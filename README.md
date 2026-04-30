@@ -1,73 +1,86 @@
-# React + TypeScript + Vite
+<div align="center">
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 🛡️ Zero-Gap Voting Architecture
+**A Formal Technical Proposal for the Modernization of the Indian Electronic Voting System**
 
-Currently, two official plugins are available:
+[![React](https://img.shields.io/badge/React-18.x-blue?style=flat&logo=react)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-5.x-purple?style=flat&logo=vite)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-cyan?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
+[![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.x-f97316?style=flat&logo=framer)](https://www.framer.com/motion/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+*An open technical blueprint proposing a dual-node, cryptographically secured electronic voting system that makes vote manipulation physically and mathematically impossible.*
 
-## React Compiler
+</div>
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 📖 Overview
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+India conducts the largest democratic election on Earth, mobilizing over 960 million eligible voters. Despite decades of successful EVM deployment, persistent public skepticism remains. 
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+This repository contains the interactive visual representation and formal architectural blueprint for the **Zero-Gap Voting Architecture** — a next-generation, dual-node election system. By severing the connection between identity validation and ballot casting through an optical airgap, anchoring all vote records in immutable cryptographic ledgers, and backing every digital action with an immediate physical paper trail, this system eliminates the attack surface that critics and adversaries currently target.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## ✨ Core Architectural Protocols
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+This system is built upon four fundamental interference protocols that transition trust from software integrity to the laws of physics and mathematics:
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1. **The Optical Airgap (Severing the Wire)**
+   Node A (Online Identity) and Node B (Offline EVM) are completely physically isolated. They communicate via a single, time-sensitive, cryptographically signed optical QR code. No Wi-Fi, Bluetooth, or RF signals are used.
+   
+2. **Cryptographic Hash Ledgers (Immutable Memory)**
+   Votes are recorded in an EEPROM ledger structured as a cryptographic hash chain. Modifying any historical entry breaks the entire chain, instantly locking the machine on reboot.
+   
+3. **Hardware Watchdog Timers (State Recovery)**
+   An independent microcontroller monitors the main EVM software. If a crash or freeze occurs mid-vote, it physically cuts power, purges volatile RAM, and reboots the machine in under 30ms, preventing incomplete or ambiguous states.
+   
+4. **VVPAT Black Box Resolution (Physical Proof Layer)**
+   The VVPAT prints a physical record of the vote *before* the digital commitment is made. The paper is the legally binding ground truth; the digital record is its mirror.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🛠️ Technology Stack
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+This interactive architectural blueprint is built using modern web technologies:
+
+* **React 18** — Component-driven UI architecture
+* **Vite** — High-performance build tooling
+* **Tailwind CSS** — Custom utility-class styling with a custom `kesari`, `ashoka`, and `india-green` color palette
+* **Framer Motion** — Fluid, physics-based micro-interactions and layout transitions
+* **Lucide React** — Crisp, consistent SVG iconography
+
+## 🚀 Getting Started
+
+To run this project locally:
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/roshhellwett/projectzerogapvote.git
+   cd projectzerogapvote
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Build for production:**
+   ```bash
+   npm run build
+   ```
+
+## 🌐 Deployment
+
+This project is fully configured for seamless deployment across two major platforms:
+
+* **GitHub Pages:** Handled automatically via GitHub Actions. Push to the `main` branch to trigger the `.github/workflows/deploy.yml` workflow. The Vite `base` configuration intelligently maps the relative paths.
+* **Vercel:** Deploys automatically. The project includes a `vercel.json` rewrite configuration to ensure stable Single Page Application (SPA) routing.
+
+## 📄 Proposal Author
+
+**Roshan Kr Singh (@roshhellwett)**  
+Submitted to the Election Commission of India, UIDAI, and MeitY (April 2026).
+
+> **Open Source Proposal** — This document is released as a public blueprint. Anyone may freely use, adapt, or improve upon the ideas presented herein.
