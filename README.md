@@ -46,31 +46,6 @@ This interactive architectural blueprint is built using modern web technologies:
 * **Framer Motion** — Fluid, physics-based micro-interactions and layout transitions
 * **Lucide React** — Crisp, consistent SVG iconography
 
-## 🚀 Getting Started
-
-To run this project locally:
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/roshhellwett/projectzerogapvote.git
-   cd projectzerogapvote
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
-
-4. **Build for production:**
-   ```bash
-   npm run build
-   ```
-
 ## 🌐 Deployment
 
 This project is fully configured for seamless deployment across two major platforms:
