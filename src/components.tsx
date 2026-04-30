@@ -11,7 +11,7 @@ export const FadeIn = ({ children, delay = 0, className = "" }: { children: Reac
       ref={ref}
       initial={{ opacity: 0, y: 40 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.8, delay, ease: "easeInOut" }}
       className={className}
     >{children}</motion.div>
   );
@@ -25,7 +25,7 @@ export const FadeInLeft = ({ children, delay = 0, className = "" }: { children: 
       ref={ref}
       initial={{ opacity: 0, x: -60 }}
       animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.8, delay, ease: "easeInOut" }}
       className={className}
     >{children}</motion.div>
   );
@@ -39,7 +39,7 @@ export const FadeInRight = ({ children, delay = 0, className = "" }: { children:
       ref={ref}
       initial={{ opacity: 0, x: 60 }}
       animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.8, delay, ease: "easeInOut" }}
       className={className}
     >{children}</motion.div>
   );
@@ -53,7 +53,7 @@ export const ScaleIn = ({ children, delay = 0, className = "" }: { children: Rea
       ref={ref}
       initial={{ opacity: 0, scale: 0.85 }}
       animate={inView ? { opacity: 1, scale: 1 } : {}}
-      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.7, delay, ease: "easeInOut" }}
       className={className}
     >{children}</motion.div>
   );
@@ -72,15 +72,15 @@ export const StaggerChildren = ({ children, className = "", delay = 0 }: { child
 );
 
 export const StaggerItem = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
-  <motion.div variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }} className={className}>
+  <motion.div variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeInOut" } } }} className={className}>
     {children}
   </motion.div>
 );
 
 export const GlassCard = ({ children, className = "", hover = true }: { children: ReactNode; className?: string; hover?: boolean }) => (
   <motion.div
-    whileHover={hover ? { y: -6, transition: { duration: 0.3, ease: "easeOut" } } : {}}
-    className={`glass-card rounded-2xl p-8 ${hover ? 'hover:shadow-2xl' : ''} transition-shadow duration-500 ${className}`}
+    whileHover={hover ? { y: -6, transition: { duration: 0.3, ease: "easeInOut" } } : {}}
+    className={`glass-card rounded-2xl p-8 flex flex-col ${hover ? 'hover:shadow-2xl hover:border-opacity-60' : ''} transition-all duration-300 ease-in-out ${className}`}
   >
     {children}
   </motion.div>
@@ -202,27 +202,27 @@ export const ProtocolVisual = ({ type }: { type: number }) => {
   if (type === 0) return (
     <div className="flex flex-col items-center gap-6 w-full px-4">
       <div className="flex items-center justify-center gap-4 sm:gap-6 w-full max-w-lg">
-        <motion.div animate={{ y: [-8, 8, -8] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} className="relative">
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-ashoka-600 to-ashoka-800 flex items-center justify-center border border-ashoka-500/30 shadow-lg shadow-ashoka-500/20">
+        <motion.div animate={{ y: [-8, 8, -8] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} className="relative group cursor-default">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-ashoka-600 to-ashoka-800 flex items-center justify-center border border-ashoka-500/30 shadow-lg shadow-ashoka-500/20 group-hover:border-ashoka-500/50 group-hover:shadow-ashoka-500/30 transition-all duration-300">
             <span className="text-2xl sm:text-3xl">&#128100;</span>
           </div>
-          <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-ashoka-400 bg-dark-800 px-2 py-0.5 rounded-full border border-ashoka-500/20 whitespace-nowrap">Node A</div>
+          <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-ashoka-400 bg-dark-800 px-2 py-0.5 rounded-full border border-ashoka-500/20 whitespace-nowrap group-hover:scale-105 transition-transform">Node A</div>
         </motion.div>
-        <div className="flex-1 relative h-12 sm:h-16 flex items-center">
+        <div className="flex-1 relative h-12 sm:h-16 flex items-center group">
           <svg className="w-full h-8" viewBox="0 0 200 32">
-            <line x1="0" y1="16" x2="200" y2="16" stroke="#334155" strokeWidth="2" strokeDasharray="8 4" />
+            <line x1="0" y1="16" x2="200" y2="16" stroke="#334155" strokeWidth="2" strokeDasharray="8 4" className="group-hover:stroke-slate-600 transition-colors" />
             <motion.circle cx="0" cy="16" r="4" fill="#f97316" animate={{ cx: [0, 200] }} transition={{ repeat: Infinity, duration: 2, ease: "linear" }} />
             <motion.circle cx="0" cy="16" r="8" fill="none" stroke="#f97316" strokeWidth="1" opacity="0.4" animate={{ cx: [0, 200], r: [4, 12], opacity: [0.6, 0] }} transition={{ repeat: Infinity, duration: 2, ease: "linear" }} />
           </svg>
-          <div className="absolute -top-2 left-1/2 -translate-x-1/2 text-[10px] font-bold text-kesari-400 bg-dark-800/90 px-3 py-1 rounded-full border border-kesari-500/20 whitespace-nowrap">
+          <div className="absolute -top-2 left-1/2 -translate-x-1/2 text-[10px] font-bold text-kesari-400 bg-dark-800/90 px-3 py-1 rounded-full border border-kesari-500/20 whitespace-nowrap group-hover:scale-105 transition-transform">
             QR Code (Light Only)
           </div>
         </div>
-        <motion.div animate={{ y: [8, -8, 8] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} className="relative">
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-kesari-600 to-kesari-800 flex items-center justify-center border border-kesari-500/30 shadow-lg shadow-kesari-500/20">
+        <motion.div animate={{ y: [8, -8, 8] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} className="relative group cursor-default">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-kesari-600 to-kesari-800 flex items-center justify-center border border-kesari-500/30 shadow-lg shadow-kesari-500/20 group-hover:border-kesari-500/50 group-hover:shadow-kesari-500/30 transition-all duration-300">
             <span className="text-2xl sm:text-3xl">&#128499;</span>
           </div>
-          <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-kesari-400 bg-dark-800 px-2 py-0.5 rounded-full border border-kesari-500/20 whitespace-nowrap">Node B</div>
+          <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-kesari-400 bg-dark-800 px-2 py-0.5 rounded-full border border-kesari-500/20 whitespace-nowrap group-hover:scale-105 transition-transform">Node B</div>
         </motion.div>
       </div>
       <div className="grid grid-cols-2 gap-3 w-full max-w-lg">
@@ -232,11 +232,11 @@ export const ProtocolVisual = ({ type }: { type: number }) => {
           { label: "No Bluetooth", icon: "&#128246;", status: "eliminated" },
           { label: "No RF Signals", icon: "&#128255;", status: "eliminated" }
         ].map((item, i) => (
-          <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.15 }} className="flex items-center gap-3 p-3 rounded-xl bg-dark-800/50 border border-dark-700/50">
-            <span className="text-lg sm:text-xl" dangerouslySetInnerHTML={{ __html: item.icon }} />
+          <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.15, duration: 0.5, ease: "easeInOut" }} className="flex items-center gap-3 p-3 rounded-xl bg-dark-800/50 border border-dark-700/50 hover:border-red-500/30 hover:bg-dark-800/70 transition-all duration-300 group">
+            <span className="text-lg sm:text-xl group-hover:scale-110 transition-transform" dangerouslySetInnerHTML={{ __html: item.icon }} />
             <div>
-              <div className="text-xs font-bold text-slate-300">{item.label}</div>
-              <div className="text-[10px] font-bold text-red-400 uppercase">{item.status}</div>
+              <div className="text-xs font-bold text-slate-300 group-hover:text-white transition-colors">{item.label}</div>
+              <div className="text-[10px] font-bold text-red-400 uppercase group-hover:text-red-300 transition-colors">{item.status}</div>
             </div>
           </motion.div>
         ))}
@@ -254,20 +254,20 @@ export const ProtocolVisual = ({ type }: { type: number }) => {
           { hash: "d5a8...", color: "from-india-green-500 to-emerald-600" }
         ].map((block, i) => (
           <div key={i} className="flex items-center">
-            <motion.div initial={{ opacity: 0, scale: 0, rotateY: 90 }} animate={{ opacity: 1, scale: 1, rotateY: 0 }} transition={{ delay: i * 0.3, type: "spring", stiffness: 200 }} className="w-20 sm:w-24 p-2 sm:p-3 rounded-xl bg-gradient-to-br from-dark-800 to-dark-900 border border-dark-700/50 text-center group hover:border-kesari-500/30 transition-colors">
-              <div className={`text-xs font-black code-text bg-gradient-to-r ${block.color} bg-clip-text text-transparent`}>{block.hash}</div>
-              <div className="text-[10px] text-slate-500 mt-1">Vote #{i + 1}</div>
-              {i > 0 && <div className="text-[9px] code-text text-kesari-400/60 mt-0.5 truncate">prev:{block.hash.substring(0, 4)}</div>}
+            <motion.div initial={{ opacity: 0, scale: 0, rotateY: 90 }} animate={{ opacity: 1, scale: 1, rotateY: 0 }} transition={{ delay: i * 0.3, duration: 0.5, ease: "easeInOut" }} className="w-20 sm:w-24 p-2 sm:p-3 rounded-xl bg-gradient-to-br from-dark-800 to-dark-900 border border-dark-700/50 text-center group hover:border-kesari-500/50 hover:shadow-lg hover:shadow-kesari-500/10 transition-all duration-300">
+              <div className={`text-xs font-black code-text bg-gradient-to-r ${block.color} bg-clip-text text-transparent group-hover:brightness-125 transition-all`}>{block.hash}</div>
+              <div className="text-[10px] text-slate-500 mt-1 group-hover:text-slate-400 transition-colors">Vote #{i + 1}</div>
+              {i > 0 && <div className="text-[9px] code-text text-kesari-400/60 mt-0.5 truncate group-hover:text-kesari-400/80 transition-colors">prev:{block.hash.substring(0, 4)}</div>}
             </motion.div>
-            {i < 3 && <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: i * 0.3 + 0.2 }} className="w-3 sm:w-4 flex items-center justify-center"><ArrowRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-kesari-500/50" /></motion.div>}
+            {i < 3 && <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: i * 0.3 + 0.2 }} className="w-3 sm:w-4 flex items-center justify-center"><ArrowRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-kesari-500/50 group-hover:text-kesari-400 transition-colors" /></motion.div>}
           </div>
         ))}
       </div>
-      <motion.div animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 2 }} className="flex items-center gap-3 p-3 sm:p-4 rounded-xl bg-red-500/5 border border-red-500/20 w-full max-w-lg">
-        <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center shrink-0"><Lock className="w-4 h-4 text-red-400" /></div>
+      <motion.div animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 2 }} className="flex items-center gap-3 p-3 sm:p-4 rounded-xl bg-red-500/5 border border-red-500/20 w-full max-w-lg hover:border-red-500/40 hover:bg-red-500/10 transition-all duration-300 group">
+        <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform"><Lock className="w-4 h-4 text-red-400 group-hover:text-red-300 transition-colors" /></div>
         <div>
-          <div className="text-sm font-bold text-red-400">Tamper Attempt Detected</div>
-          <div className="text-xs text-red-400/60 code-text">Chain broken at block #2 &mdash; Machine LOCKED</div>
+          <div className="text-sm font-bold text-red-400 group-hover:text-red-300 transition-colors">Tamper Attempt Detected</div>
+          <div className="text-xs text-red-400/60 code-text group-hover:text-red-400/80 transition-colors">Chain broken at block #2 &mdash; Machine LOCKED</div>
         </div>
       </motion.div>
     </div>
@@ -276,18 +276,18 @@ export const ProtocolVisual = ({ type }: { type: number }) => {
   if (type === 2) return (
     <div className="flex flex-col items-center gap-6 w-full px-4">
       <div className="flex items-center justify-center gap-6 sm:gap-8 w-full max-w-md">
-        <motion.div animate={{ rotate: [0, 3, -3, 0] }} transition={{ repeat: Infinity, duration: 4 }} className="relative">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-gradient-to-br from-india-green-600 to-india-green-800 flex items-center justify-center border border-india-green-500/30 shadow-lg shadow-india-green-500/20"><Zap className="w-6 h-6 sm:w-8 sm:h-8 text-white" /></div>
-          <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-india-green-400 bg-dark-800 px-2 py-0.5 rounded-full border border-india-green-500/20 whitespace-nowrap">Main CPU</div>
+        <motion.div animate={{ rotate: [0, 3, -3, 0] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }} className="relative group cursor-default">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-gradient-to-br from-india-green-600 to-india-green-800 flex items-center justify-center border border-india-green-500/30 shadow-lg shadow-india-green-500/20 group-hover:border-india-green-500/50 group-hover:shadow-india-green-500/30 transition-all duration-300"><Zap className="w-6 h-6 sm:w-8 sm:h-8 text-white group-hover:scale-110 transition-transform" /></div>
+          <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-india-green-400 bg-dark-800 px-2 py-0.5 rounded-full border border-india-green-500/20 whitespace-nowrap group-hover:scale-105 transition-transform">Main CPU</div>
         </motion.div>
-        <div className="flex flex-col items-center gap-2">
-          <motion.div animate={{ scale: [1, 1.5, 1], opacity: [0.3, 1, 0.3], boxShadow: ["0 0 0px rgba(249,115,22,0)", "0 0 20px rgba(249,115,22,0.5)", "0 0 0px rgba(249,115,22,0)"] }} transition={{ repeat: Infinity, duration: 1 }} className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-kesari-500" />
-          <div className="text-[10px] font-bold code-text text-kesari-400 bg-dark-800/80 px-2 py-0.5 rounded border border-kesari-500/20">PING 10ms</div>
-          <svg className="w-20 sm:w-24 h-1" viewBox="0 0 96 4"><line x1="0" y1="2" x2="96" y2="2" stroke="#475569" strokeWidth="2" /><motion.circle r="3" fill="#f97316" animate={{ cx: [0, 96, 0] }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} /></svg>
+        <div className="flex flex-col items-center gap-2 group">
+          <motion.div animate={{ scale: [1, 1.5, 1], opacity: [0.3, 1, 0.3], boxShadow: ["0 0 0px rgba(249,115,22,0)", "0 0 20px rgba(249,115,22,0.5)", "0 0 0px rgba(249,115,22,0)"] }} transition={{ repeat: Infinity, duration: 1 }} className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-kesari-500 group-hover:scale-125 transition-transform" />
+          <div className="text-[10px] font-bold code-text text-kesari-400 bg-dark-800/80 px-2 py-0.5 rounded border border-kesari-500/20 group-hover:border-kesari-500/40 transition-colors">PING 10ms</div>
+          <svg className="w-20 sm:w-24 h-1" viewBox="0 0 96 4"><line x1="0" y1="2" x2="96" y2="2" stroke="#475569" strokeWidth="2" className="group-hover:stroke-slate-400 transition-colors" /><motion.circle r="3" fill="#f97316" animate={{ cx: [0, 96, 0] }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} /></svg>
         </div>
-        <motion.div animate={{ rotate: [0, -3, 3, 0] }} transition={{ repeat: Infinity, duration: 4 }} className="relative">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-gradient-to-br from-ashoka-600 to-ashoka-800 flex items-center justify-center border border-ashoka-500/30 shadow-lg shadow-ashoka-500/20"><Eye className="w-6 h-6 sm:w-8 sm:h-8 text-white" /></div>
-          <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-ashoka-400 bg-dark-800 px-2 py-0.5 rounded-full border border-ashoka-500/20 whitespace-nowrap">HWT</div>
+        <motion.div animate={{ rotate: [0, -3, 3, 0] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }} className="relative group cursor-default">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-gradient-to-br from-ashoka-600 to-ashoka-800 flex items-center justify-center border border-ashoka-500/30 shadow-lg shadow-ashoka-500/20 group-hover:border-ashoka-500/50 group-hover:shadow-ashoka-500/30 transition-all duration-300"><Eye className="w-6 h-6 sm:w-8 sm:h-8 text-white group-hover:scale-110 transition-transform" /></div>
+          <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-ashoka-400 bg-dark-800 px-2 py-0.5 rounded-full border border-ashoka-500/20 whitespace-nowrap group-hover:scale-105 transition-transform">HWT</div>
         </motion.div>
       </div>
       <div className="grid grid-cols-2 gap-3 w-full max-w-md">
@@ -295,9 +295,9 @@ export const ProtocolVisual = ({ type }: { type: number }) => {
           { trigger: "PING Stops", action: "Power Cut", color: "text-red-400" },
           { trigger: "< 30ms", action: "Cold Reboot", color: "text-orange-400" }
         ].map((step, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.2 }} className="p-3 rounded-xl bg-dark-800/50 border border-dark-700/50 text-center">
-            <div className="text-xs font-bold text-slate-300">{step.trigger}</div>
-            <div className={`text-xs font-bold code-text mt-1 ${step.color}`}>&rarr; {step.action}</div>
+          <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.2, duration: 0.5, ease: "easeInOut" }} className="p-3 rounded-xl bg-dark-800/50 border border-dark-700/50 text-center hover:border-dark-600/50 hover:bg-dark-800/70 transition-all duration-300 group">
+            <div className="text-xs font-bold text-slate-300 group-hover:text-white transition-colors">{step.trigger}</div>
+            <div className={`text-xs font-bold code-text mt-1 ${step.color} group-hover:brightness-125 transition-all`}>&rarr; {step.action}</div>
           </motion.div>
         ))}
       </div>
@@ -306,23 +306,23 @@ export const ProtocolVisual = ({ type }: { type: number }) => {
 
   return (
     <div className="flex flex-col items-center gap-6 w-full px-4">
-      <div className="relative w-full max-w-sm">
-        <div className="w-full h-14 sm:h-16 rounded-2xl bg-gradient-to-b from-ashoka-900/50 to-ashoka-800/30 border border-ashoka-700/30 flex items-center px-4">
-          <div className="flex gap-1.5"><div className="w-2 h-2 rounded-full bg-red-400" /><div className="w-2 h-2 rounded-full bg-yellow-400" /><div className="w-2 h-2 rounded-full bg-green-400" /></div>
-          <div className="ml-3 text-xs code-text text-ashoka-300/60">VVPAT Printer</div>
+      <div className="relative w-full max-w-sm group">
+        <div className="w-full h-14 sm:h-16 rounded-2xl bg-gradient-to-b from-ashoka-900/50 to-ashoka-800/30 border border-ashoka-700/30 flex items-center px-4 group-hover:border-ashoka-700/50 transition-colors duration-300">
+          <div className="flex gap-1.5"><div className="w-2 h-2 rounded-full bg-red-400 group-hover:scale-110 transition-transform" /><div className="w-2 h-2 rounded-full bg-yellow-400 group-hover:scale-110 transition-transform" /><div className="w-2 h-2 rounded-full bg-green-400 group-hover:scale-110 transition-transform" /></div>
+          <div className="ml-3 text-xs code-text text-ashoka-300/60 group-hover:text-ashoka-300/80 transition-colors">VVPAT Printer</div>
         </div>
-        <motion.div animate={{ height: [0, 80, 80, 0], opacity: [0, 1, 1, 0] }} transition={{ repeat: Infinity, duration: 4, times: [0, 0.2, 0.7, 1] }} className="mx-auto w-40 sm:w-48 bg-gradient-to-b from-white to-slate-100 border-x-2 border-b-2 border-ashoka-300/30 rounded-b-xl overflow-hidden shadow-lg" style={{ transformOrigin: 'top center' }}>
+        <motion.div animate={{ height: [0, 80, 80, 0], opacity: [0, 1, 1, 0] }} transition={{ repeat: Infinity, duration: 4, times: [0, 0.2, 0.7, 1] }} className="mx-auto w-40 sm:w-48 bg-gradient-to-b from-white to-slate-100 border-x-2 border-b-2 border-ashoka-300/30 rounded-b-xl overflow-hidden shadow-lg group-hover:shadow-ashoka-500/20 group-hover:shadow-xl transition-shadow duration-300" style={{ transformOrigin: 'top center' }}>
           <div className="p-3 sm:p-4 space-y-2">
             <div className="h-2 w-3/4 bg-slate-200 rounded" /><div className="h-2 w-1/2 bg-slate-200 rounded" /><div className="h-3 w-1/3 bg-kesari-200 rounded" /><div className="h-1.5 w-2/3 bg-slate-100 rounded mt-2" /><div className="h-1.5 w-1/2 bg-slate-100 rounded" />
           </div>
         </motion.div>
-        <motion.div animate={{ scale: [1, 1.5, 1], opacity: [0, 0.6, 0] }} transition={{ repeat: Infinity, duration: 4, times: [0, 0.5, 1] }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full bg-ashoka-500/10 blur-xl" />
+        <motion.div animate={{ scale: [1, 1.5, 1], opacity: [0, 0.6, 0] }} transition={{ repeat: Infinity, duration: 4, times: [0, 0.5, 1] }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full bg-ashoka-500/10 blur-xl group-hover:bg-ashoka-500/20 transition-colors duration-300" />
       </div>
       <div className="flex gap-2 sm:gap-4 w-full max-w-sm">
         {['Tap Candidate', 'Paper Prints', '5s View', 'Deposited'].map((step, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: activeStep >= i ? 1 : 0.3, y: 0, scale: activeStep === i ? 1.05 : 1 }} transition={{ duration: 0.3 }} className="flex-1 text-center p-2 rounded-lg bg-dark-800/50 border border-dark-700/50">
-            <div className={`text-[10px] font-bold ${activeStep >= i ? 'text-ashoka-400' : 'text-slate-600'}`}>{String(i + 1).padStart(2, '0')}</div>
-            <div className={`text-[9px] mt-0.5 ${activeStep >= i ? 'text-slate-300' : 'text-slate-600'}`}>{step}</div>
+          <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: activeStep >= i ? 1 : 0.3, y: 0, scale: activeStep === i ? 1.05 : 1 }} transition={{ duration: 0.3, ease: "easeInOut" }} className="flex-1 text-center p-2 rounded-lg bg-dark-800/50 border border-dark-700/50 hover:border-ashoka-500/30 hover:bg-dark-800/70 transition-all duration-300">
+            <div className={`text-[10px] font-bold transition-colors duration-300 ${activeStep >= i ? 'text-ashoka-400' : 'text-slate-600'}`}>{String(i + 1).padStart(2, '0')}</div>
+            <div className={`text-[9px] mt-0.5 transition-colors duration-300 ${activeStep >= i ? 'text-slate-300' : 'text-slate-600'}`}>{step}</div>
           </motion.div>
         ))}
       </div>
@@ -345,30 +345,30 @@ export const QRCodePayload = () => {
   ];
 
   return (
-    <div ref={ref} className="w-full">
-      <div className="glass-card rounded-2xl overflow-hidden">
-        <div className="p-4 bg-dark-800/50 border-b border-dark-700/50 flex items-center justify-between">
+    <div ref={ref} className="w-full group">
+      <div className="glass-card rounded-2xl overflow-hidden hover:border-kesari-500/30 transition-all duration-300">
+        <div className="p-4 bg-dark-800/50 border-b border-dark-700/50 flex items-center justify-between group-hover:bg-dark-800/70 transition-colors duration-300">
           <div className="flex items-center gap-3">
-            <div className="flex gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-red-500" /><div className="w-2.5 h-2.5 rounded-full bg-yellow-500" /><div className="w-2.5 h-2.5 rounded-full bg-green-500" /></div>
-            <span className="text-xs font-bold text-slate-400 code-text">qr_payload.json</span>
+            <div className="flex gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-red-500 group-hover:scale-110 transition-transform" /><div className="w-2.5 h-2.5 rounded-full bg-yellow-500 group-hover:scale-110 transition-transform" /><div className="w-2.5 h-2.5 rounded-full bg-green-500 group-hover:scale-110 transition-transform" /></div>
+            <span className="text-xs font-bold text-slate-400 code-text group-hover:text-slate-300 transition-colors">qr_payload.json</span>
           </div>
           <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-kesari-500 animate-pulse" /><span className="text-[10px] font-bold text-kesari-400 code-text">ECI SIGNED</span></div>
         </div>
         <div className="p-4 sm:p-6 space-y-2 sm:space-y-3">
-          <div className="text-lg code-text text-slate-500 mb-2 sm:mb-4">{"{"}</div>
+          <div className="text-lg code-text text-slate-500 mb-2 sm:mb-4 group-hover:text-slate-400 transition-colors">{"{"}</div>
           {fields.map((field, i) => (
-            <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={revealed ? { opacity: 1, x: 0 } : {}} transition={{ delay: i * 0.15 }} className="flex flex-wrap items-center gap-1 sm:gap-3 pl-4 sm:pl-6">
-              <span className="code-text text-xs sm:text-sm font-bold text-ashoka-300">{field.key}</span>
+            <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={revealed ? { opacity: 1, x: 0 } : {}} transition={{ delay: i * 0.15, duration: 0.5, ease: "easeInOut" }} className="flex flex-wrap items-center gap-1 sm:gap-3 pl-4 sm:pl-6 hover:bg-dark-800/30 rounded-lg transition-colors duration-200">
+              <span className="code-text text-xs sm:text-sm font-bold text-ashoka-300 group-hover:text-ashoka-200 transition-colors">{field.key}</span>
               <span className="text-slate-500">:</span>
-              <span className={`code-text text-xs sm:text-sm font-bold ${field.color}`}>"{field.value}"</span>
+              <span className={`code-text text-xs sm:text-sm font-bold ${field.color} hover:brightness-125 transition-all`}>"{field.value}"</span>
               <span className="text-slate-600">{i < fields.length - 1 ? ',' : ''}</span>
             </motion.div>
           ))}
-          <motion.div initial={{ opacity: 0 }} animate={revealed ? { opacity: 1 } : {}} transition={{ delay: fields.length * 0.15 }} className="text-lg code-text text-slate-500 pl-0">{"}"}</motion.div>
+          <motion.div initial={{ opacity: 0 }} animate={revealed ? { opacity: 1 } : {}} transition={{ delay: fields.length * 0.15 }} className="text-lg code-text text-slate-500 pl-0 group-hover:text-slate-400 transition-colors">{"}"}</motion.div>
         </div>
         <div className="px-4 sm:px-6 pb-4">
-          <div className="flex items-center gap-2 p-3 rounded-xl bg-kesari-500/5 border border-kesari-500/20">
-            <Shield className="w-4 h-4 text-kesari-400 shrink-0" />
+          <div className="flex items-center gap-2 p-3 rounded-xl bg-kesari-500/5 border border-kesari-500/20 group-hover:border-kesari-500/40 transition-colors duration-300">
+            <Shield className="w-4 h-4 text-kesari-400 shrink-0 group-hover:scale-110 transition-transform" />
             <span className="text-xs font-bold text-kesari-400">90-second TTL &bull; Single-use &bull; Non-replayable</span>
           </div>
         </div>
@@ -392,7 +392,7 @@ export const HashChainVisual = () => {
       <div className="flex items-center gap-2 justify-center flex-wrap">
         {blocks.map((block, i) => (
           <div key={i} className="flex items-center">
-            <motion.div initial={{ opacity: 0, scale: 0, rotateY: 90 }} animate={inView ? { opacity: 1, scale: 1, rotateY: 0 } : {}} transition={{ delay: i * 0.25, type: "spring", stiffness: 200 }} className="w-24 sm:w-28 p-2.5 sm:p-3 rounded-xl bg-dark-800/80 border border-dark-700/50 hover:border-kesari-500/30 transition-colors group">
+            <motion.div initial={{ opacity: 0, scale: 0, rotateY: 90 }} animate={inView ? { opacity: 1, scale: 1, rotateY: 0 } : {}} transition={{ delay: i * 0.25, duration: 0.5, ease: "easeInOut" }} className="w-24 sm:w-28 p-2.5 sm:p-3 rounded-xl bg-dark-800/80 border border-dark-700/50 hover:border-kesari-500/30 transition-colors group">
               <div className="text-[10px] font-bold text-slate-500 mb-1">Block #{block.id}</div>
               <div className="code-text text-xs font-bold text-kesari-400">{block.hash}</div>
               <div className="code-text text-[10px] text-slate-600 mt-1">prev: {block.prev}</div>
@@ -410,10 +410,10 @@ export const ComparisonRow = ({ feature, current, zerogap, delay }: { feature: s
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-20px" });
   return (
-    <motion.tr ref={ref} initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay }} className="border-b border-dark-700/30 hover:bg-dark-800/30 transition-colors">
-      <td className="p-3 sm:p-4 text-xs sm:text-sm font-bold text-slate-300 align-top">{feature}</td>
+    <motion.tr ref={ref} initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay, duration: 0.6, ease: "easeInOut" }} className="border-b border-dark-700/30 hover:bg-dark-800/50 hover:shadow-lg transition-all duration-300">
+      <td className="p-3 sm:p-4 text-xs sm:text-sm font-bold text-slate-300 align-top hover:text-white transition-colors">{feature}</td>
       <td className="p-3 sm:p-4 text-xs sm:text-sm text-red-400/80 align-top">{current}</td>
-      <td className="p-3 sm:p-4 text-xs sm:text-sm text-india-green-400 font-bold align-top">{zerogap}</td>
+      <td className="p-3 sm:p-4 text-xs sm:text-sm text-india-green-400 font-bold align-top hover:text-india-green-300 transition-colors">{zerogap}</td>
     </motion.tr>
   );
 };
@@ -429,22 +429,22 @@ export const TimelinePhase = ({ phase, title, description, items, year, color, d
   const dotColorMap: Record<string, string> = { orange: "bg-kesari-500", blue: "bg-ashoka-500", green: "bg-india-green-500" };
 
   return (
-    <motion.div ref={ref} initial={{ opacity: 0, x: -40 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] }} className="relative pl-12 pb-12 last:pb-0">
-      <div className={`absolute left-0 top-0 w-8 h-8 rounded-full bg-gradient-to-br ${colorMap[color]} flex items-center justify-center border-4 border-dark-950 z-10`}>
+    <motion.div ref={ref} initial={{ opacity: 0, x: -40 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay, duration: 0.6, ease: "easeInOut" }} className="relative pl-12 pb-12 last:pb-0 group">
+      <div className={`absolute left-0 top-0 w-8 h-8 rounded-full bg-gradient-to-br ${colorMap[color]} flex items-center justify-center border-4 border-dark-950 z-10 group-hover:scale-110 transition-transform duration-300`}>
         <div className={`w-2 h-2 rounded-full ${dotColorMap[color]}`} />
       </div>
-      <div className="absolute left-4 top-8 w-px bg-dark-700/50" style={{ height: 'calc(100% - 2rem)' }} />
-      <div className="glass-card rounded-2xl p-5 sm:p-6">
+      <div className="absolute left-4 top-8 w-px bg-dark-700/50 group-hover:bg-dark-600/50 transition-colors duration-300" style={{ height: 'calc(100% - 2rem)' }} />
+      <div className="glass-card rounded-2xl p-5 sm:p-6 hover:border-opacity-50 transition-all duration-300">
         <div className="flex flex-wrap items-center gap-3 mb-3">
-          <span className={`text-xs font-black code-text px-2 py-1 rounded-md bg-gradient-to-r ${colorMap[color]} text-white`}>{year}</span>
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{phase}</span>
+          <span className={`text-xs font-black code-text px-2 py-1 rounded-md bg-gradient-to-r ${colorMap[color]} text-white group-hover:shadow-lg transition-shadow duration-300`}>{year}</span>
+          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-slate-400 transition-colors">{phase}</span>
         </div>
-        <h3 className="text-lg sm:text-xl font-black text-white mb-2">{title}</h3>
-        <p className="text-sm text-slate-400 mb-4">{description}</p>
+        <h3 className="text-lg sm:text-xl font-black text-white mb-2 group-hover:text-kesari-400 transition-colors">{title}</h3>
+        <p className="text-sm text-slate-400 mb-4 group-hover:text-slate-300 transition-colors">{description}</p>
         <ul className="space-y-2">
           {items.map((item, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-              <CheckCircle2 className="w-4 h-4 text-india-green-400 mt-0.5 shrink-0" />
+            <li key={i} className="flex items-start gap-2 text-sm text-slate-300 hover:text-white transition-colors">
+              <CheckCircle2 className="w-4 h-4 text-india-green-400 mt-0.5 shrink-0 group-hover:text-india-green-300 transition-colors" />
               {item}
             </li>
           ))}
@@ -472,30 +472,30 @@ export const StatBar = ({ label, amount, total, color, delay }: { label: string;
   };
 
   return (
-    <motion.div ref={ref} initial={{ opacity: 0, x: -20 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay }} className="space-y-2">
+    <motion.div ref={ref} initial={{ opacity: 0, x: -20 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] }} className="space-y-2 hover:translate-x-1 transition-transform duration-300">
       <div className="flex justify-between text-sm">
-        <span className="font-bold text-slate-300">{label}</span>
-        <span className={`font-bold code-text ${color}`}>Rs. {amount}</span>
+        <span className={`font-bold transition-colors duration-300 ${inView ? 'text-slate-300' : 'text-slate-500'}`}>{label}</span>
+        <span className={`font-bold code-text ${color} hover:brightness-125 transition-all duration-300`}>Rs. {amount}</span>
       </div>
-      <div className="h-2 rounded-full bg-dark-800 overflow-hidden">
-        <motion.div initial={{ width: 0 }} animate={inView ? { width: `${percentage}%` } : {}} transition={{ delay: delay + 0.3, duration: 1, ease: "easeOut" }} className={`h-full rounded-full bg-gradient-to-r ${gradientMap[color] || 'from-kesari-500 to-kesari-400'}`} />
+      <div className="h-2 rounded-full bg-dark-800 overflow-hidden hover:bg-dark-700/50 transition-colors duration-300">
+        <motion.div initial={{ width: 0 }} animate={inView ? { width: `${percentage}%` } : {}} transition={{ delay: delay + 0.3, duration: 1, ease: [0.16, 1, 0.3, 1] }} className={`h-full rounded-full bg-gradient-to-r ${gradientMap[color] || 'from-kesari-500 to-kesari-400'} hover:shadow-lg hover:shadow-current/20 transition-shadow duration-300`} />
       </div>
     </motion.div>
   );
 };
 
 export const AccordionItem = ({ question, answer, isOpen, onClick }: { question: string; answer: string; isOpen: boolean; onClick: () => void }) => (
-  <motion.div className="border border-dark-700/50 rounded-xl overflow-hidden" animate={isOpen ? { boxShadow: "0 0 30px rgba(249,115,22,0.05)" } : { boxShadow: "none" }} transition={{ duration: 0.3 }}>
-    <button onClick={onClick} className="w-full flex items-center justify-between p-5 sm:p-6 text-left hover:bg-dark-800/30 transition-colors" aria-expanded={isOpen}>
-      <span className="text-base sm:text-lg font-bold text-white pr-4">{question}</span>
-      <motion.div animate={{ rotate: isOpen ? 45 : 0 }} transition={{ duration: 0.3 }} className="w-8 h-8 rounded-lg bg-dark-800 flex items-center justify-center shrink-0">
+  <motion.div className="border border-dark-700/50 rounded-xl overflow-hidden hover:border-dark-600/50 transition-all duration-300" animate={isOpen ? { boxShadow: "0 0 30px rgba(249,115,22,0.05)" } : { boxShadow: "none" }} transition={{ duration: 0.3 }}>
+    <button onClick={onClick} className="w-full flex items-center justify-between p-5 sm:p-6 text-left hover:bg-dark-800/50 transition-all duration-300" aria-expanded={isOpen}>
+      <span className={`text-base sm:text-lg font-bold pr-4 transition-colors duration-300 ${isOpen ? 'text-kesari-400' : 'text-white hover:text-kesari-400'}`}>{question}</span>
+      <motion.div animate={{ rotate: isOpen ? 45 : 0, backgroundColor: isOpen ? 'rgba(249,115,22,0.1)' : 'rgba(30,41,59,1)' }} transition={{ duration: 0.3 }} className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border border-dark-700/50">
         <span className="text-kesari-400 text-xl font-bold leading-none">+</span>
       </motion.div>
     </button>
     <AnimatePresence>
       {isOpen && (
-        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }}>
-          <div className="px-5 sm:px-6 pb-5 sm:pb-6 text-sm sm:text-base text-slate-400 leading-relaxed">{answer}</div>
+        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}>
+          <div className="px-5 sm:px-6 pb-5 sm:pb-6 text-sm sm:text-base text-slate-400 leading-relaxed hover:text-slate-300 transition-colors">{answer}</div>
         </motion.div>
       )}
     </AnimatePresence>

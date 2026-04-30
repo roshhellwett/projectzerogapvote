@@ -92,7 +92,7 @@ export default function App() {
 
           <div className="hidden lg:flex items-center gap-1">
             {navItems.map(item => (
-              <button key={item.id} onClick={() => scrollTo(item.id)} className="px-4 py-2 text-sm font-semibold text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-dark-800/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-kesari-500">
+              <button key={item.id} onClick={() => scrollTo(item.id)} className="px-4 py-2 text-sm font-semibold text-slate-400 hover:text-white transition-all duration-300 rounded-lg hover:bg-dark-800/50 hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-kesari-500">
                 {item.label}
               </button>
             ))}
@@ -116,16 +116,16 @@ export default function App() {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
               className="lg:hidden bg-dark-950/95 backdrop-blur-xl border-b border-dark-800/50 overflow-hidden"
             >
               <div className="flex flex-col p-4 sm:p-6 gap-2">
                 {navItems.map(item => (
-                  <button key={item.id} onClick={() => scrollTo(item.id)} className="text-left py-3 px-4 rounded-xl text-slate-300 font-semibold hover:bg-dark-800/50 hover:text-white transition-colors">
+                  <button key={item.id} onClick={() => scrollTo(item.id)} className="text-left py-3 px-4 rounded-xl text-slate-300 font-semibold hover:bg-dark-800/50 hover:text-white hover:translate-x-1 transition-all duration-300">
                     {item.label}
                   </button>
                 ))}
-                <a href={PdfLink} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 py-3 mt-2 rounded-xl bg-gradient-to-r from-kesari-500 to-kesari-600 text-white font-semibold">
+                <a href={PdfLink} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 py-3 mt-2 rounded-xl bg-gradient-to-r from-kesari-500 to-kesari-600 text-white font-semibold hover:shadow-lg hover:shadow-kesari-500/30 transition-all duration-300">
                   <FileText className="w-5 h-5" /> Read PDF Report
                 </a>
               </div>
@@ -226,7 +226,7 @@ export default function App() {
               subtitle="India's EVMs are a proven platform, but their monolithic design creates attack surfaces that undermine public trust. These are the six critical vulnerabilities we must address."
             />
 
-            <StaggerChildren className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+            <StaggerChildren className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 items-stretch">
               {[
                 { icon: ShieldAlert, title: "Monolithic Machine", desc: "Identity validation, ballot casting, and vote storage all handled within one physical unit. A compromised machine compromises all three functions simultaneously.", color: "from-red-500/10 to-red-600/5 border-red-500/20", iconBg: "bg-red-500/20", iconColor: "text-red-400" },
                 { icon: WifiOff, title: "Signal Interception", desc: "Digital signals between validation and voting units create a man-in-the-middle attack vector. Wires and wireless connections can be intercepted, spoofed, or replayed by anyone with physical booth access.", color: "from-orange-500/10 to-orange-600/5 border-orange-500/20", iconBg: "bg-orange-500/20", iconColor: "text-orange-400" },
@@ -235,9 +235,9 @@ export default function App() {
                 { icon: Users, title: "Multiple Voting", desc: "Without a real-time, tamper-proof ledger, preventing the same voter from casting ballots across different booths or constituencies depends on paper records and human vigilance alone.", color: "from-purple-500/10 to-purple-600/5 border-purple-500/20", iconBg: "bg-purple-500/20", iconColor: "text-purple-400" },
                 { icon: Clock, title: "Incomplete Transactions", desc: "A system crash mid-vote creates an ambiguous state. Did the vote register? Was it double-counted? The current architecture has no hardware-level guarantee of clean state recovery.", color: "from-india-green-500/10 to-india-green-600/5 border-india-green-500/20", iconBg: "bg-india-green-500/20", iconColor: "text-india-green-400" },
               ].map((item, i) => (
-                <StaggerItem key={i}>
-                  <GlassCard className="h-full group">
-                    <div className={`w-14 h-14 rounded-2xl ${item.iconBg} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                <StaggerItem key={i} className="h-full flex flex-col">
+                  <GlassCard className="h-full group hover:border-opacity-40">
+                    <div className={`w-14 h-14 rounded-xl ${item.iconBg} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                       <item.icon className={`w-7 h-7 ${item.iconColor}`} />
                     </div>
                     <h3 className="text-xl font-black text-white mb-3">{item.title}</h3>
@@ -260,10 +260,10 @@ export default function App() {
             />
 
             <div className="flex flex-col lg:flex-row items-stretch gap-6 lg:gap-8 relative">
-              <FadeInLeft className="flex-1">
+              <FadeInLeft className="flex-1 h-full flex flex-col">
                 <GlassCard className="h-full border-ashoka-500/20 hover:border-ashoka-500/40">
                   <div className="flex items-center gap-4 mb-8">
-                    <div className="p-4 rounded-2xl bg-gradient-to-br from-ashoka-500/20 to-ashoka-600/10 border border-ashoka-500/20"><Fingerprint className="text-ashoka-400 w-8 h-8" /></div>
+                    <div className="p-4 rounded-xl bg-gradient-to-br from-ashoka-500/20 to-ashoka-600/10 border border-ashoka-500/20"><Fingerprint className="text-ashoka-400 w-8 h-8" /></div>
                     <div>
                       <h3 className="text-2xl lg:text-3xl font-black text-white">Node A</h3>
                       <p className="text-ashoka-400 text-sm font-bold uppercase tracking-wider">Online Identity Terminal</p>
@@ -303,10 +303,10 @@ export default function App() {
                 <div className="w-px h-24 bg-gradient-to-b from-transparent via-dark-700 to-transparent" />
               </FadeIn>
 
-              <FadeInRight className="flex-1">
+              <FadeInRight className="flex-1 h-full flex flex-col">
                 <GlassCard className="h-full border-kesari-500/20 hover:border-kesari-500/40">
                   <div className="flex items-center gap-4 mb-8">
-                    <div className="p-4 rounded-2xl bg-gradient-to-br from-kesari-500/20 to-kesari-600/10 border border-kesari-500/20"><Cpu className="text-kesari-400 w-8 h-8" /></div>
+                    <div className="p-4 rounded-xl bg-gradient-to-br from-kesari-500/20 to-kesari-600/10 border border-kesari-500/20"><Cpu className="text-kesari-400 w-8 h-8" /></div>
                     <div>
                       <h3 className="text-2xl lg:text-3xl font-black text-white">Node B</h3>
                       <p className="text-kesari-400 text-sm font-bold uppercase tracking-wider">Offline Airgapped EVM</p>
@@ -341,7 +341,7 @@ export default function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               <FadeInLeft>
-                <div>
+                <div className="max-readable">
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-kesari-400 text-sm font-bold tracking-wider uppercase mb-6">
                     <Key className="w-4 h-4" /> Cryptographic Payload
                   </div>
@@ -358,9 +358,9 @@ export default function App() {
                       { icon: Lock, text: "RSA-4096 / Ed25519 signature by ECI", color: "text-india-green-400" },
                       { icon: MapPin, text: "Constituency code ties voter to specific booth", color: "text-purple-400" },
                     ].map((item, i) => (
-                      <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="flex items-center gap-3">
-                        <item.icon className={`w-5 h-5 ${item.color} shrink-0`} />
-                        <span className="text-sm font-bold text-slate-300">{item.text}</span>
+                      <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="flex items-center gap-3 group hover:text-kesari-400 transition-colors">
+                        <item.icon className={`w-5 h-5 ${item.color} shrink-0 group-hover:scale-110 transition-transform`} />
+                        <span className="text-sm font-bold text-slate-300 group-hover:text-white transition-colors">{item.text}</span>
                       </motion.div>
                     ))}
                   </div>
@@ -423,40 +423,40 @@ export default function App() {
           </div>
         </section>
 
-        {/* ==================== HASH CHAIN SECTION ==================== */}
-        <section className="py-20 sm:py-24 lg:py-32 relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-              <FadeInLeft><HashChainVisual /></FadeInLeft>
-              <FadeInRight>
-                <div>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-orange-400 text-sm font-bold tracking-wider uppercase mb-6">
-                    <Database className="w-4 h-4" /> Immutable Memory
-                  </div>
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
-                    The Hash Chain<br /><span className="text-orange-400">Cannot Be Broken</span>
-                  </h2>
-                  <p className="text-base sm:text-lg text-slate-400 font-medium mb-6 leading-relaxed">
-                    The EEPROM ledger uses the same mathematical principle as blockchain technology — implemented at hardware level in firmware C/C++. Every vote entry contains the hash of its predecessor.
-                  </p>
-                  <div className="space-y-4">
-                    {[
-                      { step: "01", text: "Vote is cast and encrypted" },
-                      { step: "02", text: "SHA-256 hash of vote is computed" },
-                      { step: "03", text: "Previous entry's hash is linked" },
-                      { step: "04", text: "Combined hash stored as new entry" },
-                    ].map((item, i) => (
-                      <motion.div key={i} initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="flex items-center gap-4 p-3 rounded-xl bg-dark-800/40 border border-dark-700/30">
-                        <span className="text-sm font-black code-text text-orange-400">{item.step}</span>
-                        <span className="text-sm font-bold text-slate-300">{item.text}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </FadeInRight>
-            </div>
-          </div>
-        </section>
+         {/* ==================== HASH CHAIN SECTION ==================== */}
+         <section className="py-20 sm:py-24 lg:py-32 relative">
+           <div className="max-w-7xl mx-auto px-4 sm:px-6">
+             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+               <FadeInLeft><HashChainVisual /></FadeInLeft>
+               <FadeInRight>
+                 <div className="max-readable">
+                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-orange-400 text-sm font-bold tracking-wider uppercase mb-6">
+                     <Database className="w-4 h-4" /> Immutable Memory
+                   </div>
+                   <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
+                     The Hash Chain<br /><span className="text-orange-400">Cannot Be Broken</span>
+                   </h2>
+                   <p className="text-base sm:text-lg text-slate-400 font-medium mb-6 leading-relaxed">
+                     The EEPROM ledger uses the same mathematical principle as blockchain technology — implemented at hardware level in firmware C/C++. Every vote entry contains the hash of its predecessor.
+                   </p>
+                   <div className="space-y-4">
+                     {[
+                       { step: "01", text: "Vote is cast and encrypted" },
+                       { step: "02", text: "SHA-256 hash of vote is computed" },
+                       { step: "03", text: "Previous entry's hash is linked" },
+                       { step: "04", text: "Combined hash stored as new entry" },
+                     ].map((item, i) => (
+                       <motion.div key={i} initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="flex items-center gap-4 p-3 rounded-xl bg-dark-800/40 border border-dark-700/30 hover:border-orange-500/30 hover:bg-dark-800/60 transition-all duration-300 group">
+                         <span className="text-sm font-black code-text text-orange-400 group-hover:scale-110 transition-transform">{item.step}</span>
+                         <span className="text-sm font-bold text-slate-300 group-hover:text-white transition-colors">{item.text}</span>
+                       </motion.div>
+                     ))}
+                   </div>
+                 </div>
+               </FadeInRight>
+             </div>
+           </div>
+         </section>
 
         {/* ==================== VOTER JOURNEY ==================== */}
         <section id="journey" className="py-20 sm:py-24 lg:py-32 relative bg-dark-900/20">
@@ -480,16 +480,16 @@ export default function App() {
                 { step: "08", title: "Hash Chain Commit", desc: "Only after the physical paper is secured does the software commit the vote to the EEPROM hash chain. The machine returns to idle, ready for the next voter.", color: "from-india-green-600 to-india-green-700", icon: CheckCircle2 },
               ].map((s, i) => (
                 <FadeIn key={i} delay={i * 0.08}>
-                  <motion.div whileHover={{ x: 8 }} className="flex items-start gap-4 sm:gap-6 p-4 sm:p-6 rounded-2xl bg-dark-800/30 border border-dark-700/30 hover:border-dark-600/50 transition-colors group">
-                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 transition-transform`}>
+                  <motion.div whileHover={{ x: 8, transition: { duration: 0.3, ease: "easeInOut" } }} className="flex items-start gap-4 sm:gap-6 p-4 sm:p-6 rounded-2xl bg-dark-800/30 border border-dark-700/30 hover:border-dark-600/50 hover:bg-dark-800/50 transition-all duration-300 group">
+                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 group-hover:shadow-xl transition-all duration-300`}>
                       <s.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 mb-1 sm:mb-2">
-                        <span className="text-xs sm:text-sm font-black code-text text-slate-600">STEP {s.step}</span>
-                        <h4 className="text-base sm:text-lg font-black text-white">{s.title}</h4>
+                        <span className="text-xs sm:text-sm font-black code-text text-slate-600 group-hover:text-slate-500 transition-colors">STEP {s.step}</span>
+                        <h4 className="text-base sm:text-lg font-black text-white group-hover:text-kesari-400 transition-colors">{s.title}</h4>
                       </div>
-                      <p className="text-sm text-slate-400 leading-relaxed">{s.desc}</p>
+                      <p className="text-sm text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors">{s.desc}</p>
                     </div>
                   </motion.div>
                 </FadeIn>
@@ -507,15 +507,15 @@ export default function App() {
               subtitle="Before any election result is declared valid, three completely independent datasets must align perfectly. If any layer diverges, the exact point of interference is identified."
             />
 
-            <div className="grid sm:grid-cols-3 gap-5 sm:gap-6 mb-8 sm:mb-12">
+            <div className="grid sm:grid-cols-3 gap-5 sm:gap-6 mb-8 sm:mb-12 items-stretch">
               {[
                 { title: "Node A Server Log", desc: "Total authenticated voters who received QR codes from the national database.", label: "TOTAL A", icon: Server, color: "from-ashoka-500 to-ashoka-700", glow: "glow-blue" },
                 { title: "Node B EEPROM Ledger", desc: "Total votes digitally committed to the cryptographic hash chain on the offline machine.", label: "TOTAL B", icon: Database, color: "from-kesari-500 to-kesari-700", glow: "glow-orange" },
                 { title: "VVPAT Ballot Box", desc: "Total physical paper slips deposited in the sealed, tamper-evident ballot box.", label: "TOTAL C", icon: Printer, color: "from-india-green-500 to-india-green-700", glow: "glow-green" },
               ].map((col, i) => (
-                <FadeIn key={i} delay={i * 0.15}>
-                  <GlassCard className={`h-full text-center ${col.glow}`}>
-                    <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br ${col.color} flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg`}>
+                <FadeIn key={i} delay={i * 0.15} className="h-full flex flex-col">
+                  <GlassCard className={`h-full text-center ${col.glow} hover:scale-[1.02] hover:border-opacity-50`}>
+                    <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-gradient-to-br ${col.color} flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg`}>
                       <col.icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                     </div>
                     <h3 className="text-lg sm:text-xl font-black text-white mb-2 sm:mb-3">{col.title}</h3>
@@ -543,44 +543,44 @@ export default function App() {
           </div>
         </section>
 
-        {/* ==================== THREAT ANALYSIS TABLE ==================== */}
-        <section className="py-20 sm:py-24 lg:py-32 relative bg-dark-900/20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <SectionTitle
-              badge="Security Analysis"
-              title="Threat Vector Comparison"
-              subtitle="Every known attack vector against the current EVM system — and exactly how Zero-Gap's architecture neutralizes it."
-            />
+         {/* ==================== THREAT ANALYSIS TABLE ==================== */}
+         <section className="py-20 sm:py-24 lg:py-32 relative bg-dark-900/20">
+           <div className="max-w-7xl mx-auto px-4 sm:px-6">
+             <SectionTitle
+               badge="Security Analysis"
+               title="Threat Vector Comparison"
+               subtitle="Every known attack vector against the current EVM system — and exactly how Zero-Gap's architecture neutralizes it."
+             />
 
-            <FadeIn>
-              <div className="overflow-x-auto rounded-2xl">
-                <div className="glass-card rounded-2xl overflow-hidden min-w-[640px]">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-dark-700/50 bg-dark-800/50">
-                        <th className="p-4 text-left text-xs sm:text-sm font-black text-slate-300 uppercase tracking-wider w-1/4">Threat Vector</th>
-                        <th className="p-4 text-left text-xs sm:text-sm font-black text-red-400 uppercase tracking-wider w-1/4">Current EVM</th>
-                        <th className="p-4 text-left text-xs sm:text-sm font-black text-india-green-400 uppercase tracking-wider w-1/2">Zero-Gap Defence</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <ComparisonRow feature="Remote Network Attack" current="Possible if networked" zerogap="Node B has no radio hardware — physically incapable" delay={0} />
-                      <ComparisonRow feature="Signal Interception" current="Wire/wireless can be replayed" zerogap="No signal exists — optical QR + nonce prevents replay" delay={0.05} />
-                      <ComparisonRow feature="Memory Tampering" current="Flat EEPROM can be overwritten" zerogap="Hash chain — alteration breaks chain, locks machine" delay={0.1} />
-                      <ComparisonRow feature="Multiple Voting" current="Paper ledger + human vigilance" zerogap="Real-time DB check + PROM chip + hash chain" delay={0.15} />
-                      <ComparisonRow feature="Cross-Constituency Voting" current="Manual boundary enforcement" zerogap="Voter ID not in PROM chip = cryptographic rejection" delay={0.2} />
-                      <ComparisonRow feature="GUI Vote Manipulation" current="Theoretical OS vulnerability" zerogap="VVPAT prints before digital commit — paper is authority" delay={0.25} />
-                      <ComparisonRow feature="System Crash Mid-Vote" current="Ambiguous incomplete state" zerogap="HWT purges RAM, cold reboots &lt;30ms — no corrupt state" delay={0.3} />
-                      <ComparisonRow feature="Forged QR Code" current="N/A" zerogap="RSA-4096/Ed25519 impossible without ECI private key" delay={0.35} />
-                      <ComparisonRow feature="QR Replay Attack" current="N/A" zerogap="Single-use nonce — second scan rejected at verification" delay={0.4} />
-                      <ComparisonRow feature="Physical Machine Theft" current="Vote data accessible" zerogap="Hash chain check on boot — broken chain locks machine" delay={0.45} />
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </FadeIn>
-          </div>
-        </section>
+             <FadeIn>
+               <div className="overflow-x-auto rounded-2xl">
+                 <div className="glass-card rounded-2xl overflow-hidden min-w-[640px] hover:border-dark-600/50 transition-all duration-300">
+                   <table className="w-full">
+                     <thead>
+                       <tr className="border-b border-dark-700/50 bg-dark-800/50">
+                         <th className="p-4 text-left text-xs sm:text-sm font-black text-slate-300 uppercase tracking-wider w-1/4">Threat Vector</th>
+                         <th className="p-4 text-left text-xs sm:text-sm font-black text-red-400 uppercase tracking-wider w-1/4">Current EVM</th>
+                         <th className="p-4 text-left text-xs sm:text-sm font-black text-india-green-400 uppercase tracking-wider w-1/2">Zero-Gap Defence</th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       <ComparisonRow feature="Remote Network Attack" current="Possible if networked" zerogap="Node B has no radio hardware — physically incapable" delay={0} />
+                       <ComparisonRow feature="Signal Interception" current="Wire/wireless can be replayed" zerogap="No signal exists — optical QR + nonce prevents replay" delay={0.05} />
+                       <ComparisonRow feature="Memory Tampering" current="Flat EEPROM can be overwritten" zerogap="Hash chain — alteration breaks chain, locks machine" delay={0.1} />
+                       <ComparisonRow feature="Multiple Voting" current="Paper ledger + human vigilance" zerogap="Real-time DB check + PROM chip + hash chain" delay={0.15} />
+                       <ComparisonRow feature="Cross-Constituency Voting" current="Manual boundary enforcement" zerogap="Voter ID not in PROM chip = cryptographic rejection" delay={0.2} />
+                       <ComparisonRow feature="GUI Vote Manipulation" current="Theoretical OS vulnerability" zerogap="VVPAT prints before digital commit — paper is authority" delay={0.25} />
+                       <ComparisonRow feature="System Crash Mid-Vote" current="Ambiguous incomplete state" zerogap="HWT purges RAM, cold reboots &lt;30ms — no corrupt state" delay={0.3} />
+                       <ComparisonRow feature="Forged QR Code" current="N/A" zerogap="RSA-4096/Ed25519 impossible without ECI private key" delay={0.35} />
+                       <ComparisonRow feature="QR Replay Attack" current="N/A" zerogap="Single-use nonce — second scan rejected at verification" delay={0.4} />
+                       <ComparisonRow feature="Physical Machine Theft" current="Vote data accessible" zerogap="Hash chain check on boot — broken chain locks machine" delay={0.45} />
+                     </tbody>
+                   </table>
+                 </div>
+               </div>
+             </FadeIn>
+           </div>
+         </section>
 
         {/* ==================== SMART CARD SECTION ==================== */}
         <section className="py-20 sm:py-24 lg:py-32 relative">
@@ -588,7 +588,7 @@ export default function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               <FadeInLeft>
-                <div>
+                <div className="max-readable">
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-ashoka-400 text-sm font-bold tracking-wider uppercase mb-6">
                     <CreditCard className="w-4 h-4" /> Voter ID Smart Card
                   </div>
@@ -606,9 +606,9 @@ export default function App() {
                       { title: "5-Second Auth", desc: "Reduces authentication from 15-20 seconds to under 5 seconds via pre-fetch." },
                       { title: "Backward Compatible", desc: "Carries existing EPIC barcode for legacy system compatibility during transition." },
                     ].map((item, i) => (
-                      <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="p-4 rounded-xl bg-dark-800/40 border border-dark-700/30">
-                        <div className="text-sm font-bold text-white mb-1">{item.title}</div>
-                        <div className="text-xs text-slate-400">{item.desc}</div>
+                      <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="p-4 rounded-xl bg-dark-800/40 border border-dark-700/30 hover:border-dark-600/50 hover:bg-dark-800/60 transition-all duration-300 cursor-default group">
+                        <div className="text-sm font-bold text-white mb-1 group-hover:text-ashoka-400 transition-colors">{item.title}</div>
+                        <div className="text-xs text-slate-400 group-hover:text-slate-300 transition-colors">{item.desc}</div>
                       </motion.div>
                     ))}
                   </div>
@@ -619,7 +619,7 @@ export default function App() {
                 <div className="flex items-center justify-center" style={{ perspective: '1000px' }}>
                   <motion.div
                     whileHover={{ rotateY: 15, rotateX: 5 }}
-                    transition={{ type: "spring", stiffness: 300 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
                     className="relative w-72 sm:w-80 h-44 sm:h-52 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-dark-800 to-dark-900 border border-dark-700/50 p-5 sm:p-6 shadow-2xl"
                   >
                     <div className="w-10 h-8 sm:w-12 sm:h-9 rounded-lg bg-gradient-to-br from-yellow-400 to-yellow-600 mb-3 sm:mb-4 flex items-center justify-center">
@@ -645,18 +645,18 @@ export default function App() {
           </div>
         </section>
 
-        {/* ==================== COST BREAKDOWN ==================== */}
-        <section className="py-20 sm:py-24 lg:py-32 relative bg-dark-900/20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <SectionTitle
-              badge="Investment"
-              title="Cost & Feasibility"
-              subtitle="A one-time investment of Rs. 14,750–21,150 crore — approximately 12-18% of a single general election's economic footprint. Serves every election thereafter."
-            />
+         {/* ==================== COST BREAKDOWN ==================== */}
+         <section className="py-20 sm:py-24 lg:py-32 relative bg-dark-900/20">
+           <div className="max-w-7xl mx-auto px-4 sm:px-6">
+             <SectionTitle
+               badge="Investment"
+               title="Cost & Feasibility"
+               subtitle="A one-time investment of Rs. 14,750–21,150 crore — approximately 12-18% of a single general election's economic footprint. Serves every election thereafter."
+             />
 
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-              <FadeInLeft>
-                <GlassCard hover={false}>
+             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-stretch">
+               <FadeInLeft className="h-full flex flex-col">
+                 <GlassCard hover={false} className="h-full">
                   <h3 className="text-lg sm:text-xl font-black text-white mb-6 sm:mb-8 flex items-center gap-3">
                     <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-kesari-400" /> Hardware Cost Breakdown
                   </h3>
@@ -676,8 +676,8 @@ export default function App() {
                 </GlassCard>
               </FadeInLeft>
 
-              <FadeInRight>
-                <div className="space-y-6">
+              <FadeInRight className="h-full flex flex-col">
+                <div className="space-y-6 h-full">
                   <GlassCard>
                     <h3 className="text-lg sm:text-xl font-black text-white mb-3 sm:mb-4 flex items-center gap-3">
                       <Globe className="w-5 h-5 sm:w-6 sm:h-6 text-ashoka-400" /> Manufacturing Readiness
@@ -690,8 +690,8 @@ export default function App() {
                         { text: "Smart Card = same EMV lines as RuPay cards" },
                         { text: "VVPAT = already Supreme Court mandated" },
                       ].map((item, i) => (
-                        <div key={i} className="flex items-center gap-3 text-sm text-slate-300">
-                          <CheckCircle2 className="w-4 h-4 text-india-green-400 shrink-0" /> {item.text}
+                        <div key={i} className="flex items-center gap-3 text-sm text-slate-300 hover:text-white transition-colors duration-300">
+                          <CheckCircle2 className="w-4 h-4 text-india-green-400 shrink-0 group-hover:text-india-green-300 transition-colors" /> {item.text}
                         </div>
                       ))}
                     </div>
@@ -740,10 +740,10 @@ export default function App() {
               subtitle="Four countries whose experiences directly validate components of the Zero-Gap architecture — proving each concept works at national scale."
             />
 
-            <StaggerChildren className="grid sm:grid-cols-2 gap-5 sm:gap-6">
+            <StaggerChildren className="grid sm:grid-cols-2 gap-5 sm:gap-6 items-stretch">
               {globalPrecedents.map((p, i) => (
-                <StaggerItem key={i}>
-                  <GlassCard>
+                <StaggerItem key={i} className="h-full flex flex-col">
+                  <GlassCard className="h-full hover:border-opacity-50">
                     <div className="flex items-start gap-4">
                       <span className="text-3xl sm:text-4xl shrink-0">{p.flag}</span>
                       <div className="flex-1 min-w-0">
@@ -775,9 +775,9 @@ export default function App() {
               subtitle="Zero-Gap is designed as a modification under existing legal authority — not a replacement requiring entirely new legislation."
             />
 
-            <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
-              <FadeInLeft>
-                <GlassCard>
+            <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto items-stretch">
+              <FadeInLeft className="h-full flex flex-col">
+                <GlassCard className="h-full">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-ashoka-500/20 to-ashoka-600/10 border border-ashoka-500/20 flex items-center justify-center"><Shield className="w-6 h-6 text-ashoka-400" /></div>
                     <div>
@@ -792,8 +792,8 @@ export default function App() {
                   </ul>
                 </GlassCard>
               </FadeInLeft>
-              <FadeInRight>
-                <GlassCard>
+              <FadeInRight className="h-full flex flex-col">
+                <GlassCard className="h-full">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-kesari-500/20 to-kesari-600/10 border border-kesari-500/20 flex items-center justify-center"><Globe className="w-6 h-6 text-kesari-400" /></div>
                     <div>
@@ -872,21 +872,21 @@ export default function App() {
                   { icon: Printer, label: "VVPAT" },
                   { icon: Layers, label: "Reconciliation" },
                 ].map((item, i) => (
-                  <div key={i} className="flex flex-col items-center gap-2 p-3 sm:p-4 rounded-xl bg-dark-800/30 border border-dark-700/30">
-                    <item.icon className="w-5 h-5 sm:w-6 sm:h-6 text-kesari-400" />
-                    <span className="text-[10px] sm:text-xs font-bold text-slate-400 text-center leading-tight">{item.label}</span>
-                  </div>
+                  <motion.div key={i} whileHover={{ y: -4, transition: { duration: 0.3, ease: "easeInOut" } }} className="flex flex-col items-center gap-2 p-3 sm:p-4 rounded-xl bg-dark-800/30 border border-dark-700/30 hover:border-kesari-500/30 hover:bg-dark-800/50 transition-all duration-300 cursor-default group">
+                    <item.icon className="w-5 h-5 sm:w-6 sm:h-6 text-kesari-400 group-hover:scale-110 transition-transform duration-300" />
+                    <span className="text-[10px] sm:text-xs font-bold text-slate-400 text-center leading-tight group-hover:text-slate-300 transition-colors">{item.label}</span>
+                  </motion.div>
                 ))}
               </div>
             </FadeIn>
 
             <FadeIn delay={0.7}>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} href={PdfLink} target="_blank" rel="noreferrer" className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-kesari-500 to-kesari-600 text-white rounded-2xl font-black text-base sm:text-lg shadow-xl shadow-kesari-500/25 hover:shadow-kesari-500/40 transition-shadow flex items-center justify-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-kesari-500">
-                  <FileText className="w-5 h-5 sm:w-6 sm:h-6" /> Download the Full PDF Report
+                <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} href={PdfLink} target="_blank" rel="noreferrer" className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-kesari-500 to-kesari-600 text-white rounded-2xl font-black text-base sm:text-lg shadow-xl shadow-kesari-500/25 hover:shadow-kesari-500/40 hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-kesari-500 group">
+                  <FileText className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform" /> Download the Full PDF Report
                 </motion.a>
-                <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} href="mailto:roshhellwett@icloud.com" className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 glass text-white rounded-2xl font-bold text-base sm:text-lg hover:bg-dark-800/50 transition-colors flex items-center justify-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-kesari-500">
-                  <ExternalLink className="w-5 h-5 text-kesari-400" /> Contact the Author
+                <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} href="mailto:roshhellwett@icloud.com" className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 glass text-white rounded-2xl font-bold text-base sm:text-lg hover:bg-dark-800/70 hover:border-dark-600/50 transition-all duration-300 flex items-center justify-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-kesari-500 group">
+                  <ExternalLink className="w-5 h-5 text-kesari-400 group-hover:scale-110 group-hover:text-kesari-300 transition-all duration-300" /> Contact the Author
                 </motion.a>
               </div>
             </FadeIn>
@@ -916,18 +916,18 @@ export default function App() {
 
             <div>
               <h4 className="font-black text-white mb-4 text-sm uppercase tracking-wider">Quick Links</h4>
-              <div className="space-y-2">
-                {navItems.map(item => (
-                  <button key={item.id} onClick={() => scrollTo(item.id)} className="block text-sm text-slate-500 hover:text-kesari-400 transition-colors font-medium focus:outline-none focus-visible:ring-1 focus-visible:ring-kesari-500 rounded">
-                    {item.label}
-                  </button>
-                ))}
-                <a href="https://github.com/roshhellwett" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-slate-500 hover:text-kesari-400 transition-colors font-medium group">
-                  <svg viewBox="0 0 24 24" className="w-4 h-4 group-hover:text-kesari-400 transition-colors" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 2.952.761.858-.239 1.787-.357 2.708-.36.92.003 1.849.121 2.708.36 1.944-1.083 2.952-.761 2.952-.761.652 1.652.241 2.873.118 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                  <span>GitHub Profile</span>
-                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </a>
-              </div>
+                <div className="space-y-2">
+                  {navItems.map(item => (
+                    <button key={item.id} onClick={() => scrollTo(item.id)} className="block text-sm text-slate-500 hover:text-kesari-400 hover:translate-x-1 transition-all duration-300 font-medium focus:outline-none focus-visible:ring-1 focus-visible:ring-kesari-500 rounded">
+                      {item.label}
+                    </button>
+                  ))}
+                  <a href="https://github.com/roshhellwett" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-slate-500 hover:text-kesari-400 transition-all duration-300 font-medium group">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 group-hover:text-kesari-400 transition-all duration-300" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 2.952.761.858-.239 1.787-.357 2.708-.36.92.003 1.849.121 2.708.36 1.944-1.083 2.952-.761 2.952-.761.652 1.652.241 2.873.118 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    <span>GitHub Profile</span>
+                    <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300" />
+                  </a>
+                </div>
             </div>
 
             <div className="sm:col-span-2 lg:col-span-1">
@@ -954,7 +954,7 @@ export default function App() {
             <p className="text-xs text-slate-600 font-medium">2026 Zero-Gap Voting Architecture. All rights reserved.</p>
           </div>
         </div>
-      </footer>
-    </div>
-  );
-}
+         </footer>
+      </div>
+    );
+  }
