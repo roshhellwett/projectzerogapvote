@@ -832,3 +832,38 @@ html  { scroll-padding-top: var(--nav-h); }
 ═══════════════════════════════════════════════════════════════════ */
 .panel-min { min-height: clamp(280px, 40vw, 520px); }
 
+/* ═══════════════════════════════════════════════════════════════════
+   CONTENT-VISIBILITY OPTIMISATION
+   Browser skips layout/paint/animation for off-screen sections.
+   Massive perf win on long pages — esp. mobile.
+═══════════════════════════════════════════════════════════════════ */
+main > section:not(#hero) {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 800px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   IMAGE / SVG RENDERING HINTS
+═══════════════════════════════════════════════════════════════════ */
+img, svg { max-width: 100%; height: auto; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   FORCE HARDWARE ACCEL ON STICKY/FIXED LAYERS
+═══════════════════════════════════════════════════════════════════ */
+.progress-bar,
+header[class*="fixed"] {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Tap highlight removal on iOS — feels snappier */
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent overscroll bounce stealing taps on iOS */
+html, body { overscroll-behavior-y: none; }
+
+/* Last-resort overflow guard — nothing escapes the viewport horizontally */
+html, body, #root { max-width: 100vw; overflow-x: hidden; }
+

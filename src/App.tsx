@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
 import {
   Shield, WifiOff, Fingerprint, Cpu, CheckCircle2,
   ExternalLink, Printer, Database, Activity, FileText, Menu, X,
@@ -702,17 +702,20 @@ function VVPATDiagram() {
    RECONCILIATION DIAGRAM — A=B=C animated three-stream convergence
 ══════════════════════════════════════════════════════════════════ */
 function ReconcDiagram() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
   const [match, setMatch] = React.useState(false);
   const [mismatch, setMismatch] = React.useState(false);
   const [cycle, setCycle] = React.useState(0);
 
   React.useEffect(()=>{
+    if (!inView) return;
     setMatch(false); setMismatch(false);
     const t1 = setTimeout(()=>setMatch(true), 2000);
     const t2 = setTimeout(()=>{ setMatch(false); setMismatch(true); }, 5000);
     const t3 = setTimeout(()=>setCycle(c=>c+1), 8000);
     return ()=>{ clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  },[cycle]);
+  },[cycle, inView]);
 
   const streams = [
     { label:'A', name:'Server Log', sub:'Node A · Online DB', g:'from-indigo-500 to-blue-500', bg:'glass-indigo', tc:'text-indigo-600', count:'9,42,183' },
@@ -721,7 +724,7 @@ function ReconcDiagram() {
   ];
 
   return (
-    <div className="w-full glass-solid rounded-3xl p-8 select-none overflow-hidden">
+    <div ref={wrapRef} className="w-full glass-solid rounded-3xl p-6 sm:p-8 select-none overflow-hidden">
       <div className="flex items-center gap-2 mb-6">
         <div className="w-3 h-3 rounded-full bg-red-300/60"/><div className="w-3 h-3 rounded-full bg-yellow-300/60"/><div className="w-3 h-3 rounded-full bg-green-300/60"/>
         <span className="ml-3 text-[11px] font-mono text-violet-400/60 tracking-widest uppercase">Triple Reconciliation Engine</span>
@@ -792,6 +795,8 @@ function ReconcDiagram() {
    THREAT SHIELD DIAGRAM — attack paths blocked visualisation
 ══════════════════════════════════════════════════════════════════ */
 function ThreatShieldDiagram() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
   const [activeAttack, setActiveAttack] = React.useState(0);
   const attacks = [
     { name:'Remote Hack',   icon:'🌐', path:'Network → Node B', block:'No radio hardware', color:'text-red-500',   bg:'bg-red-50',   border:'border-red-200' },
@@ -800,12 +805,13 @@ function ThreatShieldDiagram() {
     { name:'Replay Attack', icon:'🔁', path:'Reuse QR token',   block:'Single-use nonce', color:'text-blue-600',  bg:'bg-blue-50',  border:'border-blue-200' },
   ];
   React.useEffect(()=>{
+    if (!inView) return;
     const t = setInterval(()=>setActiveAttack(a=>(a+1)%attacks.length),2200);
     return ()=>clearInterval(t);
-  },[]);
+  },[inView, attacks.length]);
   const a = attacks[activeAttack];
   return (
-    <div className="glass-solid rounded-3xl p-6 select-none">
+    <div ref={wrapRef} className="glass-solid rounded-3xl p-4 sm:p-6 select-none">
       <div className="text-[11px] font-mono text-violet-400/60 tracking-widest uppercase mb-4">Live Attack Simulation</div>
       {/* Selector */}
       <div className="grid grid-cols-4 gap-1.5 mb-5">
@@ -1039,19 +1045,40 @@ export default function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeFaq, setActiveFaq]   = useState<number|null>(null);
   const [activeProto, setActiveProto] = useState(0);
-  const [scrollY, setScrollY] = useState(0);
-  const [scrollPct, setScrollPct] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
+  const progressRef = useRef<HTMLDivElement>(null);
 
+  // rAF-throttled scroll handler — DOM mutation for progress bar (no App re-render),
+  // boolean threshold flip for nav glassiness (max 2 re-renders per page-scroll).
   useEffect(()=>{
-    const h = ()=>{
-      setScrollY(window.scrollY);
+    let ticking = false;
+    let lastScrolled = false;
+    const update = ()=>{
+      const y = window.scrollY;
       const tot = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollPct(tot>0?(window.scrollY/tot)*100:0);
+      const pct = tot>0 ? (y/tot)*100 : 0;
+      if (progressRef.current) progressRef.current.style.width = pct + '%';
+      const nowScrolled = y > 40;
+      if (nowScrolled !== lastScrolled) {
+        lastScrolled = nowScrolled;
+        setScrolled(nowScrolled);
+      }
+      ticking = false;
     };
-    window.addEventListener('scroll',h,{passive:true});
-    return ()=>window.removeEventListener('scroll',h);
+    const onScroll = ()=>{
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    update();
+    return ()=>window.removeEventListener('scroll', onScroll);
   },[]);
+
+  // Body scroll lock when mobile menu open
+  useEffect(()=>{
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return ()=>{ document.body.style.overflow = ''; };
+  },[mobileOpen]);
 
   useEffect(()=>{
     const ids = ['hero','problem','solution','protocols','journey','roadmap','faq'];
@@ -1093,8 +1120,8 @@ export default function App() {
   return (
     <div className="min-h-screen bg-page relative overflow-x-hidden">
 
-      {/* Progress bar */}
-      <div className="progress-bar" style={{width:`${scrollPct}%`}} />
+      {/* Progress bar (mutated imperatively via ref — zero re-renders) */}
+      <div ref={progressRef} className="progress-bar" style={{width:'0%'}} />
 
       {/* Global dot grid */}
       <div className="fixed inset-0 pointer-events-none z-0 dot-grid opacity-60" />
@@ -1107,7 +1134,7 @@ export default function App() {
       </div>
 
       {/* ── NAV ─────────────────────────────────────────────────────── */}
-      <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrollY>40?'glass-nav':'bg-transparent'}`}>
+      <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled?'glass-nav':'bg-transparent'}`}>
         <nav className="max-w-7xl mx-auto px-6 sm:px-8 h-16 flex items-center justify-between">
           <button onClick={()=>go('hero')} className="flex items-center gap-2.5 shrink-0">
             <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-md shadow-violet-200">
