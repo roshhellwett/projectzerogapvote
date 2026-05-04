@@ -38,6 +38,247 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   DESIGN TOKENS — single source of truth for spacing, radii, type
+═══════════════════════════════════════════════════════════════════ */
+:root {
+  /* Spacing scale (4px base) */
+  --s-1: 0.25rem;  --s-2: 0.5rem;   --s-3: 0.75rem;  --s-4: 1rem;
+  --s-5: 1.25rem;  --s-6: 1.5rem;   --s-8: 2rem;     --s-10: 2.5rem;
+  --s-12: 3rem;    --s-16: 4rem;    --s-20: 5rem;    --s-24: 6rem;
+  --s-32: 8rem;
+
+  /* Radii scale */
+  --r-sm: 0.5rem;   --r-md: 0.75rem;  --r-lg: 1rem;
+  --r-xl: 1.25rem;  --r-2xl: 1.5rem;  --r-3xl: 2rem;  --r-pill: 100px;
+
+  /* Type scale (fluid) */
+  --t-xs:   clamp(0.7rem,   0.65rem + 0.2vw,  0.75rem);
+  --t-sm:   clamp(0.8rem,   0.75rem + 0.25vw, 0.875rem);
+  --t-base: clamp(0.95rem,  0.9rem  + 0.3vw,  1rem);
+  --t-lg:   clamp(1.05rem,  1rem    + 0.35vw, 1.18rem);
+  --t-xl:   clamp(1.2rem,   1.1rem  + 0.5vw,  1.4rem);
+  --t-2xl:  clamp(1.5rem,   1.3rem  + 1vw,    2rem);
+  --t-3xl:  clamp(1.875rem, 1.5rem  + 2vw,    2.75rem);
+  --t-4xl:  clamp(2.5rem,   2rem    + 3vw,    4rem);
+  --t-5xl:  clamp(3rem,     2.2rem  + 5vw,    5.5rem);
+  --t-hero: clamp(2.75rem,  2rem    + 7vw,    7.5rem);
+
+  /* Shadow scale */
+  --sh-sm:  0 1px 2px rgba(15,10,46,0.04);
+  --sh-md:  0 4px 16px rgba(99,102,241,0.07), 0 1px 3px rgba(15,10,46,0.03);
+  --sh-lg:  0 12px 36px rgba(99,102,241,0.10), 0 2px 6px rgba(15,10,46,0.04);
+  --sh-xl:  0 24px 64px rgba(99,102,241,0.14), 0 4px 12px rgba(15,10,46,0.05);
+  --sh-violet: 0 8px 32px rgba(139,92,246,0.18);
+
+  /* Colors (semantic) */
+  --c-ink:       #0f0a2e;
+  --c-ink-soft:  #312e63;
+  --c-body:      #475569;
+  --c-muted:     #94a3b8;
+  --c-faint:     #cbd5e1;
+  --c-line:      rgba(196,181,253,0.28);
+  --c-line-soft: rgba(196,181,253,0.14);
+  --c-bg:        #faf9ff;
+  --c-bg-2:      #f4f1ff;
+  --c-surface:   rgba(255,255,255,0.78);
+  --c-surface-2: rgba(255,255,255,0.92);
+  --c-violet:    #8b5cf6;
+  --c-indigo:    #6366f1;
+  --c-violet-d:  #7c3aed;
+  --c-indigo-d:  #4f46e5;
+
+  /* Layout */
+  --max-w: 1200px;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --section-y: clamp(4.5rem, 9vw, 9rem);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   LAYOUT PRIMITIVES — use these on every section
+═══════════════════════════════════════════════════════════════════ */
+.section-shell {
+  position: relative;
+  padding-top: var(--section-y);
+  padding-bottom: var(--section-y);
+  isolation: isolate;
+}
+.section-shell.is-tight   { padding-top: calc(var(--section-y) * 0.65); padding-bottom: calc(var(--section-y) * 0.65); }
+.section-shell.is-spacious{ padding-top: calc(var(--section-y) * 1.25); padding-bottom: calc(var(--section-y) * 1.25); }
+
+.container-shell {
+  width: 100%;
+  max-width: var(--max-w);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  position: relative;
+}
+
+/* Section background variants */
+.bg-soft {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(139,92,246,0.05), transparent 60%),
+    linear-gradient(180deg, var(--c-bg-2) 0%, var(--c-bg) 100%);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   TYPOGRAPHY UTILITIES
+═══════════════════════════════════════════════════════════════════ */
+.eyebrow-pill {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--r-pill);
+  background: rgba(139,92,246,0.08);
+  border: 1px solid rgba(139,92,246,0.2);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-violet-d);
+  font-family: var(--font-mono);
+  margin-bottom: 1.25rem;
+}
+.eyebrow-pill::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--c-violet);
+  box-shadow: 0 0 8px rgba(139,92,246,0.6);
+}
+
+.headline {
+  font-size: var(--t-4xl);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  color: var(--c-ink);
+  margin-bottom: 1.25rem;
+  text-wrap: balance;
+}
+.headline-xl {
+  font-size: var(--t-5xl);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  color: var(--c-ink);
+  margin-bottom: 1.25rem;
+  text-wrap: balance;
+}
+.headline-hero {
+  font-size: var(--t-hero);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  color: var(--c-ink);
+  margin-bottom: 1.5rem;
+  text-wrap: balance;
+}
+
+.lede {
+  font-size: var(--t-lg);
+  line-height: 1.65;
+  color: var(--c-body);
+  max-width: 60ch;
+  text-wrap: pretty;
+}
+.lede.is-center { margin-inline: auto; }
+
+.section-head { margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+.section-head.is-center { text-align: center; }
+.section-head.is-center .lede { margin-inline: auto; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CARD SHELL — replaces ad-hoc glass classes for content cards
+═══════════════════════════════════════════════════════════════════ */
+.card-shell {
+  background: var(--c-surface);
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  border: 1px solid rgba(255,255,255,0.85);
+  border-radius: var(--r-2xl);
+  box-shadow: var(--sh-md);
+  padding: clamp(1.25rem, 3vw, 2rem);
+  transition: box-shadow 220ms ease, transform 220ms ease, border-color 220ms ease;
+  transform: translateZ(0);
+}
+.card-shell.is-hoverable:hover {
+  box-shadow: var(--sh-lg);
+  transform: translateY(-2px);
+  border-color: rgba(196,181,253,0.5);
+}
+.card-shell.is-strong {
+  background: var(--c-surface-2);
+  box-shadow: var(--sh-lg);
+}
+.card-shell.is-flush { padding: 0; overflow: hidden; }
+
+/* Inset surface within a card */
+.card-inset {
+  background: rgba(245,243,255,0.55);
+  border: 1px solid var(--c-line-soft);
+  border-radius: var(--r-xl);
+  padding: clamp(0.875rem, 2vw, 1.25rem);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   GRID PRIMITIVES
+═══════════════════════════════════════════════════════════════════ */
+.grid-2up {
+  display: grid;
+  gap: clamp(2rem, 5vw, 5rem);
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+.grid-2up.is-start { align-items: start; }
+@media (min-width: 1024px) {
+  .grid-2up { grid-template-columns: 1fr 1fr; }
+}
+
+.grid-cards {
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) { .grid-cards { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px){ .grid-cards { grid-template-columns: repeat(3, 1fr); } }
+
+/* ═══════════════════════════════════════════════════════════════════
+   STAT TILE — used in hero stats strip
+═══════════════════════════════════════════════════════════════════ */
+.stat-tile {
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  border-radius: var(--r-2xl);
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(196,181,253,0.25);
+  text-align: center;
+}
+.stat-tile .stat-num {
+  font-family: var(--font-mono);
+  font-weight: 900;
+  font-size: var(--t-2xl);
+  letter-spacing: -0.03em;
+  background: linear-gradient(120deg, var(--c-violet), var(--c-indigo));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.1;
+}
+.stat-tile .stat-label {
+  font-size: var(--t-xs);
+  color: var(--c-muted);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  margin-top: 0.4rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   DIVIDERS
+═══════════════════════════════════════════════════════════════════ */
+.divider-soft {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--c-line), transparent);
+  margin-block: clamp(2rem, 4vw, 3rem);
+}
+
 /* ─── Base ───────────────────────────────────────────────────────── */
 @layer base {
   *, *::before, *::after {
@@ -866,4 +1107,230 @@ html, body { overscroll-behavior-y: none; }
 
 /* Last-resort overflow guard — nothing escapes the viewport horizontally */
 html, body, #root { max-width: 100vw; overflow-x: hidden; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   ROADMAP / TIMELINE SPINE — single continuous connector
+═══════════════════════════════════════════════════════════════════ */
+.timeline-spine {
+  position: relative;
+  padding-left: 2.5rem;
+}
+.timeline-spine::before {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  top: 0.75rem;
+  bottom: 0.75rem;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg,
+    rgba(251,146,60,0.5) 0%,
+    rgba(99,102,241,0.5) 50%,
+    rgba(34,197,94,0.5) 100%);
+}
+.timeline-node {
+  position: relative;
+  margin-bottom: 2rem;
+}
+.timeline-node:last-child { margin-bottom: 0; }
+.timeline-node::before {
+  content: '';
+  position: absolute;
+  left: -1.875rem;
+  top: 1.5rem;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid;
+  box-shadow: 0 0 0 4px #faf9ff, var(--sh-sm);
+  z-index: 2;
+}
+.timeline-node[data-color="orange"]::before { border-color: #fb923c; }
+.timeline-node[data-color="blue"]::before   { border-color: #6366f1; }
+.timeline-node[data-color="green"]::before  { border-color: #4ade80; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   FOOTER REFINEMENT
+═══════════════════════════════════════════════════════════════════ */
+.footer-shell {
+  border-top: 1px solid var(--c-line);
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+  margin-top: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   HERO DECOR — clean radial wash, no fixed blobs
+═══════════════════════════════════════════════════════════════════ */
+.hero-decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+.hero-decor::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%; height: 80%;
+  background: radial-gradient(ellipse, rgba(139,92,246,0.18) 0%, rgba(99,102,241,0.08) 35%, transparent 65%);
+  filter: blur(40px);
+}
+.hero-decor::after {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  right: -10%;
+  width: 50%; height: 60%;
+  background: radial-gradient(ellipse, rgba(244,114,182,0.10) 0%, transparent 70%);
+  filter: blur(60px);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PROBLEM CARD — uniform layout
+═══════════════════════════════════════════════════════════════════ */
+.problem-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+}
+.problem-card .pc-num {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--c-violet-d);
+  background: rgba(139,92,246,0.08);
+  border: 1px solid rgba(139,92,246,0.18);
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--r-pill);
+  width: fit-content;
+}
+.problem-card h3 {
+  font-size: var(--t-lg);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--c-ink);
+  line-height: 1.25;
+}
+.problem-card p {
+  font-size: var(--t-sm);
+  color: var(--c-body);
+  line-height: 1.6;
+  margin-top: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PROTOCOL CARDS — standardised tab buttons
+═══════════════════════════════════════════════════════════════════ */
+.proto-tab {
+  width: 100%;
+  text-align: left;
+  padding: clamp(1rem, 2.5vw, 1.25rem);
+  border-radius: var(--r-2xl);
+  border: 1px solid rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: all 200ms ease;
+  cursor: pointer;
+}
+.proto-tab:hover { border-color: rgba(196,181,253,0.5); }
+.proto-tab.is-active {
+  background: rgba(255,255,255,0.92);
+  border-color: rgba(139,92,246,0.4);
+  box-shadow: var(--sh-lg);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CTA SECTION
+═══════════════════════════════════════════════════════════════════ */
+.cta-shell {
+  position: relative;
+  padding: clamp(3rem, 7vw, 6rem) clamp(1.5rem, 4vw, 4rem);
+  border-radius: clamp(1.5rem, 4vw, 3rem);
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #fce7f3 100%);
+  border: 1px solid rgba(196,181,253,0.4);
+  overflow: hidden;
+  text-align: center;
+}
+.cta-shell::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%; height: 70%;
+  background: radial-gradient(ellipse, rgba(139,92,246,0.2), transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   BUTTON REFINEMENT — clearer states, better focus
+═══════════════════════════════════════════════════════════════════ */
+.btn-primary, .btn-outline, .btn-ghost, .btn-brand {
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01" 1, "cv11" 1;
+  height: 2.875rem;
+  padding-inline: 1.5rem;
+  letter-spacing: -0.005em;
+  font-weight: 600;
+  font-size: var(--t-sm);
+  white-space: nowrap;
+  border-radius: var(--r-pill);
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--c-violet), var(--c-indigo));
+  box-shadow: var(--sh-violet);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--c-violet-d), var(--c-indigo-d));
+}
+.btn-outline {
+  background: rgba(255,255,255,0.75);
+  color: var(--c-ink);
+  border: 1px solid var(--c-line);
+}
+.btn-outline:hover {
+  background: rgba(255,255,255,0.95);
+  border-color: rgba(139,92,246,0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ENHANCED EYEBROW (replaces gradient .eyebrow when used alone)
+═══════════════════════════════════════════════════════════════════ */
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-violet-d);
+  margin-bottom: 1rem;
+}
+.eyebrow::before {
+  content: '';
+  width: 24px; height: 1px;
+  background: var(--c-violet);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   FORCE BASE TYPE SCALE TO TOKENS
+═══════════════════════════════════════════════════════════════════ */
+body { font-size: var(--t-base); color: var(--c-body); }
+
+/* Override hover lift on glass to match new shadow scale */
+.glass:hover, .card:hover, .glass-card:hover {
+  box-shadow: var(--sh-lg) !important;
+}
 

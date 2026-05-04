@@ -409,23 +409,19 @@ export const TimelinePhase = ({ phase, title, description, items, year, color, d
   const dotColorMap: Record<string, string> = { orange: "bg-orange-400", blue: "bg-indigo-500", green: "bg-green-400" };
 
   return (
-    <motion.div ref={ref} initial={{ opacity: 0, x: -40 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay, duration: 0.6, ease: "easeInOut" }} className="relative pl-10 sm:pl-12 pb-8 sm:pb-12 last:pb-0 group">
-      <div className={`absolute left-0 top-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br ${colorMap[color]} flex items-center justify-center border-4 border-white shadow-md z-10 group-hover:scale-110 transition-transform duration-300`}>
-        <div className={`w-2 h-2 rounded-full ${dotColorMap[color]}`} />
-      </div>
-      <div className="absolute left-3.5 sm:left-4 top-8 w-px bg-violet-100 transition-colors duration-300" style={{ height: 'calc(100% - 2rem)' }} />
-      <div className="rounded-2xl sm:rounded-3xl p-4 sm:p-6 glass border border-white/70 hover:shadow-lg hover:shadow-violet-100/60 transition-all duration-300">
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
-          <span className={`text-[11px] sm:text-xs font-black code-text px-2.5 sm:px-3 py-1 rounded-full bg-gradient-to-r ${colorMap[color]} text-white shadow-sm`}>{year}</span>
-          <span className="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">{phase}</span>
+    <motion.div ref={ref} data-color={color} initial={{ opacity: 0, x: -24 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay, duration: 0.55, ease: [0.16,1,0.3,1] }} className="timeline-node">
+      <div className="card-shell is-hoverable">
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          <span className={`text-[11px] font-black font-mono px-2.5 py-1 rounded-full bg-gradient-to-r ${colorMap[color]} text-white shadow-sm`}>{year}</span>
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{phase}</span>
         </div>
-        <h3 className="text-base sm:text-lg lg:text-xl font-bold text-slate-800 mb-2">{title}</h3>
+        <h3 className="text-lg lg:text-xl font-bold text-slate-900 mb-2 tracking-tight">{title}</h3>
         <p className="text-sm text-slate-500 mb-4 leading-relaxed">{description}</p>
         <ul className="space-y-2">
           {items.map((item, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm text-slate-500 hover:text-slate-700 transition-colors">
-              <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
-              {item}
+            <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
+              <CheckCircle2 className={`w-4 h-4 mt-0.5 shrink-0 ${dotColorMap[color].replace('bg-','text-')}`} />
+              <span>{item}</span>
             </li>
           ))}
         </ul>
@@ -470,21 +466,21 @@ export const StatBar = ({ label, amount, total, color, delay }: { label: string;
 
 export const AccordionItem = ({ question, answer, isOpen, onClick }: { question: string; answer: string; isOpen: boolean; onClick: () => void }) => (
   <motion.div
-    className="overflow-hidden rounded-3xl border transition-all duration-200"
-    animate={isOpen ? { borderColor:'rgba(139,92,246,0.3)', boxShadow:'0 4px 24px rgba(139,92,246,0.1)' } : { borderColor:'rgba(255,255,255,0.8)', boxShadow:'0 2px 8px rgba(139,92,246,0.04)' }}
-    style={{ background:'rgba(255,255,255,0.7)', backdropFilter:'blur(20px)' }}
+    className="overflow-hidden rounded-2xl border transition-all duration-200"
+    animate={isOpen ? { borderColor:'rgba(139,92,246,0.4)', boxShadow:'0 8px 28px rgba(139,92,246,0.12)' } : { borderColor:'rgba(196,181,253,0.25)', boxShadow:'0 1px 3px rgba(15,10,46,0.03)' }}
+    style={{ background:'rgba(255,255,255,0.78)', backdropFilter:'blur(16px)' }}
     transition={{ duration: 0.2 }}>
-    <button onClick={onClick} className="w-full flex items-center justify-between p-4 sm:p-5 lg:p-6 text-left group" aria-expanded={isOpen}>
-      <span className={`text-sm sm:text-base lg:text-lg font-semibold pr-3 sm:pr-4 leading-snug transition-colors duration-200 ${isOpen ? 'text-slate-900' : 'text-slate-600 group-hover:text-slate-900'}`}>{question}</span>
-      <motion.div animate={{ rotate: isOpen ? 45 : 0 }} transition={{ duration: 0.22 }}
-        className={`w-8 h-8 rounded-2xl flex items-center justify-center shrink-0 border transition-colors duration-200 ${isOpen ? 'border-violet-300 bg-violet-50 text-violet-600' : 'border-slate-200 bg-white text-slate-400'}`}>
+    <button onClick={onClick} className="w-full flex items-center justify-between gap-4 p-5 sm:p-6 text-left group" aria-expanded={isOpen}>
+      <span className={`text-base sm:text-[17px] font-semibold leading-snug tracking-tight transition-colors duration-200 ${isOpen ? 'text-slate-900' : 'text-slate-700 group-hover:text-slate-900'}`}>{question}</span>
+      <motion.span animate={{ rotate: isOpen ? 45 : 0 }} transition={{ duration: 0.22 }}
+        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border transition-colors duration-200 ${isOpen ? 'border-violet-300 bg-violet-50 text-violet-600' : 'border-violet-100 bg-white/60 text-slate-400 group-hover:text-violet-500'}`}>
         <span className="text-xl font-light leading-none">+</span>
-      </motion.div>
+      </motion.span>
     </button>
-    <AnimatePresence>
+    <AnimatePresence initial={false}>
       {isOpen && (
         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}>
-          <div className="px-4 sm:px-5 lg:px-6 pb-4 sm:pb-5 lg:pb-6 text-sm sm:text-base text-slate-500 leading-relaxed border-t border-violet-100 pt-4">{answer}</div>
+          <div className="px-5 sm:px-6 pb-5 sm:pb-6 text-[15px] text-slate-600 leading-relaxed border-t border-violet-100/60 pt-4">{answer}</div>
         </motion.div>
       )}
     </AnimatePresence>

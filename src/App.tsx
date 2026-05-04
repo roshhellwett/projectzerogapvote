@@ -8,42 +8,11 @@ import {
 } from 'lucide-react';
 import {
   FadeIn, FadeInLeft, FadeInRight, StaggerChildren, StaggerItem,
-  SectionTitle, TimelinePhase, StatBar, AccordionItem
+  TimelinePhase, StatBar, AccordionItem
 } from './components';
 
 const PDF = "https://www.slideshare.net/slideshow/zero-gap-voting-architecture-securing-india-s-electronic-voting-system/287278728";
 const ease = [0.16, 1, 0.3, 1] as const;
-
-/* ── Floating shape primitives ────────────────────────────────────── */
-const Cube = ({ size=52, color, rotate=0, delay=0 }: {size?:number;color:string;rotate?:number;delay?:number}) => (
-  <motion.div
-    animate={{ y:[0,-14,0], rotate:[rotate, rotate+6, rotate] }}
-    transition={{ duration:5+delay, repeat:Infinity, ease:'easeInOut', delay, repeatType:'mirror' }}
-    style={{ width:size, height:size, borderRadius:size*0.28,
-      background:color, boxShadow:`4px 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.5)`,
-      flexShrink:0, willChange:'transform', transform:'translateZ(0)' }}
-  />
-);
-const Sphere = ({ size=44, color, delay=0 }: {size?:number;color:string;delay?:number}) => (
-  <motion.div
-    animate={{ y:[0,-18,0] }}
-    transition={{ duration:4+delay*0.7, repeat:Infinity, ease:'easeInOut', delay, repeatType:'mirror' }}
-    style={{ width:size, height:size, borderRadius:'50%',
-      background:color,
-      boxShadow:`4px 8px 24px rgba(0,0,0,0.12), inset -3px -3px 6px rgba(0,0,0,0.08), inset 3px 3px 6px rgba(255,255,255,0.5)`,
-      flexShrink:0, willChange:'transform', transform:'translateZ(0)' }}
-  />
-);
-const Ring = ({ size=56, color, delay=0 }: {size?:number;color:string;delay?:number}) => (
-  <motion.div
-    animate={{ y:[0,-10,0], rotate:[0,12,0] }}
-    transition={{ duration:6+delay, repeat:Infinity, ease:'easeInOut', delay, repeatType:'mirror' }}
-    style={{ width:size, height:size, borderRadius:'50%',
-      border:`8px solid ${color}`, background:'transparent',
-      boxShadow:`0 6px 20px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.3)`,
-      flexShrink:0, willChange:'transform', transform:'translateZ(0)' }}
-  />
-);
 
 /* ── Shared check item ───────────────────────────────────────────── */
 const Check = ({ children }: { children: React.ReactNode }) => (
@@ -143,12 +112,16 @@ function AirgapPanel() {
       </div>
 
       {/* A=B=C row */}
-      <div className="flex gap-1.5 sm:gap-2 pt-4 sm:pt-5 mt-4 sm:mt-5 border-t border-violet-100">
-        {[{l:'A = Server Log',s:'A',c:'text-indigo-600',bg:'glass-indigo'},
-          {l:'B = EEPROM',s:'B',c:'text-orange-600',bg:'glass-saffron'},
-          {l:'C = VVPAT Paper',s:'C',c:'text-green-700',bg:'glass-green'}].map(r=>(
-          <div key={r.l} className={`flex-1 text-center py-2 sm:py-2.5 rounded-xl sm:rounded-2xl ${r.bg}`}>
-            <div className={`text-[8px] sm:text-[10px] font-black ${r.c} font-mono`}><span className="sm:hidden">{r.s}</span><span className="hidden sm:inline">{r.l}</span></div>
+      <div className="grid grid-cols-3 gap-2 pt-4 sm:pt-5 mt-4 sm:mt-5 border-t border-violet-100">
+        {[{l:'Server Log', s:'A', c:'text-indigo-600',  bg:'glass-indigo'},
+          {l:'EEPROM',     s:'B', c:'text-orange-600',  bg:'glass-saffron'},
+          {l:'VVPAT Paper',s:'C', c:'text-green-700',   bg:'glass-green'}].map(r=>(
+          <div key={r.s} className={`text-center py-2 sm:py-2.5 px-1 rounded-xl sm:rounded-2xl ${r.bg} min-w-0`}>
+            <div className={`text-[10px] sm:text-[11px] font-black ${r.c} font-mono leading-none`}>
+              <span className="text-base sm:text-sm">{r.s}</span>
+              <span className="hidden sm:inline"> = </span>
+              <span className="block sm:inline text-[8px] sm:text-[11px] mt-0.5 sm:mt-0 truncate">{r.l}</span>
+            </div>
           </div>
         ))}
       </div>
@@ -238,50 +211,6 @@ function JourneyPanel() {
           </motion.div>
         ))}
       </div>
-    </div>
-  );
-}
-
-
-/* ══════════════════════════════════════════════════════════════════
-   FLOATING ILLUSTRATION — decorative shapes cluster
-══════════════════════════════════════════════════════════════════ */
-function FloatCluster({ variant='a' }: { variant?: 'a'|'b'|'c'|'d' }) {
-  if (variant === 'a') return (
-    <div className="relative w-72 h-72 select-none pointer-events-none">
-      <div className="absolute inset-0 blob-violet opacity-40 animate-blob" style={{width:'200px',height:'200px',top:'20px',left:'20px'}} />
-      <div className="absolute" style={{top:'10px',left:'60px'}}><Cube size={60} color="linear-gradient(135deg,#8b5cf6,#6366f1)" rotate={12} delay={0} /></div>
-      <div className="absolute" style={{top:'80px',right:'20px'}}><Sphere size={50} color="linear-gradient(135deg,#f97316,#ec4899)" delay={0.5} /></div>
-      <div className="absolute" style={{bottom:'40px',left:'30px'}}><Cube size={38} color="linear-gradient(135deg,#38bdf8,#6366f1)" rotate={-15} delay={1} /></div>
-      <div className="absolute" style={{bottom:'20px',right:'50px'}}><Ring size={48} color="#a78bfa" delay={0.8} /></div>
-      <div className="absolute" style={{top:'50px',left:'20px'}}><Sphere size={24} color="linear-gradient(135deg,#4ade80,#22c55e)" delay={1.2} /></div>
-      <div className="absolute" style={{top:'30px',right:'60px'}}><Cube size={28} color="linear-gradient(135deg,#fb923c,#f97316)" rotate={20} delay={1.5} /></div>
-    </div>
-  );
-  if (variant === 'b') return (
-    <div className="relative w-64 h-64 select-none pointer-events-none">
-      <div className="absolute inset-0 blob-pink opacity-35 animate-blob" style={{width:'180px',height:'180px',top:'30px',left:'30px'}} />
-      <div className="absolute" style={{top:'0px',right:'20px'}}><Sphere size={64} color="linear-gradient(135deg,#6366f1,#8b5cf6)" delay={0} /></div>
-      <div className="absolute" style={{top:'70px',left:'10px'}}><Ring size={52} color="#f97316" delay={0.6} /></div>
-      <div className="absolute" style={{bottom:'30px',right:'30px'}}><Cube size={44} color="linear-gradient(135deg,#ec4899,#a78bfa)" rotate={-10} delay={1} /></div>
-      <div className="absolute" style={{bottom:'60px',left:'40px'}}><Sphere size={28} color="linear-gradient(135deg,#38bdf8,#6366f1)" delay={0.4} /></div>
-    </div>
-  );
-  if (variant === 'c') return (
-    <div className="relative w-60 h-60 select-none pointer-events-none">
-      <div className="absolute inset-0 blob-sky opacity-35 animate-blob" style={{width:'170px',height:'170px',top:'20px',left:'20px'}} />
-      <div className="absolute" style={{top:'10px',left:'30px'}}><Ring size={60} color="#6366f1" delay={0} /></div>
-      <div className="absolute" style={{top:'60px',right:'10px'}}><Cube size={50} color="linear-gradient(135deg,#22c55e,#38bdf8)" rotate={8} delay={0.7} /></div>
-      <div className="absolute" style={{bottom:'20px',left:'10px'}}><Sphere size={40} color="linear-gradient(135deg,#f97316,#fbbf24)" delay={0.3} /></div>
-      <div className="absolute" style={{bottom:'50px',right:'40px'}}><Cube size={30} color="linear-gradient(135deg,#ec4899,#f97316)" rotate={25} delay={1.1} /></div>
-    </div>
-  );
-  return (
-    <div className="relative w-56 h-56 select-none pointer-events-none">
-      <div className="absolute inset-0 blob-orange opacity-35 animate-blob" style={{width:'160px',height:'160px',top:'20px',left:'20px'}} />
-      <div className="absolute" style={{top:'5px',right:'20px'}}><Cube size={56} color="linear-gradient(135deg,#f97316,#ec4899)" rotate={-12} delay={0} /></div>
-      <div className="absolute" style={{top:'70px',left:'5px'}}><Sphere size={44} color="linear-gradient(135deg,#8b5cf6,#6366f1)" delay={0.5} /></div>
-      <div className="absolute" style={{bottom:'10px',right:'30px'}}><Ring size={42} color="#22c55e" delay={0.9} /></div>
     </div>
   );
 }
@@ -1123,15 +1052,8 @@ export default function App() {
       {/* Progress bar (mutated imperatively via ref — zero re-renders) */}
       <div ref={progressRef} className="progress-bar" style={{width:'0%'}} />
 
-      {/* Global dot grid */}
-      <div className="fixed inset-0 pointer-events-none z-0 dot-grid opacity-60" />
-
-      {/* Large ambient blobs — fixed background */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="blob-violet absolute" style={{width:'600px',height:'600px',top:'-200px',left:'-150px',opacity:0.18}} />
-        <div className="blob-pink absolute" style={{width:'500px',height:'500px',top:'30%',right:'-200px',opacity:0.15}} />
-        <div className="blob-sky absolute" style={{width:'400px',height:'400px',bottom:'-100px',left:'20%',opacity:0.12}} />
-      </div>
+      {/* Subtle dot grid — only one global background layer */}
+      <div className="fixed inset-0 pointer-events-none z-0 dot-grid opacity-30" />
 
       {/* ── NAV ─────────────────────────────────────────────────────── */}
       <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled?'glass-nav':'bg-transparent'}`}>
@@ -1199,79 +1121,74 @@ export default function App() {
         {/* ══════════════════════════════════════════════════════════
             HERO
         ══════════════════════════════════════════════════════════ */}
-        <section id="hero" className="relative pt-28 sm:pt-36 pb-0 overflow-hidden">
-          {/* hero radial wash */}
-          <div className="absolute inset-0 hero-wash pointer-events-none" />
+        <section id="hero" className="section-shell is-spacious overflow-hidden">
+          <div className="hero-decor" />
 
-          <div className="max-w-7xl mx-auto px-6 sm:px-8 relative">
+          <div className="container-shell">
             {/* Eyebrow */}
-            <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{duration:0.5,ease}}
+            <motion.div initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{duration:0.5,ease}}
               className="flex justify-center mb-8">
-              <span className="live-dot">PROPOSED TO ECI · UIDAI · MEITY</span>
+              <span className="eyebrow-pill">Proposed to ECI · UIDAI · MeitY</span>
             </motion.div>
 
             {/* H1 */}
-            <div className="text-center max-w-5xl mx-auto mb-8 px-2">
-              <motion.h1 initial={{opacity:0,y:40}} animate={{opacity:1,y:0}} transition={{duration:0.7,ease,delay:0.05}}
-                className="text-[2.4rem] xs:text-5xl sm:text-7xl lg:text-[96px] xl:text-[108px] font-black tracking-[-0.03em] sm:tracking-[-0.04em] leading-[0.95] sm:leading-[0.92] text-slate-900">
-                Secure India's<br/>
-                <span className="gradient-text">elections</span><br/>
-                for ever.
-              </motion.h1>
-            </div>
+            <motion.h1 initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{duration:0.7,ease,delay:0.05}}
+              className="headline-hero text-center mx-auto max-w-5xl">
+              Secure India's <span className="gradient-text">elections</span> for ever.
+            </motion.h1>
 
             {/* Subtext */}
-            <motion.p initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{duration:0.6,delay:0.18,ease}}
-              className="text-center text-base sm:text-xl lg:text-2xl text-slate-500 font-normal max-w-2xl mx-auto mb-10 leading-relaxed px-4">
+            <motion.p initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{duration:0.6,delay:0.18,ease}}
+              className="lede is-center text-center mt-2 mb-10 max-w-2xl">
               Zero-Gap makes electronic vote manipulation not merely difficult —
-              <span className="text-slate-700 font-medium"> physically and mathematically impossible.</span>
+              <span className="text-slate-800 font-medium"> physically and mathematically impossible.</span>
             </motion.p>
 
             {/* CTAs */}
-            <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{duration:0.5,delay:0.28,ease}}
-              className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-16 sm:mb-20 px-4">
-              <motion.button whileHover={{scale:1.04}} whileTap={{scale:0.97}} onClick={()=>go('solution')} className="btn-primary text-sm sm:text-base px-6 sm:px-8 py-3.5 sm:py-4 w-full sm:w-auto justify-center">
+            <motion.div initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{duration:0.5,delay:0.28,ease}}
+              className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-14 sm:mb-20">
+              <motion.button whileHover={{scale:1.03}} whileTap={{scale:0.97}} onClick={()=>go('solution')} className="btn-primary w-full sm:w-auto justify-center">
                 Explore Architecture <ArrowRight className="w-4 h-4" />
               </motion.button>
-              <motion.a whileHover={{scale:1.04}} whileTap={{scale:0.97}} href={PDF} target="_blank" rel="noreferrer" className="btn-outline text-sm sm:text-base px-6 sm:px-8 py-3.5 sm:py-4 w-full sm:w-auto justify-center">
+              <motion.a whileHover={{scale:1.03}} whileTap={{scale:0.97}} href={PDF} target="_blank" rel="noreferrer" className="btn-outline w-full sm:w-auto justify-center">
                 <FileText className="w-4 h-4" /> Download PDF
               </motion.a>
             </motion.div>
 
             {/* Hero full-width panel */}
-            <motion.div initial={{opacity:0,y:56}} animate={{opacity:1,y:0}} transition={{duration:1,ease,delay:0.35}}
+            <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:0.9,ease,delay:0.35}}
               className="relative max-w-5xl mx-auto">
-              {/* ambient glow under panel */}
-              <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-3/4 h-32 rounded-full bg-violet-400/20 blur-[60px] pointer-events-none" />
               <AirgapPanel />
             </motion.div>
-          </div>
 
-          {/* Stats strip */}
-          <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:0.6,delay:0.7}}
-            className="mt-16 sm:mt-20 border-y border-violet-100/60 bg-white/40 backdrop-blur-sm">
-            <div className="max-w-7xl mx-auto px-6 sm:px-8 py-8 sm:py-10 grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 sm:divide-x sm:divide-violet-100">
+            {/* Stats strip — unified tile design (no orphan dividers) */}
+            <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{duration:0.6,delay:0.65,ease}}
+              className="mt-12 sm:mt-16 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-5xl mx-auto">
               {[
-                {v:'960M+', l:'Eligible Voters',       g:'from-violet-600 to-indigo-600'},
-                {v:'4',     l:'Security Protocols',    g:'from-indigo-600 to-blue-600'},
-                {v:'90s',   l:'QR Token Lifespan',     g:'from-green-500 to-emerald-600'},
-                {v:'A=B=C', l:'Triple Reconciliation', g:'from-orange-500 to-pink-600'},
-              ].map((s,i)=>(
-                <motion.div key={i} initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{delay:0.8+i*0.08,duration:0.5,ease}} className="sm:px-8 first:pl-0">
-                  <div className={`text-2xl sm:text-3xl lg:text-4xl font-black tracking-[-0.04em] font-mono bg-gradient-to-r ${s.g} bg-clip-text text-transparent mb-1`}>{s.v}</div>
-                  <div className="text-xs sm:text-sm text-slate-500 font-medium leading-tight">{s.l}</div>
-                </motion.div>
+                {v:'960M+', l:'Eligible Voters'},
+                {v:'4',     l:'Security Protocols'},
+                {v:'90s',   l:'QR Token Lifespan'},
+                {v:'A=B=C', l:'Triple Reconciliation'},
+              ].map(s=>(
+                <div key={s.l} className="stat-tile">
+                  <div className="stat-num">{s.v}</div>
+                  <div className="stat-label">{s.l}</div>
+                </div>
               ))}
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </section>
 
         {/* ══════════════════════════════════════════════════════════
             PROBLEM
         ══════════════════════════════════════════════════════════ */}
-        <section id="problem" className="py-20 sm:py-32 lg:py-40 bg-page-alt relative">
-          <div className="max-w-7xl mx-auto px-6 sm:px-8">
-            <SectionTitle badge="The Problem" title={"Current EVMs\nhave six gaps."} subtitle="India's EVMs are battle-tested — but their monolithic architecture creates attack surfaces that undermine public trust. We close every one." />
+        <section id="problem" className="section-shell bg-soft">
+          <div className="container-shell">
+            <header className="section-head is-center">
+              <span className="eyebrow-pill">The Problem</span>
+              <h2 className="headline-xl">Current EVMs have six gaps.</h2>
+              <p className="lede is-center">India's EVMs are battle-tested — but their monolithic architecture creates attack surfaces that undermine public trust. We close every one.</p>
+            </header>
             <StaggerChildren className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {[
                 { n:'01', title:'Monolithic Machine',      desc:'Identity, ballot, and storage share one unit. Compromising one compromises all.',            g:'from-red-400 to-rose-500',      ring:'border-red-200/60',    diagram:(
@@ -1356,13 +1273,14 @@ export default function App() {
                 )},
               ].map((item,i)=>(
                 <StaggerItem key={i}>
-                  <motion.div whileHover={{y:-5,scale:1.01}} transition={{duration:0.25,ease}} className={`glass rounded-3xl p-6 overflow-hidden group h-full flex flex-col border ${item.ring}`}>
-                    <div className="flex items-center justify-between mb-4">
-                      <div className={`px-3 py-1 rounded-full text-[10px] font-black font-mono bg-gradient-to-r ${item.g} text-white`}>{item.n}</div>
-                      <h3 className="text-sm font-bold text-slate-700">{item.title}</h3>
+                  <motion.div whileHover={{y:-3}} transition={{duration:0.22,ease}} className="card-shell is-hoverable problem-card">
+                    <div className="flex items-center justify-between">
+                      <span className="pc-num">{item.n}</span>
+                      <span className={`w-9 h-9 rounded-xl bg-gradient-to-br ${item.g} shadow-sm flex-shrink-0`} aria-hidden />
                     </div>
-                    {item.diagram}
-                    <p className="text-slate-500 text-xs leading-relaxed flex-1">{item.desc}</p>
+                    <h3>{item.title}</h3>
+                    <div className="opacity-90">{item.diagram}</div>
+                    <p>{item.desc}</p>
                   </motion.div>
                 </StaggerItem>
               ))}
@@ -1373,26 +1291,16 @@ export default function App() {
         {/* ══════════════════════════════════════════════════════════
             SOLUTION — copy L + panel R
         ══════════════════════════════════════════════════════════ */}
-        <section id="solution" className="py-20 sm:py-32 lg:py-40 relative overflow-hidden">
-          {/* Background shape decorations — fully contained */}
-          <div className="absolute top-8 right-8 pointer-events-none select-none opacity-70 hidden lg:block">
-            <div className="relative w-48 h-48">
-              <div style={{position:'absolute',top:0,right:0}}><Cube size={44} color="linear-gradient(135deg,#6366f1,#8b5cf6)" rotate={18} delay={0} /></div>
-              <div style={{position:'absolute',top:52,right:52}}><Sphere size={28} color="linear-gradient(135deg,#f97316,#ec4899)" delay={0.5} /></div>
-              <div style={{position:'absolute',top:8,right:62}}><Ring size={32} color="#a78bfa" delay={0.9} /></div>
-            </div>
-          </div>
-          <div className="max-w-7xl mx-auto px-6 sm:px-8">
-            <div className="grid lg:grid-cols-2 gap-10 lg:gap-24 items-center">
+        <section id="solution" className="section-shell">
+          <div className="container-shell">
+            <div className="grid-2up">
               <FadeInLeft>
-                <span className="eyebrow">The Architecture</span>
-                <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-[-0.03em] sm:tracking-[-0.04em] leading-[1.05] sm:leading-[1.0] text-slate-900 mb-5 sm:mb-7">
-                  Two nodes.<br /><span className="gradient-text-violet">Zero connection.</span>
-                </h2>
-                <p className="text-base sm:text-xl text-slate-500 leading-relaxed mb-8 sm:mb-10">
+                <span className="eyebrow-pill">The Architecture</span>
+                <h2 className="headline">Two nodes. <span className="gradient-text-violet">Zero connection.</span></h2>
+                <p className="lede mb-8">
                   Node A handles identity online. Node B casts the ballot offline. The only channel between them is a beam of light carrying a signed QR code.
                 </p>
-                <ul className="space-y-3 mb-8 sm:mb-10">
+                <ul className="space-y-3 mb-8">
                   <Check>Node A is the only machine ever connected to a network</Check>
                   <Check>Node B has no Wi-Fi chip, Bluetooth module, or network port</Check>
                   <Check>The QR token expires in 90 seconds — replay attacks impossible</Check>
@@ -1412,26 +1320,16 @@ export default function App() {
         {/* ══════════════════════════════════════════════════════════
             HASH CHAIN — panel L + copy R
         ══════════════════════════════════════════════════════════ */}
-        <section className="py-20 sm:py-32 lg:py-40 bg-page-alt relative overflow-hidden">
-          {/* Background shape decorations — fully contained */}
-          <div className="absolute bottom-8 left-8 pointer-events-none select-none opacity-70 hidden lg:block">
-            <div className="relative w-44 h-44">
-              <div style={{position:'absolute',bottom:0,left:0}}><Cube size={40} color="linear-gradient(135deg,#f97316,#ec4899)" rotate={-15} delay={0} /></div>
-              <div style={{position:'absolute',bottom:48,left:48}}><Sphere size={26} color="linear-gradient(135deg,#8b5cf6,#6366f1)" delay={0.6} /></div>
-              <div style={{position:'absolute',bottom:4,left:58}}><Ring size={30} color="#22c55e" delay={1} /></div>
-            </div>
-          </div>
-          <div className="max-w-7xl mx-auto px-6 sm:px-8">
-            <div className="grid lg:grid-cols-2 gap-10 lg:gap-24 items-center">
+        <section className="section-shell bg-soft">
+          <div className="container-shell">
+            <div className="grid-2up">
               <FadeInLeft>
                 <HashPanel />
               </FadeInLeft>
               <FadeInRight>
-                <span className="eyebrow">Immutable Memory</span>
-                <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-[-0.03em] sm:tracking-[-0.04em] leading-[1.05] sm:leading-[1.0] text-slate-900 mb-5 sm:mb-7">
-                  Alter one bit.<br /><span className="gradient-text">Machine locks.</span>
-                </h2>
-                <p className="text-base sm:text-xl text-slate-500 leading-relaxed mb-8 sm:mb-10">
+                <span className="eyebrow-pill">Immutable Memory</span>
+                <h2 className="headline">Alter one bit. <span className="gradient-text">Machine locks.</span></h2>
+                <p className="lede mb-8">
                   The EEPROM ledger uses the same mathematical principle as blockchain — implemented in bare-metal C/C++. Every entry chains to the hash of its predecessor.
                 </p>
                 <ul className="space-y-3">
@@ -1448,23 +1346,27 @@ export default function App() {
         {/* ══════════════════════════════════════════════════════════
             PROTOCOLS — tabs
         ══════════════════════════════════════════════════════════ */}
-        <section id="protocols" className="py-20 sm:py-32 lg:py-40 relative">
-          <div className="max-w-7xl mx-auto px-6 sm:px-8">
-            <SectionTitle center badge="Hardware Security" title="Four protocols that make tampering physically impossible." subtitle="Every security layer operates at the hardware or physics level. Software exploits simply cannot reach them." />
+        <section id="protocols" className="section-shell">
+          <div className="container-shell">
+            <header className="section-head is-center">
+              <span className="eyebrow-pill">Hardware Security</span>
+              <h2 className="headline-xl">Four protocols that make tampering physically impossible.</h2>
+              <p className="lede is-center">Every security layer operates at the hardware or physics level. Software exploits simply cannot reach them.</p>
+            </header>
             <div className="grid lg:grid-cols-[380px_1fr] gap-4 lg:gap-6">
               {/* tab list */}
               <div className="space-y-3">
                 {protocols.map((p,i)=>(
                   <motion.button key={i} onClick={()=>setActiveProto(i)} whileTap={{scale:0.99}}
-                    className={`w-full text-left p-5 rounded-3xl border transition-all duration-200 ${activeProto===i?'glass-solid border-violet-200/60 shadow-lg shadow-violet-100':'glass border-white/60 hover:border-violet-200/40'}`}>
-                    <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${p.g} flex items-center justify-center shadow-lg ${p.shadow} shrink-0 transition-transform duration-200 ${activeProto===i?'scale-110':''}`}>
+                    className={`proto-tab ${activeProto===i?'is-active':''}`}>
+                    <div className="flex items-center gap-4 min-w-0">
+                      <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${p.g} flex items-center justify-center shadow-md ${p.shadow} shrink-0`}>
                         <p.icon className="w-5 h-5 text-white" />
                       </div>
-                      <div className="flex-1">
-                        <div className={`text-[10px] font-black font-mono mb-0.5 transition-colors ${activeProto===i?'text-violet-500':'text-slate-300'}`}>{p.n}</div>
-                        <div className={`font-bold text-sm transition-colors ${activeProto===i?'text-slate-900':'text-slate-600'}`}>{p.title}</div>
-                        <div className={`text-xs transition-colors ${activeProto===i?'text-violet-500':'text-transparent'}`}>{p.sub}</div>
+                      <div className="flex-1 min-w-0">
+                        <div className={`text-[10px] font-black font-mono mb-0.5 ${activeProto===i?'text-violet-600':'text-slate-400'}`}>{p.n}</div>
+                        <div className={`font-semibold text-[15px] tracking-tight ${activeProto===i?'text-slate-900':'text-slate-700'}`}>{p.title}</div>
+                        <div className={`text-[12px] truncate ${activeProto===i?'text-violet-500':'text-slate-400'}`}>{p.sub}</div>
                       </div>
                       <ArrowRight className={`w-4 h-4 shrink-0 transition-all ${activeProto===i?'text-violet-500 translate-x-0.5':'text-slate-300'}`} />
                     </div>
@@ -1481,7 +1383,7 @@ export default function App() {
               </div>
 
               {/* visual panel — live diagram per protocol */}
-              <div className="relative min-h-[420px] sm:min-h-[520px] glass-solid rounded-3xl border border-violet-100/60 overflow-hidden diagram-panel">
+              <div className="relative min-h-[420px] sm:min-h-[520px] card-shell is-strong is-flush diagram-panel">
                 <AnimatePresence mode="wait">
                   <motion.div key={activeProto}
                     initial={{opacity:0,x:20}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-20}}
@@ -1503,15 +1405,13 @@ export default function App() {
         {/* ══════════════════════════════════════════════════════════
             JOURNEY — sticky L + panel R
         ══════════════════════════════════════════════════════════ */}
-        <section id="journey" className="py-20 sm:py-32 lg:py-40 bg-page-alt">
-          <div className="max-w-7xl mx-auto px-6 sm:px-8">
-            <div className="grid lg:grid-cols-2 gap-10 lg:gap-24 items-start">
+        <section id="journey" className="section-shell bg-soft">
+          <div className="container-shell">
+            <div className="grid-2up is-start">
               <FadeInLeft className="lg:sticky lg:top-24">
-                <span className="eyebrow">User Experience</span>
-                <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-[-0.03em] sm:tracking-[-0.04em] leading-[1.05] sm:leading-[1.0] text-slate-900 mb-5 sm:mb-7">
-                  Eight steps.<br /><span className="gradient-text-violet">One secure vote.</span>
-                </h2>
-                <p className="text-base sm:text-xl text-slate-500 leading-relaxed mb-6 sm:mb-8">
+                <span className="eyebrow-pill">User Experience</span>
+                <h2 className="headline">Eight steps. <span className="gradient-text-violet">One secure vote.</span></h2>
+                <p className="lede mb-8">
                   Every stage is cryptographically verified, physically witnessed, and immutably recorded. The voter experience remains simple; the security machinery is invisible.
                 </p>
                 <div className="space-y-2 text-sm">
@@ -1533,16 +1433,14 @@ export default function App() {
         {/* ══════════════════════════════════════════════════════════
             RECONCILIATION — panel L + copy R
         ══════════════════════════════════════════════════════════ */}
-        <section className="py-20 sm:py-32 lg:py-40 relative">
-          <div className="max-w-7xl mx-auto px-6 sm:px-8">
-            <div className="grid lg:grid-cols-2 gap-10 lg:gap-24 items-center">
+        <section className="section-shell">
+          <div className="container-shell">
+            <div className="grid-2up">
               <FadeInLeft><ReconcDiagram /></FadeInLeft>
               <FadeInRight>
-                <span className="eyebrow">Mathematical Proof</span>
-                <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-[-0.03em] sm:tracking-[-0.04em] leading-[1.05] sm:leading-[1.0] text-slate-900 mb-5 sm:mb-7">
-                  Three counts.<br /><span className="gradient-text">One truth.</span>
-                </h2>
-                <p className="text-base sm:text-xl text-slate-500 leading-relaxed mb-8 sm:mb-10">
+                <span className="eyebrow-pill">Mathematical Proof</span>
+                <h2 className="headline">Three counts. <span className="gradient-text">One truth.</span></h2>
+                <p className="lede mb-8">
                   Before any result is declared valid, three completely independent datasets must match exactly. The moment any layer diverges, the system identifies the precise point of interference.
                 </p>
                 <ul className="space-y-3">
@@ -1559,9 +1457,13 @@ export default function App() {
         {/* ══════════════════════════════════════════════════════════
             THREAT TABLE
         ══════════════════════════════════════════════════════════ */}
-        <section className="py-20 sm:py-32 lg:py-40 bg-page-alt">
-          <div className="max-w-7xl mx-auto px-6 sm:px-8">
-            <SectionTitle badge="Security Analysis" title="Every attack vector. Neutralised." subtitle="Each known threat against current EVMs — and the exact Zero-Gap mechanism that defeats it." />
+        <section className="section-shell bg-soft">
+          <div className="container-shell">
+            <header className="section-head">
+              <span className="eyebrow-pill">Security Analysis</span>
+              <h2 className="headline">Every attack vector. Neutralised.</h2>
+              <p className="lede">Each known threat against current EVMs — and the exact Zero-Gap mechanism that defeats it.</p>
+            </header>
             <FadeIn className="mb-6 sm:mb-8"><ThreatShieldDiagram /></FadeIn>
             <FadeIn>
               <div className="glass-table overflow-x-auto rounded-[20px]">
@@ -1607,16 +1509,20 @@ export default function App() {
         {/* ══════════════════════════════════════════════════════════
             ROADMAP
         ══════════════════════════════════════════════════════════ */}
-        <section id="roadmap" className="py-20 sm:py-32 lg:py-40 relative">
-          <div className="max-w-7xl mx-auto px-6 sm:px-8">
-            <SectionTitle badge="Implementation" title="Three phases to national deployment." subtitle="A pragmatic five-year pathway built on existing legal authority, manufacturing, and infrastructure." />
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-            <div>
-              <TimelinePhase phase="Phase 1" title="Pilot Programme" year="Years 1–2" color="orange" description="Controlled deployment in select state assembly elections to validate the architecture under real conditions." items={["500 booths across 2–3 state elections, parallel with existing EVMs","Biometric success rates, auth time, and uptime data collected","Independent audit via ECI Technical Expert Committee","Budget: Rs. 150–300 crore"]} delay={0} />
-              <TimelinePhase phase="Phase 2" title="Infrastructure Build-Out" year="Years 2–3" color="blue" description="National-scale manufacturing, smart card rollout, and workforce training." items={["Voter ID Smart Card rollout through UIDAI infrastructure","Node A & B manufactured through BEL at national scale","QR signing key ceremony under ECI constitutional authority","Budget: Rs. 7,125–9,500 crore"]} delay={0.1} />
-              <TimelinePhase phase="Phase 3" title="National Deployment" year="Years 3–5" color="green" description="Full deployment for Lok Sabha General Elections." items={["Complete Zero-Gap rollout for Lok Sabha 2029","VVPAT audit upgraded to 100% physical recount","Budget: Rs. 6,825–9,950 crore"]} delay={0.2} />
-            </div>
-            <FadeInRight className="lg:sticky lg:top-24"><DeploymentDiagram /></FadeInRight>
+        <section id="roadmap" className="section-shell">
+          <div className="container-shell">
+            <header className="section-head is-center">
+              <span className="eyebrow-pill">Implementation</span>
+              <h2 className="headline-xl">Three phases to national deployment.</h2>
+              <p className="lede is-center">A pragmatic five-year pathway built on existing legal authority, manufacturing, and infrastructure.</p>
+            </header>
+            <div className="grid-2up is-start">
+              <div className="timeline-spine">
+                <TimelinePhase phase="Phase 1" title="Pilot Programme" year="Years 1–2" color="orange" description="Controlled deployment in select state assembly elections to validate the architecture under real conditions." items={["500 booths across 2–3 state elections, parallel with existing EVMs","Biometric success rates, auth time, and uptime data collected","Independent audit via ECI Technical Expert Committee","Budget: Rs. 150–300 crore"]} delay={0} />
+                <TimelinePhase phase="Phase 2" title="Infrastructure Build-Out" year="Years 2–3" color="blue" description="National-scale manufacturing, smart card rollout, and workforce training." items={["Voter ID Smart Card rollout through UIDAI infrastructure","Node A & B manufactured through BEL at national scale","QR signing key ceremony under ECI constitutional authority","Budget: Rs. 7,125–9,500 crore"]} delay={0.1} />
+                <TimelinePhase phase="Phase 3" title="National Deployment" year="Years 3–5" color="green" description="Full deployment for Lok Sabha General Elections." items={["Complete Zero-Gap rollout for Lok Sabha 2029","VVPAT audit upgraded to 100% physical recount","Budget: Rs. 6,825–9,950 crore"]} delay={0.2} />
+              </div>
+              <FadeInRight className="lg:sticky lg:top-24"><DeploymentDiagram /></FadeInRight>
             </div>
           </div>
         </section>
@@ -1624,15 +1530,13 @@ export default function App() {
         {/* ══════════════════════════════════════════════════════════
             COST
         ══════════════════════════════════════════════════════════ */}
-        <section className="py-20 sm:py-32 lg:py-40 bg-page-alt">
-          <div className="max-w-7xl mx-auto px-6 sm:px-8">
-            <div className="grid lg:grid-cols-2 gap-10 lg:gap-24 items-start">
+        <section className="section-shell bg-soft">
+          <div className="container-shell">
+            <div className="grid-2up is-start">
               <FadeInLeft>
-                <span className="eyebrow">Investment</span>
-                <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-[-0.03em] sm:tracking-[-0.04em] leading-[1.05] sm:leading-[1.0] text-slate-900 mb-5 sm:mb-7">
-                  12–18% of one<br /><span className="gradient-text">election's cost.</span>
-                </h2>
-                <p className="text-base sm:text-xl text-slate-500 leading-relaxed mb-8 sm:mb-10">
+                <span className="eyebrow-pill">Investment</span>
+                <h2 className="headline">12–18% of one <span className="gradient-text">election's cost.</span></h2>
+                <p className="lede mb-8">
                   India's 2024 General Election had an economic footprint exceeding Rs. 1.2 lakh crore. Zero-Gap is a one-time investment that secures every election after it.
                 </p>
                 <ul className="space-y-3">
@@ -1669,16 +1573,13 @@ export default function App() {
         {/* ══════════════════════════════════════════════════════════
             FAQ
         ══════════════════════════════════════════════════════════ */}
-        <section id="faq" className="py-20 sm:py-32 lg:py-40 relative">
-          <div className="max-w-7xl mx-auto px-6 sm:px-8">
-            <div className="grid lg:grid-cols-[1fr_2fr] gap-10 lg:gap-24">
-              <FadeInLeft>
-                <span className="eyebrow">FAQ</span>
-                <h2 className="text-3xl sm:text-5xl font-black tracking-[-0.03em] sm:tracking-[-0.04em] leading-[1.05] sm:leading-[1.0] text-slate-900 mb-4 sm:mb-6">Common<br />questions.</h2>
-                <p className="text-base sm:text-lg text-slate-500 leading-relaxed">Everything the Election Commission, academics, and journalists have asked — answered directly.</p>
-                <div className="mt-8 sm:mt-10 float-cluster-wrapper hidden sm:block">
-                  <FloatCluster variant="a" />
-                </div>
+        <section id="faq" className="section-shell">
+          <div className="container-shell">
+            <div className="grid lg:grid-cols-[1fr_2fr] gap-10 lg:gap-20 items-start">
+              <FadeInLeft className="lg:sticky lg:top-24">
+                <span className="eyebrow-pill">FAQ</span>
+                <h2 className="headline">Common questions.</h2>
+                <p className="lede">Everything the Election Commission, academics, and journalists have asked — answered directly.</p>
               </FadeInLeft>
               <FadeInRight>
                 <div className="space-y-3">
@@ -1694,27 +1595,23 @@ export default function App() {
         {/* ══════════════════════════════════════════════════════════
             CTA
         ══════════════════════════════════════════════════════════ */}
-        <section className="py-24 sm:py-36 lg:py-48 relative overflow-hidden">
-          {/* gradient blob bg */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full" style={{background:'radial-gradient(ellipse,rgba(139,92,246,0.15) 0%,rgba(99,102,241,0.08) 50%,transparent 70%)'}} />
-          </div>
-          <div className="max-w-4xl mx-auto px-6 sm:px-8 text-center relative z-10">
+        <section className="section-shell">
+          <div className="container-shell">
             <FadeIn>
-              <span className="eyebrow">Ready for Review</span>
-              <h2 className="text-3xl sm:text-6xl lg:text-7xl xl:text-[88px] font-black tracking-[-0.03em] sm:tracking-[-0.04em] leading-[1.0] sm:leading-[0.92] text-slate-900 mb-6 sm:mb-8">
-                India's elections<br />deserve this.
-              </h2>
-              <p className="text-base sm:text-xl lg:text-2xl text-slate-500 max-w-2xl mx-auto mb-10 sm:mb-12 leading-relaxed px-2">
-                Open source. Peer-reviewable. Built on existing infrastructure. Designed to work within India's constitutional, electoral, and manufacturing frameworks.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full px-4 sm:px-0">
-                <motion.a whileHover={{scale:1.04}} whileTap={{scale:0.97}} href={PDF} target="_blank" rel="noreferrer" className="btn-primary text-sm sm:text-base px-6 sm:px-8 py-3.5 sm:py-4 w-full sm:w-auto justify-center">
-                  <FileText className="w-4 h-4" /> Read the Full PDF <ExternalLink className="w-3.5 h-3.5 opacity-70" />
-                </motion.a>
-                <motion.a whileHover={{scale:1.04}} whileTap={{scale:0.97}} href="mailto:contact@zerogapvoting.in" className="btn-outline text-sm sm:text-base px-6 sm:px-8 py-3.5 sm:py-4 w-full sm:w-auto justify-center">
-                  <Mail className="w-4 h-4" /> Contact for Review
-                </motion.a>
+              <div className="cta-shell">
+                <span className="eyebrow-pill" style={{margin:'0 auto 1.25rem'}}>Ready for Review</span>
+                <h2 className="headline-xl mx-auto max-w-3xl">India's elections deserve this.</h2>
+                <p className="lede is-center text-center max-w-2xl mt-4 mb-10">
+                  Open source. Peer-reviewable. Built on existing infrastructure. Designed to work within India's constitutional, electoral, and manufacturing frameworks.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 relative z-10">
+                  <motion.a whileHover={{scale:1.03}} whileTap={{scale:0.97}} href={PDF} target="_blank" rel="noreferrer" className="btn-primary w-full sm:w-auto justify-center">
+                    <FileText className="w-4 h-4" /> Read the Full PDF <ExternalLink className="w-3.5 h-3.5 opacity-70" />
+                  </motion.a>
+                  <motion.a whileHover={{scale:1.03}} whileTap={{scale:0.97}} href="mailto:contact@zerogapvoting.in" className="btn-outline w-full sm:w-auto justify-center">
+                    <Mail className="w-4 h-4" /> Contact for Review
+                  </motion.a>
+                </div>
               </div>
             </FadeIn>
           </div>
@@ -1722,28 +1619,31 @@ export default function App() {
 
       </main>
 
-      {/* FOOTER */}
-      <footer className="border-t border-violet-100 py-10 sm:py-14 bg-white/60 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-md shadow-violet-200">
-              <Shield className="w-4 h-4 text-white" />
+      {/* FOOTER — clean 2-row layout */}
+      <footer className="footer-shell">
+        <div className="container-shell">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-md shadow-violet-200">
+                <Shield className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <div className="font-bold text-sm text-slate-800">Zero<span className="gradient-text-violet">Gap</span> Voting</div>
+                <div className="text-[11px] text-slate-400">An open architecture by Roshan Kr Singh</div>
+              </div>
             </div>
-            <div>
-              <div className="font-bold text-sm text-slate-800">Zero<span className="gradient-text-violet">Gap</span> Voting</div>
-              <div className="text-[10px] text-slate-400">by Roshan Kr Singh</div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <a href={PDF} target="_blank" rel="noreferrer" className="text-xs text-slate-500 hover:text-violet-700 transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-violet-50"><FileText className="w-3.5 h-3.5" /> PDF Report</a>
+              <a href="mailto:contact@zerogapvoting.in" className="text-xs text-slate-500 hover:text-violet-700 transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-violet-50"><Mail className="w-3.5 h-3.5" /> Contact</a>
             </div>
           </div>
-          <div className="flex flex-col items-center gap-1.5">
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-50 border border-violet-100">
-              <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-violet-400 to-indigo-400 shrink-0" />
-              <span className="text-[10px] font-semibold text-violet-500 tracking-wide">Proposed to ECI · UIDAI · MeitY</span>
-            </div>
-            <span className="text-[10px] text-slate-300 tracking-wide">Non-partisan · Open for review</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <a href={PDF} target="_blank" rel="noreferrer" className="text-xs text-slate-400 hover:text-violet-600 transition-colors flex items-center gap-1.5"><FileText className="w-3 h-3" /> PDF</a>
-            <a href="mailto:contact@zerogapvoting.in" className="text-xs text-slate-400 hover:text-violet-600 transition-colors flex items-center gap-1.5"><Mail className="w-3 h-3" /> Contact</a>
+          <div className="divider-soft" style={{margin:'1.5rem 0'}} />
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-400">
+            <span>© 2026 Zero-Gap Voting Initiative · Non-partisan · Open for review</span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+              Proposed to ECI · UIDAI · MeitY
+            </span>
           </div>
         </div>
       </footer>
