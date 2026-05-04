@@ -59,3 +59,5 @@ This project is fully configured for seamless deployment across two major platfo
 Submitted to the Election Commission of India, UIDAI, and MeitY (April 2026).
 
 > **Open Source Proposal** — This document is released as a public blueprint. Anyone may freely use, adapt, or improve upon the ideas presented herein.
+
+© 2026 [Zenith Open Source Projects](https://zenithopensourceprojects.vercel.app/). All Rights Reserved. Zenith is a Open Source Project Idea's by @roshhellwett
