@@ -296,7 +296,7 @@
     font-family: var(--font-sans);
     background: #f8f7ff;
     color: #1e1b4b;
-    overflow-x: hidden;
+    overflow-x: clip;
     letter-spacing: -0.012em;
   }
 
@@ -1102,11 +1102,11 @@ button, a {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Prevent overscroll bounce stealing taps on iOS */
-html, body { overscroll-behavior-y: none; }
+/* Prevent overscroll bounce stealing taps on iOS — body only */
+body { overscroll-behavior-y: none; }
 
-/* Last-resort overflow guard — nothing escapes the viewport horizontally */
-html, body, #root { max-width: 100vw; overflow-x: hidden; }
+/* Horizontal overflow guard — only on body, never html or #root (creates nested scroll containers that capture wheel events) */
+body { overflow-x: clip; }
 
 /* ═══════════════════════════════════════════════════════════════════
    ROADMAP / TIMELINE SPINE — single continuous connector
