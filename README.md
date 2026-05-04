@@ -1,63 +1,58 @@
-<div align="center">
+# Zero-Gap Voting Architecture
 
-# 🛡️ Zero-Gap Voting Architecture
-**A Formal Technical Proposal for the Modernization of the Indian Electronic Voting System**
+<p align="center">
+  <strong>A Formal Technical Proposal for Modernizing India's Electronic Voting System</strong>
+</p>
 
-[![React](https://img.shields.io/badge/React-18.x-blue?style=flat&logo=react)](https://reactjs.org/)
-[![Vite](https://img.shields.io/badge/Vite-5.x-purple?style=flat&logo=vite)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-cyan?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
-[![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.x-f97316?style=flat&logo=framer)](https://www.framer.com/motion/)
-
-*An open technical blueprint proposing a dual-node, cryptographically secured electronic voting system that makes vote manipulation physically and mathematically impossible.*
-
-</div>
+<p align="center">
+  <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-19.2-61DAFB?logo=react&logoColor=white" alt="React 19"></a>
+  <a href="https://vitejs.dev/"><img src="https://img.shields.io/badge/Vite-8.0-646CFF?logo=vite&logoColor=white" alt="Vite 8"></a>
+  <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwind-4.2-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind CSS 4"></a>
+  <a href="https://www.framer.com/motion/"><img src="https://img.shields.io/badge/Framer_Motion-12.3-EF4444?logo=framer&logoColor=white" alt="Framer Motion"></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white" alt="TypeScript"></a>
+</p>
 
 ---
 
-## 📖 Overview
+## Overview
 
-India conducts the largest democratic election on Earth, mobilizing over 960 million eligible voters. Despite decades of successful EVM deployment, persistent public skepticism remains. 
+India conducts the world's largest democratic election, serving over **960 million eligible voters**. Despite proven EVM deployment, public skepticism persists regarding electoral integrity.
 
-This repository contains the interactive visual representation and formal architectural blueprint for the **Zero-Gap Voting Architecture** — a next-generation, dual-node election system. By severing the connection between identity validation and ballot casting through an optical airgap, anchoring all vote records in immutable cryptographic ledgers, and backing every digital action with an immediate physical paper trail, this system eliminates the attack surface that critics and adversaries currently target.
+This repository presents the **Zero-Gap Voting Architecture** — a dual-node election system that transitions trust from software assertions to physical and mathematical laws. By implementing optical airgaps, cryptographic hash ledgers, and immediate physical verification, this architecture eliminates traditional attack vectors while maintaining operational efficiency.
 
-## ✨ Core Architectural Protocols
+## Core Architecture
 
-This system is built upon four fundamental interference protocols that transition trust from software integrity to the laws of physics and mathematics:
+### 1. Optical Airgap Protocol
+Node A (Identity Validation) and Node B (Ballot Casting) maintain complete physical isolation. Communication occurs exclusively via cryptographically-signed, time-sensitive optical QR codes. No wireless transmission — eliminating RF, Bluetooth, and WiFi attack surfaces.
 
-1. **The Optical Airgap (Severing the Wire)**
-   Node A (Online Identity) and Node B (Offline EVM) are completely physically isolated. They communicate via a single, time-sensitive, cryptographically signed optical QR code. No Wi-Fi, Bluetooth, or RF signals are used.
-   
-2. **Cryptographic Hash Ledgers (Immutable Memory)**
-   Votes are recorded in an EEPROM ledger structured as a cryptographic hash chain. Modifying any historical entry breaks the entire chain, instantly locking the machine on reboot.
-   
-3. **Hardware Watchdog Timers (State Recovery)**
-   An independent microcontroller monitors the main EVM software. If a crash or freeze occurs mid-vote, it physically cuts power, purges volatile RAM, and reboots the machine in under 30ms, preventing incomplete or ambiguous states.
-   
-4. **VVPAT Black Box Resolution (Physical Proof Layer)**
-   The VVPAT prints a physical record of the vote *before* the digital commitment is made. The paper is the legally binding ground truth; the digital record is its mirror.
+### 2. Cryptographic Hash Ledger
+Vote records are stored in EEPROM as a sequential hash chain. Any modification to historical data breaks the chain integrity, triggering immediate system lockdown upon verification failure.
 
-## 🛠️ Technology Stack
+### 3. Hardware Watchdog System
+An independent microcontroller monitors EVM operations. In event of software crash or freeze mid-vote, the watchdog physically severs power, purges volatile memory, and completes a cold reboot within 30ms — preventing incomplete or ambiguous vote states.
 
-This interactive architectural blueprint is built using modern web technologies:
+### 4. VVPAT Physical Verification
+The Voter Verifiable Paper Audit Trail prints a physical vote record **before** digital commitment. Paper serves as the legally-binding ground truth; digital records function as cryptographic mirrors of physical reality.
 
-* **React 18** — Component-driven UI architecture
-* **Vite** — High-performance build tooling
-* **Tailwind CSS** — Custom utility-class styling with a custom `kesari`, `ashoka`, and `india-green` color palette
-* **Framer Motion** — Fluid, physics-based micro-interactions and layout transitions
-* **Lucide React** — Crisp, consistent SVG iconography
+## Author
 
-## 🌐 Deployment
+**Roshan Kr Singh** ([@roshhellwett](https://github.com/roshhellwett))
 
-This project is fully configured for seamless deployment across two major platforms:
+Submitted to:
+- Election Commission of India
+- UIDAI
+- Ministry of Electronics and Information Technology (MeitY)
 
-* **GitHub Pages:** Handled automatically via GitHub Actions. Push to the `main` branch to trigger the `.github/workflows/deploy.yml` workflow. The Vite `base` configuration intelligently maps the relative paths.
-* **Vercel:** Deploys automatically. The project includes a `vercel.json` rewrite configuration to ensure stable Single Page Application (SPA) routing.
+*April 2026*
 
-## 📄 Proposal Author
+---
 
-**Roshan Kr Singh (@roshhellwett)**  
-Submitted to the Election Commission of India, UIDAI, and MeitY (April 2026).
+## License
 
-> **Open Source Proposal** — This document is released as a public blueprint. Anyone may freely use, adapt, or improve upon the ideas presented herein.
+This proposal is released as an **open technical blueprint**. The architecture, concepts, and implementation may be freely used, adapted, and improved upon without restriction.
 
-© 2026 [Zenith Open Source Projects](https://zenithopensourceprojects.vercel.app/). All Rights Reserved. Zenith is a Open Source Project Idea's by @roshhellwett
+---
+
+<p align="center">
+  <sub>© 2026 Zenith Open Source Projects. A public initiative by <a href="https://github.com/roshhellwett">@roshhellwett</a></sub>
+</p>
