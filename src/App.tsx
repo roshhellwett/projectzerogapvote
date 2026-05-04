@@ -14,10 +14,66 @@ import {
 const PDF = "https://www.slideshare.net/slideshow/zero-gap-voting-architecture-securing-india-s-electronic-voting-system/287278728";
 const ease = [0.16, 1, 0.3, 1] as const;
 
-/* ── Shared check item ───────────────────────────────────────────── */
+/* ── Mobile notice popup ───────────────────────────────────── */
+function MobileNotice() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const dismissed = sessionStorage.getItem('zg-mobile-notice-dismissed');
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    if (isMobile && !dismissed) {
+      const t = setTimeout(() => setShow(true), 800);
+      return () => clearTimeout(t);
+    }
+  }, []);
+  const dismiss = () => {
+    sessionStorage.setItem('zg-mobile-notice-dismissed', '1');
+    setShow(false);
+  };
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:0.25}}
+          className="mobile-notice-backdrop"
+          onClick={dismiss}
+          role="dialog" aria-modal="true" aria-labelledby="mn-title">
+          <motion.div
+            initial={{opacity:0,y:24,scale:0.96}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:16,scale:0.97}}
+            transition={{duration:0.32,ease}}
+            className="mobile-notice"
+            onClick={(e)=>e.stopPropagation()}>
+            <div className="mobile-notice-stripe" aria-hidden />
+            <div className="mobile-notice-body">
+              <div className="mobile-notice-icon" aria-hidden>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="4" width="20" height="12" rx="2" />
+                  <line x1="8" y1="20" x2="16" y2="20" />
+                  <line x1="12" y1="16" x2="12" y2="20" />
+                </svg>
+              </div>
+              <h3 id="mn-title">Best viewed on desktop</h3>
+              <p>This presentation has rich interactive diagrams and animations designed for a larger screen. For the full experience, please open it on a desktop or laptop.</p>
+              <div className="mobile-notice-actions">
+                <button className="mobile-notice-primary" onClick={dismiss}>
+                  Continue on mobile <ArrowRight className="w-4 h-4" />
+                </button>
+                <button className="mobile-notice-secondary" onClick={dismiss}>
+                  Don't show this again
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/* ── Shared check item ─────────────────────────────────────── */
 const Check = ({ children }: { children: React.ReactNode }) => (
   <li className="flex items-start gap-3 text-slate-700 text-base">
-    <div className="w-5 h-5 rounded-full bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
+    <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 shadow-sm" style={{background:'linear-gradient(135deg,#E87722,#C5601A)'}}>
       <CheckCircle2 className="w-3 h-3 text-white" />
     </div>
     <span>{children}</span>
@@ -1052,6 +1108,9 @@ export default function App() {
       {/* Progress bar (mutated imperatively via ref — zero re-renders) */}
       <div ref={progressRef} className="progress-bar" style={{width:'0%'}} />
 
+      {/* Mobile notice popup */}
+      <MobileNotice />
+
       {/* Subtle dot grid — only one global background layer */}
       <div className="fixed inset-0 pointer-events-none z-0 dot-grid opacity-30" />
 
@@ -1059,7 +1118,7 @@ export default function App() {
       <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled?'glass-nav':'bg-transparent'}`}>
         <nav className="max-w-7xl mx-auto px-6 sm:px-8 h-16 flex items-center justify-between">
           <button onClick={()=>go('hero')} className="flex items-center gap-2.5 shrink-0">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-md shadow-violet-200">
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center shadow-md" style={{background:'linear-gradient(135deg,#E87722,#C5601A)',boxShadow:'0 4px 14px rgba(232,119,34,0.3)'}}>
               <Shield className="w-4 h-4 text-white" />
             </div>
             <span className="font-bold text-[15px] tracking-tight text-slate-800">Zero<span className="gradient-text-violet">Gap</span></span>
@@ -1624,7 +1683,7 @@ export default function App() {
         <div className="container-shell">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-md shadow-violet-200">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-md" style={{background:'linear-gradient(135deg,#E87722,#C5601A)',boxShadow:'0 4px 14px rgba(232,119,34,0.3)'}}>
                 <Shield className="w-4 h-4 text-white" />
               </div>
               <div>
