@@ -67,6 +67,7 @@
     <meta property="og:description" content="Dual-node airgap · SHA-256 Hash Chain · Hardware Watchdog · VVPAT Paper Proof. An open technical proposal that makes vote manipulation physically and mathematically impossible. For India's 960 million voters." />
     <meta property="og:image"              content="https://roshhellwett.github.io/projectzerogapvote/og-image.svg" />
     <meta property="og:image:secure_url"   content="https://roshhellwett.github.io/projectzerogapvote/og-image.svg" />
+    <meta property="og:image:url"          content="https://roshhellwett.github.io/projectzerogapvote/og-image.svg" />
     <meta property="og:image:type"         content="image/svg+xml" />
     <meta property="og:image:width"        content="1200" />
     <meta property="og:image:height"       content="630" />
@@ -91,6 +92,7 @@
     <meta name="twitter:title"       content="Zero-Gap Voting — EVM Manipulation Made Physically Impossible 🇮🇳" />
     <meta name="twitter:description" content="An open architecture for India's elections: optical airgap, hash chain ledger, hardware watchdog, VVPAT paper proof. 960M voters deserve this. Proposed to ECI · UIDAI · MeitY." />
     <meta name="twitter:image"       content="https://roshhellwett.github.io/projectzerogapvote/og-image.svg" />
+    <meta name="twitter:image:src"   content="https://roshhellwett.github.io/projectzerogapvote/og-image.svg" />
     <meta name="twitter:image:alt"   content="Zero-Gap Voting Architecture — Node A to Node B optical airgap diagram" />
     <meta name="twitter:label1"      content="Proposed to" />
     <meta name="twitter:data1"       content="ECI · UIDAI · MeitY" />
@@ -254,6 +256,16 @@
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
   </head>
   <body>
+    <!-- GitHub Pages SPA redirect handler -->
+    <script>
+      (function(){
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

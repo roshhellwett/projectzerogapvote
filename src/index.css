@@ -144,13 +144,13 @@
 /* ═══════════════════════════════════════════════════════════════════
    ANIMATION UTILITIES
 ═══════════════════════════════════════════════════════════════════ */
-.animate-float-a   { animation: float-a 6s ease-in-out infinite; will-change: transform; }
-.animate-float-b   { animation: float-b 5s ease-in-out infinite; will-change: transform; }
-.animate-float-c   { animation: float-c 7s ease-in-out infinite; will-change: transform; }
-.animate-blob      { animation: blob 10s ease-in-out infinite; will-change: border-radius, transform; contain: layout; }
-.animate-spin-slow { animation: spin-slow 20s linear infinite; will-change: transform; }
-.animate-pulse-soft{ animation: pulse-soft 3s ease-in-out infinite; will-change: opacity, transform; }
-.animate-gradient  { background-size: 200% 200%; animation: gradient-pan 5s ease infinite; will-change: background-position; }
+.animate-float-a   { animation: float-a 6s ease-in-out infinite; will-change: transform; transform: translateZ(0); }
+.animate-float-b   { animation: float-b 5s ease-in-out infinite; will-change: transform; transform: translateZ(0); }
+.animate-float-c   { animation: float-c 7s ease-in-out infinite; will-change: transform; transform: translateZ(0); }
+.animate-blob      { animation: blob 12s ease-in-out infinite; will-change: border-radius; contain: strict; transform: translateZ(0); }
+.animate-spin-slow { animation: spin-slow 20s linear infinite; will-change: transform; transform: translateZ(0); }
+.animate-pulse-soft{ animation: pulse-soft 3s ease-in-out infinite; will-change: opacity; }
+.animate-gradient  { background-size: 200% 200%; animation: gradient-pan 6s ease infinite; will-change: background-position; }
 .animate-slide-up  { animation: slide-up 0.6s cubic-bezier(0.16,1,0.3,1) both; }
 .animate-scale-in  { animation: scale-in 0.5s cubic-bezier(0.16,1,0.3,1) both; }
 
@@ -188,8 +188,8 @@
   box-shadow:
     0 4px 24px rgba(139,92,246,0.08),
     0 1px 0 rgba(255,255,255,0.9) inset;
-  transition: box-shadow 250ms ease, transform 250ms ease;
-  will-change: transform;
+  transition: box-shadow 200ms ease, transform 200ms ease;
+  transform: translateZ(0);
 }
 .glass:hover {
   box-shadow:
@@ -201,72 +201,79 @@
 /* Deeper / more opaque glass — for key info panels */
 .glass-solid {
   background: rgba(255,255,255,0.82);
-  backdrop-filter: blur(28px) saturate(2);
-  -webkit-backdrop-filter: blur(28px) saturate(2);
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
   border: 1px solid rgba(255,255,255,0.9);
   border-radius: 24px;
   box-shadow:
     0 8px 40px rgba(99,102,241,0.1),
     0 1px 0 rgba(255,255,255,1) inset;
+  transform: translateZ(0);
 }
 
 /* Coloured glass — violet tint */
 .glass-violet {
   background: rgba(237,233,254,0.7);
-  backdrop-filter: blur(20px) saturate(1.8);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(16px) saturate(1.6);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
   border: 1px solid rgba(196,181,253,0.5);
   border-radius: 20px;
   box-shadow: 0 4px 24px rgba(139,92,246,0.12);
+  transform: translateZ(0);
 }
 
 /* Coloured glass — indigo tint */
 .glass-indigo {
   background: rgba(224,231,255,0.7);
-  backdrop-filter: blur(20px) saturate(1.8);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(16px) saturate(1.6);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
   border: 1px solid rgba(165,180,252,0.5);
   border-radius: 20px;
   box-shadow: 0 4px 24px rgba(99,102,241,0.12);
+  transform: translateZ(0);
 }
 
 /* Coloured glass — saffron tint */
 .glass-saffron {
   background: rgba(255,247,237,0.75);
-  backdrop-filter: blur(20px) saturate(1.8);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(16px) saturate(1.6);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
   border: 1px solid rgba(253,186,116,0.45);
   border-radius: 20px;
   box-shadow: 0 4px 24px rgba(249,115,22,0.1);
+  transform: translateZ(0);
 }
 
 /* Coloured glass — green tint */
 .glass-green {
   background: rgba(240,253,244,0.75);
-  backdrop-filter: blur(20px) saturate(1.8);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(16px) saturate(1.6);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
   border: 1px solid rgba(134,239,172,0.45);
   border-radius: 20px;
   box-shadow: 0 4px 24px rgba(34,197,94,0.1);
+  transform: translateZ(0);
 }
 
 /* Coloured glass — red/danger tint */
 .glass-red {
   background: rgba(254,242,242,0.75);
-  backdrop-filter: blur(20px) saturate(1.8);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(16px) saturate(1.6);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
   border: 1px solid rgba(252,165,165,0.4);
   border-radius: 20px;
   box-shadow: 0 4px 24px rgba(239,68,68,0.08);
+  transform: translateZ(0);
 }
 
 /* Nav glass */
 .glass-nav {
-  background: rgba(255,255,255,0.75);
-  backdrop-filter: blur(24px) saturate(2);
-  -webkit-backdrop-filter: blur(24px) saturate(2);
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
   border-bottom: 1px solid rgba(255,255,255,0.8);
   box-shadow: 0 1px 20px rgba(139,92,246,0.07);
+  transform: translateZ(0);
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -275,27 +282,31 @@
 ═══════════════════════════════════════════════════════════════════ */
 .blob-violet {
   border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-  background: linear-gradient(135deg, rgba(167,139,250,0.35), rgba(99,102,241,0.2));
-  filter: blur(1px);
-  animation: blob 12s ease-in-out infinite;
+  background: linear-gradient(135deg, rgba(167,139,250,0.3), rgba(99,102,241,0.18));
+  animation: blob 14s ease-in-out infinite;
+  contain: strict;
+  transform: translateZ(0);
 }
 .blob-pink {
   border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-  background: linear-gradient(135deg, rgba(244,114,182,0.25), rgba(167,139,250,0.2));
-  filter: blur(1px);
-  animation: blob 14s ease-in-out infinite reverse;
+  background: linear-gradient(135deg, rgba(244,114,182,0.22), rgba(167,139,250,0.18));
+  animation: blob 16s ease-in-out infinite reverse;
+  contain: strict;
+  transform: translateZ(0);
 }
 .blob-orange {
   border-radius: 50% 50% 30% 70% / 50% 70% 30% 50%;
-  background: linear-gradient(135deg, rgba(251,146,60,0.22), rgba(244,114,182,0.15));
-  filter: blur(1px);
-  animation: blob 16s ease-in-out infinite 2s;
+  background: linear-gradient(135deg, rgba(251,146,60,0.18), rgba(244,114,182,0.12));
+  animation: blob 18s ease-in-out infinite 2s;
+  contain: strict;
+  transform: translateZ(0);
 }
 .blob-sky {
   border-radius: 60% 40% 60% 40% / 30% 60% 40% 70%;
-  background: linear-gradient(135deg, rgba(56,189,248,0.22), rgba(99,102,241,0.15));
-  filter: blur(1px);
-  animation: blob 18s ease-in-out infinite 1s reverse;
+  background: linear-gradient(135deg, rgba(56,189,248,0.18), rgba(99,102,241,0.12));
+  animation: blob 20s ease-in-out infinite 1s reverse;
+  contain: strict;
+  transform: translateZ(0);
 }
 
 /* Small floating shape */
@@ -690,6 +701,33 @@ html  { scroll-padding-top: var(--nav-h); }
 ═══════════════════════════════════════════════════════════════════ */
 @media (max-width: 640px) {
 
+  /* ── MOBILE PERFORMANCE: reduce blur cost significantly ─────── */
+  .glass {
+    backdrop-filter: blur(10px) saturate(1.4) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(1.4) !important;
+  }
+  .glass-solid {
+    backdrop-filter: blur(12px) saturate(1.5) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(1.5) !important;
+  }
+  .glass-violet, .glass-indigo, .glass-saffron, .glass-green, .glass-red {
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+  .glass-nav {
+    backdrop-filter: blur(14px) saturate(1.6) !important;
+    -webkit-backdrop-filter: blur(14px) saturate(1.6) !important;
+  }
+
+  /* ── Kill heavy decorative animations on mobile ─────────────── */
+  .animate-blob, .blob-violet, .blob-pink, .blob-orange, .blob-sky {
+    animation: none !important;
+  }
+  .animate-float-a, .animate-float-b, .animate-float-c {
+    animation: none !important;
+    transform: none !important;
+  }
+
   /* Hero h1 — tighter tracking on small screens */
   #hero h1 { letter-spacing: -0.03em; }
 
@@ -739,6 +777,12 @@ html  { scroll-padding-top: var(--nav-h); }
 
   /* Consistent section padding on mobile */
   section { padding-top: 4rem !important; padding-bottom: 4rem !important; }
+
+  /* Prevent text from escaping flex/grid containers */
+  .flex > *, .grid > * { min-width: 0; }
+
+  /* Truncate long mono labels on mobile */
+  .font-mono { word-break: break-all; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════

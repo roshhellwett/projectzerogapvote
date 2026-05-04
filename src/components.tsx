@@ -5,13 +5,13 @@ import { CheckCircle2, Shield, Lock, Zap, Eye, ArrowRight } from 'lucide-react';
 
 export const FadeIn = ({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) => {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const inView = useInView(ref, { once: true, margin: "-20px" });
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.65, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.45, delay, ease: [0.16, 1, 0.3, 1] }}
       className={className}
     >{children}</motion.div>
   );
@@ -19,13 +19,13 @@ export const FadeIn = ({ children, delay = 0, className = "" }: { children: Reac
 
 export const FadeInLeft = ({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) => {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const inView = useInView(ref, { once: true, margin: "-20px" });
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: -40 }}
+      initial={{ opacity: 0, x: -24 }}
       animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.65, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.45, delay, ease: [0.16, 1, 0.3, 1] }}
       className={className}
     >{children}</motion.div>
   );
@@ -33,13 +33,13 @@ export const FadeInLeft = ({ children, delay = 0, className = "" }: { children: 
 
 export const FadeInRight = ({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) => {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const inView = useInView(ref, { once: true, margin: "-20px" });
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: 40 }}
+      initial={{ opacity: 0, x: 24 }}
       animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.65, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.45, delay, ease: [0.16, 1, 0.3, 1] }}
       className={className}
     >{children}</motion.div>
   );
@@ -47,13 +47,13 @@ export const FadeInRight = ({ children, delay = 0, className = "" }: { children:
 
 export const ScaleIn = ({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) => {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const inView = useInView(ref, { once: true, margin: "-20px" });
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, scale: 0.92 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={inView ? { opacity: 1, scale: 1 } : {}}
-      transition={{ duration: 0.55, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] }}
       className={className}
     >{children}</motion.div>
   );
@@ -101,7 +101,7 @@ export const SectionTitle = ({ badge, title, subtitle, center = false }: { badge
           {badge}
         </motion.p>
       )}
-      <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-[-0.03em] sm:tracking-[-0.04em] mb-4 sm:mb-6 leading-[1.05] sm:leading-[1.0] text-slate-900 whitespace-pre-line">
+      <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-[-0.03em] sm:tracking-[-0.04em] mb-4 sm:mb-6 leading-[1.05] sm:leading-[1.0] text-slate-900 break-words overflow-hidden">
         {title}
       </h2>
       <p className={`text-slate-500 max-w-2xl text-base sm:text-lg lg:text-xl font-normal leading-relaxed ${center ? 'mx-auto' : ''}`}>
@@ -119,12 +119,12 @@ export const AnimatedCounter = ({ end, suffix = "", prefix = "", duration = 2 }:
   useEffect(() => {
     if (!inView) return;
     let start = 0;
-    const increment = end / (duration * 60);
+    const increment = end / (duration * 30);
     const timer = setInterval(() => {
       start += increment;
       if (start >= end) { setCount(end); clearInterval(timer); }
       else setCount(Math.floor(start));
-    }, 1000 / 60);
+    }, 1000 / 30);
     return () => clearInterval(timer);
   }, [inView, end, duration]);
 
@@ -132,36 +132,14 @@ export const AnimatedCounter = ({ end, suffix = "", prefix = "", duration = 2 }:
 };
 
 const PARTICLE_DATA = [
-  { size: 2.1, left: 12, top: 34, duration: 7, delay: 1, opacity: 0.2 },
-  { size: 1.5, left: 45, top: 67, duration: 9, delay: 3, opacity: 0.15 },
-  { size: 3.0, left: 78, top: 12, duration: 5, delay: 0, opacity: 0.25 },
-  { size: 1.8, left: 23, top: 89, duration: 8, delay: 2, opacity: 0.18 },
-  { size: 2.5, left: 56, top: 45, duration: 6, delay: 4, opacity: 0.22 },
-  { size: 1.2, left: 90, top: 23, duration: 10, delay: 1, opacity: 0.12 },
-  { size: 2.8, left: 34, top: 78, duration: 7, delay: 3, opacity: 0.28 },
-  { size: 1.6, left: 67, top: 56, duration: 9, delay: 0, opacity: 0.16 },
-  { size: 2.3, left: 89, top: 90, duration: 6, delay: 2, opacity: 0.21 },
-  { size: 1.4, left: 5, top: 45, duration: 8, delay: 4, opacity: 0.14 },
-  { size: 2.7, left: 78, top: 12, duration: 5, delay: 1, opacity: 0.26 },
-  { size: 1.9, left: 34, top: 67, duration: 11, delay: 3, opacity: 0.19 },
-  { size: 2.2, left: 56, top: 89, duration: 7, delay: 0, opacity: 0.23 },
-  { size: 1.3, left: 12, top: 23, duration: 9, delay: 2, opacity: 0.13 },
-  { size: 2.9, left: 45, top: 34, duration: 6, delay: 4, opacity: 0.29 },
-  { size: 1.7, left: 90, top: 78, duration: 8, delay: 1, opacity: 0.17 },
-  { size: 2.4, left: 23, top: 56, duration: 10, delay: 3, opacity: 0.24 },
-  { size: 1.1, left: 67, top: 90, duration: 7, delay: 0, opacity: 0.11 },
-  { size: 2.6, left: 89, top: 45, duration: 9, delay: 2, opacity: 0.27 },
-  { size: 1.0, left: 5, top: 12, duration: 5, delay: 4, opacity: 0.10 },
-  { size: 2.0, left: 78, top: 67, duration: 8, delay: 1, opacity: 0.20 },
-  { size: 1.5, left: 34, top: 89, duration: 11, delay: 3, opacity: 0.15 },
-  { size: 3.2, left: 56, top: 23, duration: 6, delay: 0, opacity: 0.30 },
-  { size: 1.8, left: 12, top: 78, duration: 7, delay: 2, opacity: 0.18 },
-  { size: 2.5, left: 45, top: 34, duration: 9, delay: 4, opacity: 0.25 },
-  { size: 1.2, left: 90, top: 56, duration: 10, delay: 1, opacity: 0.12 },
-  { size: 2.8, left: 23, top: 90, duration: 5, delay: 3, opacity: 0.28 },
-  { size: 1.6, left: 67, top: 12, duration: 8, delay: 0, opacity: 0.16 },
-  { size: 2.3, left: 89, top: 45, duration: 7, delay: 2, opacity: 0.23 },
-  { size: 1.4, left: 5, top: 67, duration: 9, delay: 4, opacity: 0.14 },
+  { size: 2.1, left: 12, top: 34, duration: 8, delay: 0,   opacity: 0.18 },
+  { size: 3.0, left: 78, top: 12, duration: 7, delay: 1.5, opacity: 0.22 },
+  { size: 1.8, left: 23, top: 89, duration: 9, delay: 3,   opacity: 0.15 },
+  { size: 2.5, left: 56, top: 45, duration: 6, delay: 0.5, opacity: 0.20 },
+  { size: 2.8, left: 34, top: 78, duration: 8, delay: 2,   opacity: 0.24 },
+  { size: 2.3, left: 89, top: 20, duration: 7, delay: 1,   opacity: 0.18 },
+  { size: 1.6, left: 67, top: 56, duration: 9, delay: 3.5, opacity: 0.14 },
+  { size: 3.2, left: 45, top: 70, duration: 6, delay: 0,   opacity: 0.26 },
 ];
 
 export const ParticleBackground = () => {
@@ -174,6 +152,7 @@ export const ParticleBackground = () => {
           className="absolute rounded-full bg-violet-500 animate-particle"
           style={{
             width: p.size, height: p.size, left: `${p.left}%`, top: `${p.top}%`, opacity: p.opacity,
+            transform: 'translateZ(0)',
             ['--particle-duration' as string]: `${p.duration}s`,
             ['--particle-delay' as string]: `${p.delay}s`,
           }}

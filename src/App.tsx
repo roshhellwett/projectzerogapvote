@@ -18,30 +18,30 @@ const ease = [0.16, 1, 0.3, 1] as const;
 const Cube = ({ size=52, color, rotate=0, delay=0 }: {size?:number;color:string;rotate?:number;delay?:number}) => (
   <motion.div
     animate={{ y:[0,-14,0], rotate:[rotate, rotate+6, rotate] }}
-    transition={{ duration:5+delay, repeat:Infinity, ease:'easeInOut', delay }}
+    transition={{ duration:5+delay, repeat:Infinity, ease:'easeInOut', delay, repeatType:'mirror' }}
     style={{ width:size, height:size, borderRadius:size*0.28,
       background:color, boxShadow:`4px 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.5)`,
-      flexShrink:0 }}
+      flexShrink:0, willChange:'transform', transform:'translateZ(0)' }}
   />
 );
 const Sphere = ({ size=44, color, delay=0 }: {size?:number;color:string;delay?:number}) => (
   <motion.div
-    animate={{ y:[0,-18,0], scale:[1,1.06,1] }}
-    transition={{ duration:4+delay*0.7, repeat:Infinity, ease:'easeInOut', delay }}
+    animate={{ y:[0,-18,0] }}
+    transition={{ duration:4+delay*0.7, repeat:Infinity, ease:'easeInOut', delay, repeatType:'mirror' }}
     style={{ width:size, height:size, borderRadius:'50%',
       background:color,
       boxShadow:`4px 8px 24px rgba(0,0,0,0.12), inset -3px -3px 6px rgba(0,0,0,0.08), inset 3px 3px 6px rgba(255,255,255,0.5)`,
-      flexShrink:0 }}
+      flexShrink:0, willChange:'transform', transform:'translateZ(0)' }}
   />
 );
 const Ring = ({ size=56, color, delay=0 }: {size?:number;color:string;delay?:number}) => (
   <motion.div
-    animate={{ y:[0,-10,0], rotate:[0,15,0] }}
-    transition={{ duration:6+delay, repeat:Infinity, ease:'easeInOut', delay }}
+    animate={{ y:[0,-10,0], rotate:[0,12,0] }}
+    transition={{ duration:6+delay, repeat:Infinity, ease:'easeInOut', delay, repeatType:'mirror' }}
     style={{ width:size, height:size, borderRadius:'50%',
       border:`8px solid ${color}`, background:'transparent',
       boxShadow:`0 6px 20px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.3)`,
-      flexShrink:0 }}
+      flexShrink:0, willChange:'transform', transform:'translateZ(0)' }}
   />
 );
 
@@ -176,16 +176,16 @@ function HashPanel() {
       </div>
       <div className="flex flex-col gap-2.5">
         {blocks.map((b,i)=>(
-          <motion.div key={b.id} initial={{opacity:0,x:-16}} animate={{opacity:1,x:0}} transition={{delay:i*0.15,duration:0.5,ease}}
-            className={`flex items-center gap-4 p-4 rounded-2xl ${b.bg}`}>
+          <motion.div key={b.id} initial={{opacity:0,x:-16}} animate={{opacity:1,x:0}} transition={{delay:i*0.1,duration:0.4,ease}}
+            className={`flex items-center gap-3 p-3 sm:p-4 rounded-2xl ${b.bg} min-w-0`}>
             <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${b.g} flex items-center justify-center shadow-sm shrink-0`}>
               <span className="text-[10px] font-black text-white">#{b.id}</span>
             </div>
-            <div className="flex-1 min-w-0">
-              <div className={`text-sm font-black font-mono ${b.tc}`}>{b.hash}</div>
-              <div className="text-[9px] text-slate-400 font-mono">← {b.prev}</div>
+            <div className="flex-1 min-w-0 overflow-hidden">
+              <div className={`text-xs sm:text-sm font-black font-mono truncate ${b.tc}`}>{b.hash}</div>
+              <div className="text-[9px] text-slate-400 font-mono truncate">← {b.prev}</div>
             </div>
-            <div className="text-[9px] text-slate-400 font-mono">SHA-256</div>
+            <div className="text-[9px] text-slate-400 font-mono shrink-0 hidden sm:block">SHA-256</div>
             {i < blocks.length-1 && (
               <motion.div animate={{y:[0,3,0]}} transition={{repeat:Infinity,duration:1.2,delay:i*0.3}}>
                 <ChevronDown className="w-3.5 h-3.5 text-violet-400" />
@@ -228,12 +228,12 @@ function JourneyPanel() {
       </div>
       <div className="space-y-1.5">
         {steps.map((s,i)=>(
-          <motion.div key={i} initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{delay:i*0.07,duration:0.4,ease}}
-            className={`flex items-center gap-3 px-4 py-3 rounded-2xl ${s.bg}`}>
+          <motion.div key={i} initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{delay:i*0.05,duration:0.3,ease}}
+            className={`flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl ${s.bg} min-w-0`}>
             <span className={`text-[11px] font-black font-mono w-6 shrink-0 ${s.tc}`}>{s.n}</span>
-            <div className="flex-1">
-              <div className={`text-xs font-bold ${s.tc}`}>{s.t}</div>
-              <div className={`text-[10px] ${s.nc}`}>{s.d}</div>
+            <div className="flex-1 min-w-0 overflow-hidden">
+              <div className={`text-xs font-bold truncate ${s.tc}`}>{s.t}</div>
+              <div className={`text-[10px] truncate ${s.nc}`}>{s.d}</div>
             </div>
           </motion.div>
         ))}
