@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8f7ff"/>
+      <stop offset="50%" style="stop-color:#f3f0ff"/>
+      <stop offset="100%" style="stop-color:#eef4ff"/>
+    </linearGradient>
+    <linearGradient id="badge" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#6366f1"/>
+    </linearGradient>
+    <linearGradient id="titlegrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#7c3aed"/>
+      <stop offset="40%" style="stop-color:#6366f1"/>
+      <stop offset="80%" style="stop-color:#f97316"/>
+      <stop offset="100%" style="stop-color:#ec4899"/>
+    </linearGradient>
+    <linearGradient id="nodeA" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="nodeB" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f97316"/>
+      <stop offset="100%" style="stop-color:#ec4899"/>
+    </linearGradient>
+    <filter id="glass">
+      <feGaussianBlur stdDeviation="0.5"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="12" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle dot grid -->
+  <pattern id="dots" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+    <circle cx="1" cy="1" r="1" fill="rgba(139,92,246,0.1)"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#dots)"/>
+
+  <!-- Top-left ambient blob -->
+  <ellipse cx="100" cy="100" rx="240" ry="200" fill="rgba(139,92,246,0.07)" filter="url(#glow)"/>
+  <!-- Bottom-right ambient blob -->
+  <ellipse cx="1100" cy="530" rx="220" ry="180" fill="rgba(249,115,22,0.07)" filter="url(#glow)"/>
+
+  <!-- Main glass card -->
+  <rect x="60" y="60" width="1080" height="510" rx="32" fill="rgba(255,255,255,0.72)" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/>
+
+  <!-- Live badge -->
+  <rect x="100" y="104" width="200" height="30" rx="15" fill="rgba(34,197,94,0.1)" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
+  <circle cx="118" cy="119" r="5" fill="#22c55e"/>
+  <text x="130" y="124" font-family="system-ui,-apple-system,sans-serif" font-size="11" font-weight="700" fill="#16a34a" letter-spacing="0.06em">PROPOSED TO ECI · UIDAI</text>
+
+  <!-- Main headline -->
+  <text x="100" y="195" font-family="system-ui,-apple-system,sans-serif" font-size="58" font-weight="900" letter-spacing="-0.04em" fill="#0f0a2e">Secure India's</text>
+  <text x="100" y="265" font-family="system-ui,-apple-system,sans-serif" font-size="68" font-weight="900" letter-spacing="-0.04em" fill="url(#titlegrad)">elections</text>
+  <text x="100" y="335" font-family="system-ui,-apple-system,sans-serif" font-size="58" font-weight="900" letter-spacing="-0.04em" fill="#0f0a2e">for ever.</text>
+
+  <!-- Subtext -->
+  <text x="100" y="385" font-family="system-ui,-apple-system,sans-serif" font-size="19" font-weight="400" fill="#64748b">Vote manipulation made physically &amp; mathematically impossible.</text>
+
+  <!-- Author + brand -->
+  <rect x="100" y="416" width="340" height="36" rx="18" fill="url(#badge)"/>
+  <text x="120" y="439" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="700" fill="white" letter-spacing="0.02em">ZeroGap Voting · Roshan Kr Singh</text>
+
+  <!-- Right side — architecture mini diagram -->
+  <!-- Node A box -->
+  <rect x="720" y="130" width="180" height="140" rx="20" fill="rgba(224,231,255,0.8)" stroke="rgba(165,180,252,0.6)" stroke-width="1.5"/>
+  <rect x="740" y="152" width="40" height="40" rx="12" fill="url(#nodeA)"/>
+  <text x="792" y="170" font-family="system-ui,-apple-system,sans-serif" font-size="11" font-weight="800" fill="#4338ca" letter-spacing="0.08em">NODE A</text>
+  <text x="792" y="185" font-family="system-ui,-apple-system,sans-serif" font-size="10" fill="#6366f1">Identity Terminal</text>
+  <text x="740" y="218" font-family="system-ui,-apple-system,sans-serif" font-size="10" fill="#6366f1">● Biometric Auth</text>
+  <text x="740" y="234" font-family="system-ui,-apple-system,sans-serif" font-size="10" fill="#6366f1">● QR Generator</text>
+  <text x="740" y="250" font-family="system-ui,-apple-system,sans-serif" font-size="10" fill="#22c55e">● ONLINE</text>
+
+  <!-- Optical channel animated line -->
+  <line x1="900" y1="200" x2="1000" y2="200" stroke="url(#titlegrad)" stroke-width="2" stroke-dasharray="6,3"/>
+  <circle cx="920" cy="200" r="5" fill="#8b5cf6" opacity="0.8"/>
+  <circle cx="950" cy="200" r="4" fill="#f97316" opacity="0.7"/>
+  <circle cx="980" cy="200" r="5" fill="#6366f1" opacity="0.8"/>
+  <text x="910" y="188" font-family="system-ui,-apple-system,sans-serif" font-size="9" font-weight="700" fill="#8b5cf6" letter-spacing="0.1em">OPTICAL ONLY</text>
+  <!-- X marks -->
+  <text x="908" y="216" font-family="system-ui,-apple-system,sans-serif" font-size="9" fill="#ef4444">✕ No Wire</text>
+  <text x="908" y="228" font-family="system-ui,-apple-system,sans-serif" font-size="9" fill="#ef4444">✕ No WiFi</text>
+
+  <!-- Node B box -->
+  <rect x="1000" y="130" width="100" height="140" rx="20" fill="rgba(255,247,237,0.8)" stroke="rgba(253,186,116,0.5)" stroke-width="1.5"/>
+  <rect x="1020" y="152" width="36" height="36" rx="10" fill="url(#nodeB)"/>
+  <text x="1013" y="210" font-family="system-ui,-apple-system,sans-serif" font-size="10" font-weight="800" fill="#c2410c" letter-spacing="0.06em">NODE B</text>
+  <text x="1013" y="224" font-family="system-ui,-apple-system,sans-serif" font-size="9" fill="#ea580c">Airgapped</text>
+  <text x="1013" y="238" font-family="system-ui,-apple-system,sans-serif" font-size="9" fill="#94a3b8">● OFFLINE</text>
+
+  <!-- A=B=C strip -->
+  <rect x="720" y="300" width="116" height="36" rx="12" fill="rgba(224,231,255,0.7)" stroke="rgba(165,180,252,0.5)" stroke-width="1"/>
+  <text x="740" y="323" font-family="monospace" font-size="11" font-weight="900" fill="#4338ca">A = Server Log</text>
+  <rect x="843" y="300" width="108" height="36" rx="12" fill="rgba(255,247,237,0.7)" stroke="rgba(253,186,116,0.5)" stroke-width="1"/>
+  <text x="860" y="323" font-family="monospace" font-size="11" font-weight="900" fill="#c2410c">B = EEPROM</text>
+  <rect x="958" y="300" width="122" height="36" rx="12" fill="rgba(240,253,244,0.7)" stroke="rgba(134,239,172,0.5)" stroke-width="1"/>
+  <text x="972" y="323" font-family="monospace" font-size="11" font-weight="900" fill="#15803d">C = VVPAT Paper</text>
+
+  <!-- 4 protocol pills -->
+  <rect x="720" y="360" width="134" height="28" rx="14" fill="rgba(237,233,254,0.8)" stroke="rgba(196,181,253,0.5)" stroke-width="1"/>
+  <text x="740" y="379" font-family="system-ui,-apple-system,sans-serif" font-size="11" font-weight="700" fill="#7c3aed">🔒 Optical Airgap</text>
+  <rect x="862" y="360" width="126" height="28" rx="14" fill="rgba(237,233,254,0.8)" stroke="rgba(196,181,253,0.5)" stroke-width="1"/>
+  <text x="880" y="379" font-family="system-ui,-apple-system,sans-serif" font-size="11" font-weight="700" fill="#7c3aed">⛓ Hash Chain</text>
+  <rect x="720" y="396" width="134" height="28" rx="14" fill="rgba(240,253,244,0.8)" stroke="rgba(134,239,172,0.5)" stroke-width="1"/>
+  <text x="738" y="415" font-family="system-ui,-apple-system,sans-serif" font-size="11" font-weight="700" fill="#15803d">🛡 HW Watchdog</text>
+  <rect x="862" y="396" width="120" height="28" rx="14" fill="rgba(255,247,237,0.8)" stroke="rgba(253,186,116,0.5)" stroke-width="1"/>
+  <text x="880" y="415" font-family="system-ui,-apple-system,sans-serif" font-size="11" font-weight="700" fill="#c2410c">🧾 VVPAT Proof</text>
+
+  <!-- Stats row -->
+  <text x="720" y="468" font-family="monospace" font-size="24" font-weight="900" fill="#7c3aed">960M+</text>
+  <text x="720" y="485" font-family="system-ui,-apple-system,sans-serif" font-size="10" fill="#94a3b8">Eligible Voters</text>
+  <text x="840" y="468" font-family="monospace" font-size="24" font-weight="900" fill="#6366f1">4</text>
+  <text x="840" y="485" font-family="system-ui,-apple-system,sans-serif" font-size="10" fill="#94a3b8">Protocols</text>
+  <text x="900" y="468" font-family="monospace" font-size="24" font-weight="900" fill="#22c55e">90s</text>
+  <text x="900" y="485" font-family="system-ui,-apple-system,sans-serif" font-size="10" fill="#94a3b8">QR TTL</text>
+  <text x="980" y="468" font-family="monospace" font-size="20" font-weight="900" fill="#f97316">A=B=C</text>
+  <text x="980" y="485" font-family="system-ui,-apple-system,sans-serif" font-size="10" fill="#94a3b8">Triple Recon.</text>
+
+  <!-- Bottom border accent -->
+  <rect x="60" y="552" width="1080" height="3" rx="2" fill="url(#titlegrad)" opacity="0.6"/>
+</svg>

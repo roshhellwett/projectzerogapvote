@@ -1,68 +1,257 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-IN" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- ═══════════════════════════════════════════
+         FAVICONS & PWA ICONS
+    ═══════════════════════════════════════════ -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <meta name="theme-color" content="#8b5cf6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#6366f1" media="(prefers-color-scheme: dark)" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="ZeroGap Vote" />
 
-    <!-- Primary Meta Tags -->
-    <title>Zero-Gap Voting Architecture — Secure EVM Proposal for India by Roshan Kr Singh</title>
-    <meta name="title" content="Zero-Gap Voting Architecture — Secure EVM Proposal for India" />
-    <meta name="description" content="An open technical blueprint proposing a dual-node, cryptographically secured electronic voting system that makes vote manipulation physically and mathematically impossible. Proposed by Roshan Kr Singh to the Election Commission of India, UIDAI, and MeitY." />
-    <meta name="keywords" content="Zero-Gap Voting, EVM security, electronic voting India, election commission India, secure voting system, cryptographic voting, VVPAT, hash chain voting, optical airgap, voter authentication, Aadhaar voting, biometric voting, EVM tamper proof, India election technology, roshan kr singh, roshhellwett" />
-    <meta name="author" content="Roshan Kr Singh (roshhellwett)" />
-    <meta name="robots" content="index, follow" />
-    <meta name="language" content="English" />
-    <meta name="revisit-after" content="7 days" />
-    <meta name="theme-color" content="#020617" />
-    <link rel="canonical" href="https://roshhellwett.github.io/projectzerogapvote/" />
+    <!-- ═══════════════════════════════════════════
+         PRECONNECT — speed up Google Fonts
+    ═══════════════════════════════════════════ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://roshhellwett.github.io/projectzerogapvote/" />
-    <meta property="og:title" content="Zero-Gap Voting Architecture — Making Vote Manipulation Impossible" />
-    <meta property="og:description" content="A dual-node, airgapped, cryptographically secured electronic voting system for India. Proposed by Roshan Kr Singh." />
-    <meta property="og:image" content="/og-image.png" />
-    <meta property="og:site_name" content="Zero-Gap Voting Architecture" />
-    <meta property="og:locale" content="en_IN" />
+    <!-- ═══════════════════════════════════════════
+         PRIMARY META
+    ═══════════════════════════════════════════ -->
+    <title>Zero-Gap Voting — Making EVM Manipulation Physically Impossible | India 2029</title>
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://zerogapvote.com" />
-    <meta name="twitter:title" content="Zero-Gap Voting Architecture — Secure EVM Proposal for India" />
-    <meta name="twitter:description" content="A dual-node, airgapped, cryptographically secured electronic voting system for India. Proposed by Roshan Kr Singh." />
-    <meta name="twitter:image" content="/og-image.png" />
+    <meta name="title"       content="Zero-Gap Voting — Making EVM Manipulation Physically Impossible | India 2029" />
+    <meta name="description" content="Zero-Gap is an open technical blueprint for India's elections: dual-node airgap, SHA-256 hash chain, hardware watchdog, VVPAT paper proof. Vote manipulation made physically and mathematically impossible. Proposed to ECI, UIDAI & MeitY by Roshan Kr Singh." />
 
-    <!-- Structured Data — JSON-LD -->
+    <meta name="keywords" content="
+      Zero-Gap Voting, EVM security India, EVM hack proof, electronic voting machine tamper proof,
+      election commission India, ECI proposal, UIDAI voting, MeitY election technology,
+      secure voting system India 2024 2029, Lok Sabha election technology, biometric voting India,
+      optical airgap voting, hash chain EEPROM, VVPAT paper trail, hardware watchdog EVM,
+      cryptographic voting, RSA-4096 QR voting, voter authentication Aadhaar,
+      dual node voting architecture, airgapped EVM, vote manipulation impossible,
+      India election reform, electoral integrity India, EVM transparency,
+      Roshan Kr Singh, roshhellwett, zerogapvote, zero gap voting architecture
+    " />
+
+    <meta name="author"        content="Roshan Kr Singh" />
+    <meta name="creator"       content="Roshan Kr Singh (@roshhellwett)" />
+    <meta name="publisher"     content="Zero-Gap Voting Initiative" />
+    <meta name="robots"        content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="googlebot"     content="index, follow" />
+    <meta name="language"      content="en-IN" />
+    <meta name="revisit-after" content="3 days" />
+    <meta name="rating"        content="general" />
+    <meta name="category"      content="Technology, Politics, Security, India" />
+
+    <link rel="canonical"  href="https://roshhellwett.github.io/projectzerogapvote/" />
+    <link rel="alternate"  hreflang="en-IN" href="https://roshhellwett.github.io/projectzerogapvote/" />
+    <link rel="alternate"  hreflang="en"    href="https://roshhellwett.github.io/projectzerogapvote/" />
+    <link rel="alternate"  hreflang="x-default" href="https://roshhellwett.github.io/projectzerogapvote/" />
+
+    <!-- ═══════════════════════════════════════════
+         OPEN GRAPH (Facebook, LinkedIn, WhatsApp, Telegram)
+    ═══════════════════════════════════════════ -->
+    <meta property="og:type"        content="article" />
+    <meta property="og:url"         content="https://roshhellwett.github.io/projectzerogapvote/" />
+    <meta property="og:site_name"   content="Zero-Gap Voting Architecture" />
+    <meta property="og:locale"      content="en_IN" />
+    <meta property="og:title"       content="Zero-Gap Voting — Making EVM Manipulation Physically Impossible" />
+    <meta property="og:description" content="Dual-node airgap · SHA-256 Hash Chain · Hardware Watchdog · VVPAT Paper Proof. An open technical proposal that makes vote manipulation physically and mathematically impossible. For India's 960 million voters." />
+    <meta property="og:image"              content="https://roshhellwett.github.io/projectzerogapvote/og-image.svg" />
+    <meta property="og:image:secure_url"   content="https://roshhellwett.github.io/projectzerogapvote/og-image.svg" />
+    <meta property="og:image:type"         content="image/svg+xml" />
+    <meta property="og:image:width"        content="1200" />
+    <meta property="og:image:height"       content="630" />
+    <meta property="og:image:alt"          content="Zero-Gap Voting Architecture diagram — Node A and Node B connected by optical airgap only" />
+    <meta property="article:author"        content="Roshan Kr Singh" />
+    <meta property="article:published_time" content="2026-04-01T00:00:00+05:30" />
+    <meta property="article:modified_time"  content="2026-05-04T00:00:00+05:30" />
+    <meta property="article:section"        content="Technology" />
+    <meta property="article:tag"            content="EVM Security" />
+    <meta property="article:tag"            content="India Elections" />
+    <meta property="article:tag"            content="Cryptography" />
+    <meta property="article:tag"            content="Voting Technology" />
+    <meta property="article:tag"            content="Election Commission India" />
+
+    <!-- ═══════════════════════════════════════════
+         TWITTER / X CARD
+    ═══════════════════════════════════════════ -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:site"        content="@roshhellwett" />
+    <meta name="twitter:creator"     content="@roshhellwett" />
+    <meta name="twitter:url"         content="https://roshhellwett.github.io/projectzerogapvote/" />
+    <meta name="twitter:title"       content="Zero-Gap Voting — EVM Manipulation Made Physically Impossible 🇮🇳" />
+    <meta name="twitter:description" content="An open architecture for India's elections: optical airgap, hash chain ledger, hardware watchdog, VVPAT paper proof. 960M voters deserve this. Proposed to ECI · UIDAI · MeitY." />
+    <meta name="twitter:image"       content="https://roshhellwett.github.io/projectzerogapvote/og-image.svg" />
+    <meta name="twitter:image:alt"   content="Zero-Gap Voting Architecture — Node A to Node B optical airgap diagram" />
+    <meta name="twitter:label1"      content="Proposed to" />
+    <meta name="twitter:data1"       content="ECI · UIDAI · MeitY" />
+    <meta name="twitter:label2"      content="Voters Protected" />
+    <meta name="twitter:data2"       content="960 Million" />
+
+    <!-- ═══════════════════════════════════════════
+         JSON-LD STRUCTURED DATA
+         1. TechArticle (main content)
+         2. FAQPage    (boosts rich results / featured snippets)
+         3. BreadcrumbList (Google breadcrumb in SERP)
+         4. Person     (author knowledge panel)
+    ═══════════════════════════════════════════ -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "TechArticle",
-      "headline": "Zero-Gap Voting Architecture: A Formal Technical Proposal for the Modernization of the Indian Electronic Voting System",
-      "description": "An open technical blueprint proposing a dual-node, cryptographically secured electronic voting system that makes vote manipulation physically and mathematically impossible.",
-      "author": {
-        "@type": "Person",
-        "name": "Roshan Kr Singh",
-        "url": "https://github.com/roshhellwett",
-        "email": "roshhellwett@icloud.com"
-      },
-      "datePublished": "2026-04-01",
-      "dateModified": "2026-04-30",
-      "publisher": {
-        "@type": "Organization",
-        "name": "Zero-Gap Voting Initiative"
-      },
-      "keywords": ["electronic voting", "EVM security", "India elections", "cryptographic voting", "optical airgap", "VVPAT", "hash chain", "biometric authentication"],
-      "articleSection": "Technology",
-      "inLanguage": "en"
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://roshhellwett.github.io/projectzerogapvote/#article",
+          "headline": "Zero-Gap Voting Architecture: Making India's EVM Manipulation Physically and Mathematically Impossible",
+          "alternativeHeadline": "A Dual-Node Airgapped Cryptographic Voting System Proposed to the Election Commission of India",
+          "description": "Zero-Gap is an open technical blueprint that proposes replacing India's monolithic EVMs with a dual-node architecture — Node A (biometric identity, online) and Node B (ballot, fully airgapped) — connected only by a time-signed optical QR code. The system adds a SHA-256 hash chain ledger, hardware watchdog, and mandatory VVPAT paper proof to make vote manipulation physically and mathematically impossible.",
+          "image": "https://roshhellwett.github.io/projectzerogapvote/og-image.svg",
+          "author": {
+            "@type": "Person",
+            "@id": "https://github.com/roshhellwett",
+            "name": "Roshan Kr Singh",
+            "alternateName": "roshhellwett",
+            "url": "https://github.com/roshhellwett",
+            "email": "roshhellwett@icloud.com",
+            "sameAs": [
+              "https://github.com/roshhellwett",
+              "https://twitter.com/roshhellwett"
+            ]
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Zero-Gap Voting Initiative",
+            "url": "https://roshhellwett.github.io/projectzerogapvote/"
+          },
+          "datePublished": "2026-04-01",
+          "dateModified": "2026-05-04",
+          "mainEntityOfPage": "https://roshhellwett.github.io/projectzerogapvote/",
+          "url": "https://roshhellwett.github.io/projectzerogapvote/",
+          "inLanguage": "en-IN",
+          "articleSection": "Election Technology",
+          "keywords": "EVM security, electronic voting India, optical airgap, hash chain, VVPAT, hardware watchdog, cryptographic voting, election commission India, biometric authentication, dual node voting",
+          "about": [
+            { "@type": "Thing", "name": "Electronic Voting Machine" },
+            { "@type": "Thing", "name": "Election Security" },
+            { "@type": "Thing", "name": "Cryptography" },
+            { "@type": "Thing", "name": "India Elections" }
+          ],
+          "mentions": [
+            { "@type": "Organization", "name": "Election Commission of India" },
+            { "@type": "Organization", "name": "UIDAI" },
+            { "@type": "Organization", "name": "MeitY" }
+          ],
+          "isAccessibleForFree": true,
+          "license": "https://opensource.org/licenses/MIT"
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://roshhellwett.github.io/projectzerogapvote/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Can digital voting systems always be hacked?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Zero-Gap agrees — which is why security does not rely on software integrity alone. The physical airgap, hardware watchdog, and paper VVPAT mean even a fully compromised software stack cannot alter election outcomes without physically detectable evidence."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What if biometric authentication fails for rural voters?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Dual-biometric redundancy: fingerprint is primary, but near-infrared iris scanning serves as automatic fallback — the same system used by Aadhaar across 1.4 billion enrollees. Iris specifically addresses worn fingerprints common among agricultural and manual-labour voters."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Who controls the QR signing keys in Zero-Gap?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Keys are managed exclusively by the Election Commission of India under the same constitutional protections as current EVM firmware. A multi-party key ceremony ensures no single actor can generate or compromise signing keys."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How much does Zero-Gap cost compared to running an election?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The estimated one-time investment is Rs. 14,750–21,150 crore — approximately 12–18% of the economic footprint of the 2024 General Election. This is a one-time deployment that secures every election thereafter, using existing BEL manufacturing lines and UIDAI infrastructure."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is Zero-Gap voting too complex to deploy nationally in India?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Node A uses the same hardware as Aadhaar e-KYC terminals already manufactured by BEL. Node B uses the same microcontroller architecture as current EVMs. VVPAT is already Supreme Court-mandated. Zero-Gap is tighter integration of existing components, not a greenfield system."
+              }
+            }
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://roshhellwett.github.io/projectzerogapvote/#breadcrumb",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://roshhellwett.github.io/projectzerogapvote/" },
+            { "@type": "ListItem", "position": 2, "name": "Architecture", "item": "https://roshhellwett.github.io/projectzerogapvote/#solution" },
+            { "@type": "ListItem", "position": 3, "name": "Security Protocols", "item": "https://roshhellwett.github.io/projectzerogapvote/#protocols" }
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://github.com/roshhellwett",
+          "name": "Roshan Kr Singh",
+          "alternateName": "roshhellwett",
+          "url": "https://github.com/roshhellwett",
+          "jobTitle": "Systems Architect & Election Technology Researcher",
+          "knowsAbout": ["Cryptography", "Electronic Voting", "India Elections", "Hardware Security", "Biometric Authentication"],
+          "sameAs": [
+            "https://github.com/roshhellwett",
+            "https://twitter.com/roshhellwett"
+          ]
+        }
+      ]
     }
     </script>
 
-    <!-- Hidden SEO Tags for roshhellwett -->
-    <meta name="github" content="roshhellwett" />
-    <meta name="creator" content="roshhellwett" />
-    <meta name="designer" content="Roshan Kr Singh (@roshhellwett)" />
-    <meta name="contact-email" content="roshhellwett@icloud.com" />
+    <!-- ═══════════════════════════════════════════
+         EXTRA VIRAL / DISCOVERY SIGNALS
+    ═══════════════════════════════════════════ -->
+    <!-- Pinterest rich pin -->
+    <meta name="pinterest-rich-pin" content="true" />
+    <!-- LinkedIn post -->
+    <meta property="og:rich_attachment" content="true" />
+    <!-- Slack / Discord unfurl -->
+    <meta name="slack-app-id" content="" />
+    <!-- WhatsApp / iMessage link preview handled by og: tags above -->
+
+    <!-- News / Media signals -->
+    <meta name="news_keywords" content="EVM security, India election 2029, vote manipulation, election commission India, Zero-Gap voting, Roshan Kr Singh" />
+    <meta name="standout" content="https://roshhellwett.github.io/projectzerogapvote/" />
+
+    <!-- DC metadata for academic indexing -->
+    <meta name="DC.title"    content="Zero-Gap Voting Architecture" />
+    <meta name="DC.creator"  content="Roshan Kr Singh" />
+    <meta name="DC.subject"  content="Electronic Voting Security; India Elections; Cryptography" />
+    <meta name="DC.language" content="en-IN" />
+    <meta name="DC.type"     content="TechArticle" />
+
+    <!-- ═══════════════════════════════════════════
+         PERFORMANCE HINTS
+    ═══════════════════════════════════════════ -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
   </head>
   <body>
     <div id="root"></div>
