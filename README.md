@@ -1,16 +1,10 @@
-# Zero-Gap Voting Architecture
-
-<p align="center">
-  <strong>A Formal Technical Proposal for Modernizing India's Electronic Voting System</strong>
-</p>
-
-<p align="center">
   <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-19.2-61DAFB?logo=react&logoColor=white" alt="React 19"></a>
   <a href="https://vitejs.dev/"><img src="https://img.shields.io/badge/Vite-8.0-646CFF?logo=vite&logoColor=white" alt="Vite 8"></a>
   <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwind-4.2-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind CSS 4"></a>
   <a href="https://www.framer.com/motion/"><img src="https://img.shields.io/badge/Framer_Motion-12.3-EF4444?logo=framer&logoColor=white" alt="Framer Motion"></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white" alt="TypeScript"></a>
-</p>
+# PROJECT ZERO GAP VOTE
+<strong>A Formal Technical Proposal for Modernizing India's Electronic Voting System</strong>
 
 ---
 
