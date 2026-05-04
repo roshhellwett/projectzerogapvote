@@ -233,39 +233,160 @@ function HashPanel() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   VOTER JOURNEY PANEL
+   VOTER JOURNEY PANEL — CINEMATIC VERSION with active step trail, progress glow
 ══════════════════════════════════════════════════════════════════ */
 function JourneyPanel() {
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [completedSteps, setCompletedSteps] = React.useState<number[]>([]);
+  
+  // Cycle through steps animation
+  React.useEffect(()=>{
+    const interval = setInterval(()=>{
+      setActiveStep(prev=>{
+        const next = (prev + 1) % 8;
+        if(next === 0){
+          setCompletedSteps([]);
+        } else {
+          setCompletedSteps(s=>[...s,prev]);
+        }
+        return next;
+      });
+    },2000);
+    return ()=>clearInterval(interval);
+  },[]);
+  
   const steps = [
-    {n:'01',t:'Smart Card Tap',d:'NFC Voter ID on Node A',bg:'glass-indigo',tc:'text-indigo-600',nc:'text-indigo-500'},
-    {n:'02',t:'Biometric Scan',d:'Fingerprint + iris fallback',bg:'glass-indigo',tc:'text-indigo-600',nc:'text-indigo-500'},
-    {n:'03',t:'Server Validates',d:'Real-time deduplication',bg:'glass-indigo',tc:'text-indigo-600',nc:'text-indigo-500'},
-    {n:'04',t:'QR Token Generated',d:'RSA-4096 signed, 90s TTL',bg:'glass-indigo',tc:'text-indigo-600',nc:'text-indigo-500'},
-    {n:'⟶',t:'Airgap Crossed',d:'Voter walks to booth — light only',bg:'glass-violet',tc:'text-violet-700',nc:'text-violet-500'},
-    {n:'05',t:'QR Verified Offline',d:'Signature + PROM check',bg:'glass',tc:'text-slate-700',nc:'text-slate-500'},
-    {n:'06',t:'Ballot Cast + VVPAT',d:'Paper printed, 5s display',bg:'glass-saffron',tc:'text-orange-600',nc:'text-orange-500'},
-    {n:'07',t:'Hash Chain Commit',d:'Vote locked into EEPROM',bg:'glass-green',tc:'text-green-700',nc:'text-green-600'},
+    {n:'01',icon:Fingerprint,t:'Smart Card Tap',d:'NFC Voter ID on Node A',color:'#64748b'},
+    {n:'02',icon:Activity,t:'Biometric Scan',d:'Fingerprint + iris fallback',color:'#64748b'},
+    {n:'03',icon:Database,t:'Server Validates',d:'Real-time deduplication',color:'#64748b'},
+    {n:'04',icon:WifiOff,t:'QR Token Generated',d:'RSA-4096 signed, 90s TTL',color:'#64748b'},
+    {n:'⟶',icon:ArrowRight,t:'Airgap Crossed',d:'Voter walks to booth — light only',color:'#E87722',isBridge:true},
+    {n:'05',icon:Shield,t:'QR Verified Offline',d:'Signature + PROM check',color:'#64748b'},
+    {n:'06',icon:Printer,t:'Ballot Cast + VVPAT',d:'Paper printed, 5s display',color:'#E87722'},
+    {n:'07',icon:CheckCircle2,t:'Hash Chain Commit',d:'Vote locked into EEPROM',color:'#0F7A3A'},
   ];
+  
   return (
-    <div className="w-full glass-solid rounded-3xl p-7 select-none">
-      <div className="flex items-center gap-2 mb-5">
-        <div className="w-3 h-3 rounded-full bg-red-300/60" />
-        <div className="w-3 h-3 rounded-full bg-yellow-300/60" />
-        <div className="w-3 h-3 rounded-full bg-green-300/60" />
-        <span className="ml-3 text-[11px] font-mono text-violet-400/60 tracking-widest uppercase">Voter Session Log</span>
-        <span className="ml-auto live-dot">ACTIVE</span>
+    <div className="w-full glass-cinematic rounded-3xl p-6 select-none relative overflow-hidden">
+      {/* Progress trail background */}
+      <div className="absolute left-9 top-20 bottom-10 w-0.5 bg-slate-200 rounded-full">
+        <motion.div 
+          className="absolute top-0 left-0 right-0 bg-gradient-to-b from-slate-400 via-amber-400 to-emerald-400 rounded-full"
+          animate={{height:`${(activeStep / (steps.length - 1)) * 100}%`}}
+          transition={{duration:0.5,ease:[0.16,1,0.3,1]}}
+        />
       </div>
-      <div className="space-y-1.5">
-        {steps.map((s,i)=>(
-          <motion.div key={i} initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{delay:i*0.05,duration:0.3,ease}}
-            className={`flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl ${s.bg} min-w-0`}>
-            <span className={`text-[11px] font-black font-mono w-6 shrink-0 ${s.tc}`}>{s.n}</span>
-            <div className="flex-1 min-w-0 overflow-hidden">
-              <div className={`text-xs font-bold truncate ${s.tc}`}>{s.t}</div>
-              <div className={`text-[10px] truncate ${s.nc}`}>{s.d}</div>
-            </div>
-          </motion.div>
-        ))}
+      
+      {/* Header */}
+      <div className="flex items-center gap-2 mb-5 relative z-10">
+        <div className="flex gap-1.5">
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500"/>
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.3}} className="w-3 h-3 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500"/>
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.6}} className="w-3 h-3 rounded-full bg-gradient-to-br from-green-400 to-emerald-500"/>
+        </div>
+        <span className="ml-3 text-[11px] font-mono text-slate-400 tracking-widest uppercase">Voter Session Journey</span>
+        
+        <motion.div 
+          animate={{opacity:[0.5,1,0.5]}} 
+          transition={{repeat:Infinity,duration:1.5}}
+          className="ml-auto flex items-center gap-1.5 px-2 py-1 rounded-full bg-green-50 border border-green-200">
+          <motion.div 
+            animate={{scale:[1,1.3,1]}} 
+            transition={{repeat:Infinity,duration:1}}
+            className="w-1.5 h-1.5 rounded-full bg-green-500"
+          />
+          <span className="text-[9px] font-bold text-green-600 font-mono">LIVE</span>
+        </motion.div>
+      </div>
+      
+      {/* Steps with cinematic styling */}
+      <div className="space-y-2 relative z-10">
+        {steps.map((s,i)=>{
+          const isActive = i === activeStep;
+          const isCompleted = completedSteps.includes(i) || i < activeStep;
+          
+          return (
+            <motion.div 
+              key={i} 
+              initial={{opacity:0,x:-20}}
+              animate={{opacity:1,x:0}}
+              transition={{delay:i*0.08,duration:0.4,ease:[0.16,1,0.3,1]}}
+              className={`flex items-center gap-3 px-3 py-3 rounded-2xl transition-all duration-300 ${
+                isActive?'bg-white border-2 border-amber-200 shadow-lg shadow-amber-100':
+                isCompleted?'bg-slate-50 border border-slate-200':
+                'bg-slate-50/50 border border-slate-100 opacity-60'
+              }`}>
+              {/* Step number/icon */}
+              <motion.div 
+                animate={isActive?{scale:[1,1.1,1]}:{scale:1}}
+                transition={{repeat:isActive?Infinity:0,duration:1}}
+                className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 font-black font-mono text-sm ${
+                  isActive?'bg-amber-100 text-amber-700 shadow-md':
+                  isCompleted?'bg-slate-200 text-slate-600':
+                  'bg-slate-100 text-slate-400'
+                }`}
+                style={isCompleted&&!isActive?{backgroundColor:s.color+'20',color:s.color}:undefined}>
+                {isCompleted&&!isActive?(
+                  <CheckCircle2 className="w-5 h-5"/>
+                ):s.n}
+              </motion.div>
+              
+              {/* Content */}
+              <div className="flex-1 min-w-0">
+                <div className={`text-sm font-bold truncate ${
+                  isActive?'text-slate-800':
+                  isCompleted?'text-slate-700':
+                  'text-slate-400'
+                }`}>
+                  {s.t}
+                </div>
+                <div className={`text-[11px] truncate ${
+                  isActive?'text-amber-600':
+                  isCompleted?'text-slate-500':
+                  'text-slate-300'
+                }`}>
+                  {s.d}
+                </div>
+              </div>
+              
+              {/* Active indicator */}
+              {isActive && (
+                <motion.div 
+                  initial={{scale:0,opacity:0}}
+                  animate={{scale:1,opacity:1}}
+                  className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-amber-50 border border-amber-200">
+                  <motion.div 
+                    animate={{scale:[1,1.3,1],opacity:[1,0.5,1]}}
+                    transition={{repeat:Infinity,duration:1}}
+                    className="w-1.5 h-1.5 rounded-full bg-amber-500"
+                  />
+                  <span className="text-[10px] font-bold text-amber-600 font-mono">ACTIVE</span>
+                </motion.div>
+              )}
+              
+              {isCompleted && !isActive && (
+                <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0"/>
+              )}
+            </motion.div>
+          );
+        })}
+      </div>
+      
+      {/* Progress summary */}
+      <div className="mt-4 flex items-center justify-between px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200">
+        <span className="text-[11px] text-slate-500 font-mono">Journey Progress</span>
+        <div className="flex items-center gap-2">
+          <div className="w-24 h-2 rounded-full bg-slate-200 overflow-hidden">
+            <motion.div 
+              className="h-full rounded-full bg-gradient-to-r from-slate-400 via-amber-400 to-emerald-400"
+              animate={{width:`${((activeStep + 1) / steps.length) * 100}%`}}
+              transition={{duration:0.3}}
+            />
+          </div>
+          <span className="text-[11px] font-bold font-mono text-slate-600">
+            {Math.round(((activeStep + 1) / steps.length) * 100)}%
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -276,143 +397,355 @@ function JourneyPanel() {
    PROTOCOL DIAGRAMS — one per protocol, themed like AirgapPanel
 ══════════════════════════════════════════════════════════════════ */
 
-/** 01 — Optical Airgap: animated QR photon beam Node A → Node B */
+/** 01 — Optical Airgap: CINEMATIC VERSION with enhanced photon beams, particle effects, 3D depth */
 function AirgapDiagram() {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-6 p-8 select-none">
-      {/* titlebar */}
+    <div className="w-full h-full flex flex-col items-center justify-center gap-6 p-6 sm:p-8 select-none particle-container">
+      {/* Titlebar with cinematic styling */}
       <div className="w-full flex items-center gap-2 mb-2">
-        <div className="w-3 h-3 rounded-full bg-red-300/60"/><div className="w-3 h-3 rounded-full bg-yellow-300/60"/><div className="w-3 h-3 rounded-full bg-green-300/60"/>
-        <span className="ml-3 text-[11px] font-mono text-indigo-400/60 tracking-widest uppercase">Optical Channel — Zero Wires</span>
+        <div className="flex gap-1.5">
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500 shadow-lg shadow-red-200"/>
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.3}} className="w-3 h-3 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 shadow-lg shadow-yellow-200"/>
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.6}} className="w-3 h-3 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 shadow-lg shadow-green-200"/>
+        </div>
+        <span className="ml-3 text-[11px] font-mono text-slate-400 tracking-widest uppercase">Optical Channel — Zero Wires</span>
+        <motion.div 
+          animate={{opacity:[0.5,1,0.5]}} 
+          transition={{repeat:Infinity,duration:1.5}}
+          className="ml-auto flex items-center gap-1.5 px-2 py-1 rounded-full bg-slate-100 border border-slate-200">
+          <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-glow-pulse-green"/>
+          <span className="text-[9px] font-bold text-slate-500 font-mono">LIVE</span>
+        </motion.div>
       </div>
 
-      <div className="flex items-center gap-0 w-full max-w-lg">
-        {/* Node A */}
-        <motion.div initial={{opacity:0,x:-20}} animate={{opacity:1,x:0}} transition={{duration:0.5}}
-          className="flex-1 glass-indigo rounded-2xl p-4">
-          <div className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-3">Node A · Online</div>
-          {['Biometric Auth','Smart Card','Sign QR','Server Log'].map(t=>(
-            <div key={t} className="flex items-center gap-2 text-[11px] text-indigo-500 mb-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0"/>{t}
+      <div className="flex items-stretch gap-0 w-full max-w-lg depth-layer">
+        {/* Node A — Enhanced with cinematic depth */}
+        <motion.div 
+          initial={{opacity:0,x:-30,rotateY:-15}} 
+          animate={{opacity:1,x:0,rotateY:0}} 
+          transition={{duration:0.7,ease:[0.16,1,0.3,1]}}
+          className="flex-1 glass-cinematic rounded-2xl p-4 relative overflow-hidden group">
+          {/* Shimmer overlay */}
+          <div className="absolute inset-0 animate-shimmer opacity-30 pointer-events-none"/>
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center shadow-lg">
+                <Database className="w-4 h-4 text-white"/>
+              </div>
+              <div>
+                <div className="text-[10px] font-black text-slate-700 uppercase tracking-widest">Node A</div>
+                <div className="text-[9px] text-slate-400 font-mono">Online Infrastructure</div>
+              </div>
             </div>
-          ))}
-          <div className="mt-3 flex items-center gap-1.5">
-            <motion.div animate={{scale:[1,1.4,1],opacity:[1,0.5,1]}} transition={{repeat:Infinity,duration:1.2}}
-              className="w-2 h-2 rounded-full bg-green-400"/>
-            <span className="text-[10px] font-bold text-green-500 font-mono">ONLINE</span>
+            
+            {[
+              {icon:Fingerprint,label:'Biometric Auth',color:'text-slate-600'},
+              {icon:Shield,label:'Smart Card NFC',color:'text-slate-600'},
+              {icon:WifiOff,label:'Sign QR Token',color:'text-slate-600'},
+              {icon:Database,label:'Server Log',color:'text-slate-600'}
+            ].map((t,i)=>(
+              <motion.div 
+                key={t.label} 
+                initial={{opacity:0,x:-10}}
+                animate={{opacity:1,x:0}}
+                transition={{delay:0.1*i+0.3,duration:0.4}}
+                className="flex items-center gap-2 text-[11px] text-slate-500 mb-2 py-1.5 px-2 rounded-lg hover:bg-slate-50 transition-colors">
+                <div className="w-5 h-5 rounded-lg bg-slate-100 flex items-center justify-center">
+                  <t.icon className="w-3 h-3 text-slate-400"/>
+                </div>
+                <span className={t.color}>{t.label}</span>
+                <motion.div 
+                  animate={{scale:[1,1.2,1],opacity:[0.5,1,0.5]}} 
+                  transition={{repeat:Infinity,duration:1.5,delay:i*0.2}}
+                  className="ml-auto w-1.5 h-1.5 rounded-full bg-green-400"/>
+              </motion.div>
+            ))}
+            
+            <div className="mt-4 flex items-center gap-2 px-3 py-2 rounded-xl bg-green-50 border border-green-200">
+              <motion.div 
+                animate={{scale:[1,1.3,1],opacity:[1,0.6,1]}} 
+                transition={{repeat:Infinity,duration:1.2}}
+                className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-lg shadow-green-200"/>
+              <span className="text-[10px] font-bold text-green-600 font-mono tracking-wide">ONLINE ACTIVE</span>
+            </div>
           </div>
         </motion.div>
 
-        {/* Channel */}
-        <div className="flex flex-col items-center mx-3 shrink-0" style={{width:100}}>
-          <div className="text-[9px] font-mono text-violet-400/70 uppercase tracking-widest mb-2 text-center leading-tight">Optical<br/>Channel</div>
-          {/* beam track */}
-          <div className="relative w-full h-6 flex items-center">
-            <div className="w-full h-px bg-gradient-to-r from-indigo-200 via-violet-400 to-orange-200"/>
+        {/* Channel — Cinematic optical beam */}
+        <div className="flex flex-col items-center mx-2 sm:mx-3 shrink-0 justify-center" style={{width:90}}>
+          <div className="text-[9px] font-mono text-slate-400 uppercase tracking-widest mb-3 text-center">Optical<br/>Bridge</div>
+          
+          {/* Enhanced beam track with glow */}
+          <div className="relative w-full h-20 flex flex-col items-center justify-center">
+            {/* Background track glow */}
+            <div className="absolute w-full h-1 rounded-full bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 opacity-50"/>
+            
+            {/* Active beam line */}
+            <motion.div 
+              animate={{opacity:[0.3,0.8,0.3]}}
+              transition={{repeat:Infinity,duration:2}}
+              className="absolute w-full h-0.5 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent shadow-lg shadow-amber-200"/>
+            
+            {/* Enhanced photon particles */}
+            {[0,1,2,3].map(i=>(
+              <motion.div 
+                key={i} 
+                className="absolute w-3 h-3 rounded-full z-10"
+                style={{
+                  background:'radial-gradient(circle,rgba(232,119,34,0.9) 0%,rgba(244,162,97,0.6) 50%,transparent 70%)',
+                  boxShadow:'0 0 20px rgba(232,119,34,0.8), 0 0 40px rgba(232,119,34,0.4)',
+                  top:`${25 + i * 15}%`
+                }}
+                animate={{left:['-10%','110%'],scale:[0.8,1.3,0.8]}}
+                transition={{duration:1.8,delay:i*0.45,repeat:Infinity,ease:'linear'}}/>
+            ))}
+            
+            {/* Trail effect particles */}
             {[0,1,2].map(i=>(
-              <motion.div key={i} className="absolute w-2.5 h-2.5 rounded-full"
-                style={{background:'linear-gradient(135deg,#6366f1,#f97316)',boxShadow:'0 0 10px rgba(139,92,246,0.8)',top:'50%',transform:'translateY(-50%)'}}
-                animate={{left:['-8%','108%']}}
-                transition={{duration:1.6,delay:i*0.55,repeat:Infinity,ease:'linear'}}/>
+              <motion.div 
+                key={`trail-${i}`}
+                className="absolute w-1.5 h-1.5 rounded-full bg-amber-300 opacity-60"
+                style={{top:`${30 + i * 20}%`}}
+                animate={{left:['-10%','110%'],opacity:[0,0.6,0]}}
+                transition={{duration:1.8,delay:i*0.45+0.2,repeat:Infinity,ease:'linear'}}/>
             ))}
           </div>
-          {/* QR token */}
-          <motion.div animate={{opacity:[0.6,1,0.6]}} transition={{repeat:Infinity,duration:2}}
-            className="mt-2 text-[9px] font-bold text-violet-500 font-mono bg-violet-50 border border-violet-200 px-2 py-0.5 rounded-lg text-center leading-tight">
-            QR 90s<br/>TTL
+          
+          {/* QR token with enhanced styling */}
+          <motion.div 
+            animate={{opacity:[0.5,1,0.5],y:[0,-3,0]}} 
+            transition={{repeat:Infinity,duration:2}}
+            className="mt-3 px-3 py-1.5 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 shadow-md">
+            <div className="text-[9px] font-bold text-amber-600 font-mono text-center">QR 90s TTL</div>
+            <div className="text-[7px] text-amber-400 text-center font-mono">RSA-4096</div>
           </motion.div>
-          {/* no-wire badges */}
-          <div className="mt-2 flex flex-col items-center gap-0.5">
-            {['No Wire','No WiFi','No BT'].map(t=>(
-              <span key={t} className="text-[8px] text-red-400 font-semibold flex items-center gap-0.5">
-                <X className="w-2.5 h-2.5"/>{t}
-              </span>
+          
+          {/* No-wire badges with icons */}
+          <div className="mt-3 flex flex-col items-center gap-1">
+            {['No Wire','No WiFi','No BT'].map((t,i)=>(
+              <motion.span 
+                key={t} 
+                initial={{opacity:0,x:-10}}
+                animate={{opacity:1,x:0}}
+                transition={{delay:0.5+i*0.1}}
+                className="text-[8px] text-red-500 font-semibold flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-50 border border-red-100">
+                <X className="w-3 h-3"/>{t}
+              </motion.span>
             ))}
           </div>
         </div>
 
-        {/* Node B */}
-        <motion.div initial={{opacity:0,x:20}} animate={{opacity:1,x:0}} transition={{duration:0.5,delay:0.15}}
-          className="flex-1 glass-saffron rounded-2xl p-4">
-          <div className="text-[10px] font-black text-orange-600 uppercase tracking-widest mb-3">Node B · Airgapped</div>
-          {['QR Scan Only','PROM Voter List','EEPROM Chain','VVPAT Print'].map(t=>(
-            <div key={t} className="flex items-center gap-2 text-[11px] text-orange-500 mb-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-orange-400 shrink-0"/>{t}
+        {/* Node B — Enhanced airgapped panel */}
+        <motion.div 
+          initial={{opacity:0,x:30,rotateY:15}} 
+          animate={{opacity:1,x:0,rotateY:0}} 
+          transition={{duration:0.7,delay:0.2,ease:[0.16,1,0.3,1]}}
+          className="flex-1 glass-cinematic rounded-2xl p-4 relative overflow-hidden">
+          {/* Security border glow */}
+          <div className="absolute inset-0 rounded-2xl border-2 border-dashed border-slate-200 opacity-50"/>
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center shadow-lg">
+                <Shield className="w-4 h-4 text-white"/>
+              </div>
+              <div>
+                <div className="text-[10px] font-black text-slate-700 uppercase tracking-widest">Node B</div>
+                <div className="text-[9px] text-slate-400 font-mono">Airgapped Unit</div>
+              </div>
             </div>
-          ))}
-          <div className="mt-3 flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full bg-slate-300"/>
-            <span className="text-[10px] font-bold text-slate-400 font-mono">AIRGAPPED</span>
+            
+            {[
+              {icon:CheckCircle2,label:'QR Scan Only',color:'text-slate-600'},
+              {icon:Database,label:'PROM Voter List',color:'text-slate-600'},
+              {icon:Activity,label:'EEPROM Chain',color:'text-slate-600'},
+              {icon:Printer,label:'VVPAT Print',color:'text-slate-600'}
+            ].map((t,i)=>(
+              <motion.div 
+                key={t.label}
+                initial={{opacity:0,x:10}}
+                animate={{opacity:1,x:0}}
+                transition={{delay:0.1*i+0.4,duration:0.4}}
+                className="flex items-center gap-2 text-[11px] text-slate-500 mb-2 py-1.5 px-2 rounded-lg hover:bg-slate-50 transition-colors">
+                <div className="w-5 h-5 rounded-lg bg-slate-100 flex items-center justify-center">
+                  <t.icon className="w-3 h-3 text-slate-400"/>
+                </div>
+                <span className={t.color}>{t.label}</span>
+              </motion.div>
+            ))}
+            
+            <div className="mt-4 flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-100 border border-slate-200">
+              <div className="w-2.5 h-2.5 rounded-full bg-slate-400"/>
+              <span className="text-[10px] font-bold text-slate-500 font-mono tracking-wide">AIRGAPPED</span>
+              <WifiOff className="w-3 h-3 text-slate-400 ml-auto"/>
+            </div>
           </div>
         </motion.div>
       </div>
 
-      {/* A=B=C footer */}
-      <div className="flex gap-2 w-full max-w-lg">
-        {[{l:'A = Server Log',c:'text-indigo-600',bg:'glass-indigo'},
-          {l:'B = EEPROM',c:'text-orange-600',bg:'glass-saffron'},
-          {l:'C = VVPAT Paper',c:'text-green-700',bg:'glass-green'}].map(r=>(
-          <div key={r.l} className={`flex-1 text-center py-2 rounded-2xl ${r.bg}`}>
-            <div className={`text-[10px] font-black ${r.c} font-mono`}>{r.l}</div>
-          </div>
+      {/* A=B=C footer — Enhanced equality validation */}
+      <motion.div 
+        initial={{opacity:0,y:20}}
+        animate={{opacity:1,y:0}}
+        transition={{delay:0.6,duration:0.5}}
+        className="flex gap-2 w-full max-w-lg">
+        {[
+          {l:'A',sub:'Server Log',c:'text-slate-700',bg:'bg-slate-100',border:'border-slate-200',icon:Database},
+          {l:'B',sub:'EEPROM',c:'text-slate-700',bg:'bg-slate-100',border:'border-slate-200',icon:Activity},
+          {l:'C',sub:'VVPAT',c:'text-slate-700',bg:'bg-slate-100',border:'border-slate-200',icon:Printer}
+        ].map((r,i)=>(
+          <motion.div 
+            key={r.l} 
+            whileHover={{scale:1.02,y:-2}}
+            className={`flex-1 text-center py-3 rounded-xl ${r.bg} border ${r.border} relative overflow-hidden group cursor-default`}>
+            <div className="flex items-center justify-center gap-1.5 mb-1">
+              <r.icon className="w-3 h-3 text-slate-400"/>
+              <div className="text-lg font-black text-slate-800 font-mono">{r.l}</div>
+            </div>
+            <div className="text-[9px] text-slate-500 font-medium">{r.sub}</div>
+            <motion.div 
+              className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent"
+              animate={{opacity:[0,1,0],scaleX:[0,1,0]}}
+              transition={{repeat:Infinity,duration:2,delay:i*0.3}}
+            />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }
 
-/** 02 — Hash Chain: 4 animated blocks chained, tamper triggers lock */
+/** 02 — Hash Chain: CINEMATIC VERSION with 3D depth, glowing connections, explosion effects */
 function HashDiagram() {
   const [tampered, setTampered] = React.useState(false);
   const [phase, setPhase] = React.useState(0); // 0=building, 1=built, 2=tampered
-
   const [hashCycle, setHashCycle] = React.useState(0);
+  const [showExplosion, setShowExplosion] = React.useState(false);
+  
   React.useEffect(()=>{
-    setTampered(false); setPhase(0);
+    setTampered(false); setPhase(0); setShowExplosion(false);
     const t1 = setTimeout(()=>setPhase(1), 1600);
-    const t2 = setTimeout(()=>{ setPhase(2); setTampered(true); }, 4000);
+    const t2 = setTimeout(()=>{ setPhase(2); setTampered(true); setShowExplosion(true); }, 4000);
     const t3 = setTimeout(()=>setHashCycle(c=>c+1), 7500);
     return ()=>{ clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   },[hashCycle]);
 
   const blocks = [
-    {id:1, hash:'a3f9c1',prev:'GENESIS', g:'from-indigo-500 to-blue-500', tc:'text-indigo-600', bg:'glass-indigo'},
-    {id:2, hash:'d7b28e',prev:'a3f9c1',  g:'from-violet-500 to-purple-500',tc:'text-violet-600',bg:'glass-violet'},
-    {id:3, hash:'f1e42a',prev:'d7b28e',  g:'from-orange-400 to-pink-500',  tc:'text-orange-600',bg:'glass-saffron'},
-    {id:4, hash:'9c0d7f',prev:'f1e42a',  g:'from-green-400 to-emerald-500',tc:'text-green-700', bg:'glass-green'},
+    {id:1, hash:'a3f9c1',prev:'GENESIS', g:'from-slate-600 to-slate-700', tc:'text-slate-700', bg:'bg-slate-100',accent:'#64748b'},
+    {id:2, hash:'d7b28e',prev:'a3f9c1',  g:'from-slate-600 to-slate-700',tc:'text-slate-700',bg:'bg-slate-100',accent:'#64748b'},
+    {id:3, hash:'f1e42a',prev:'d7b28e',  g:'from-amber-500 to-orange-500',tc:'text-amber-700',bg:'bg-amber-50',accent:'#f59e0b'},
+    {id:4, hash:'9c0d7f',prev:'f1e42a',  g:'from-emerald-500 to-green-500',tc:'text-emerald-700', bg:'bg-emerald-50',accent:'#10b981'},
   ];
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-5 p-8 select-none">
-      <div className="w-full flex items-center gap-2 mb-1">
-        <div className="w-3 h-3 rounded-full bg-red-300/60"/><div className="w-3 h-3 rounded-full bg-yellow-300/60"/><div className="w-3 h-3 rounded-full bg-green-300/60"/>
-        <span className="ml-3 text-[11px] font-mono text-violet-400/60 tracking-widest uppercase">EEPROM Hash Chain</span>
-        {phase===2 && <motion.span initial={{opacity:0}} animate={{opacity:1}} className="ml-auto text-[10px] font-bold text-red-500 font-mono bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">TAMPER DETECTED</motion.span>}
+    <div className="w-full h-full flex flex-col items-center justify-center gap-5 p-6 sm:p-8 select-none relative overflow-hidden">
+      {/* Background grid effect */}
+      <div className="absolute inset-0 opacity-[0.03]" style={{
+        backgroundImage:'radial-gradient(circle,#64748b 1px,transparent 1px)',
+        backgroundSize:'20px 20px'
+      }}/>
+      
+      {/* Header with cinematic status indicator */}
+      <div className="w-full flex items-center gap-2 mb-2 relative z-10">
+        <div className="flex gap-1.5">
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500"/>
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.3}} className="w-3 h-3 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500"/>
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.6}} className="w-3 h-3 rounded-full bg-gradient-to-br from-green-400 to-emerald-500"/>
+        </div>
+        <span className="ml-3 text-[11px] font-mono text-slate-400 tracking-widest uppercase">EEPROM Hash Chain</span>
+        
+        {phase===2 && (
+          <motion.div 
+            initial={{opacity:0,scale:0.8}} 
+            animate={{opacity:1,scale:1}} 
+            className="ml-auto flex items-center gap-1.5 px-2 py-1 rounded-full bg-red-50 border border-red-200">
+            <motion.div animate={{scale:[1,1.3,1]}} transition={{repeat:Infinity,duration:0.5}} className="w-2 h-2 rounded-full bg-red-500"/>
+            <span className="text-[10px] font-bold text-red-600 font-mono">BREACH DETECTED</span>
+          </motion.div>
+        )}
       </div>
 
-      {/* Chain blocks */}
-      <div className="flex items-center gap-1 w-full max-w-lg flex-wrap justify-center">
+      {/* Chain blocks with 3D depth */}
+      <div className="flex items-center gap-2 w-full max-w-xl flex-wrap justify-center relative z-10">
         {blocks.map((b,i)=>{
           const broken = tampered && i >= 2;
+          const isTarget = i === 2;
+          
           return (
             <React.Fragment key={b.id}>
+              {/* Block with enhanced 3D styling */}
               <motion.div
-                initial={{opacity:0,scale:0.6,rotateY:90}}
-                animate={phase>0?{opacity:1,scale:broken?1.04:1,rotateY:0}:{opacity:0,scale:0.6,rotateY:90}}
-                transition={{delay:i*0.25,duration:0.4,ease:'easeOut'}}
-                className={`rounded-xl p-2.5 border transition-all duration-300 ${broken?'border-red-300 shadow-red-200/60 shadow-lg':b.bg+' border-white/60'}`}
-                style={{minWidth:80}}>
-                <div className="text-[9px] font-bold text-slate-400 mb-0.5">Block #{b.id}</div>
-                <div className={`text-[11px] font-black font-mono ${broken?'text-red-500':b.tc}`}>{broken&&i===2?'██████':b.hash}</div>
-                <div className="text-[9px] text-slate-400 mt-0.5 font-mono truncate">prev: {broken&&i===2?'??????':b.prev}</div>
-                {broken&&i===2 && (
-                  <motion.div animate={{opacity:[1,0.4,1]}} transition={{repeat:Infinity,duration:0.6}}
-                    className="text-[9px] font-bold text-red-500 mt-1">⚠ CORRUPTED</motion.div>
+                initial={{opacity:0,scale:0.6,rotateY:90,y:20}}
+                animate={phase>0?{
+                  opacity:1,scale:broken?1.02:1,rotateY:0,y:broken?[0,-4,0]:0
+                }:{opacity:0,scale:0.6,rotateY:90,y:20}}
+                transition={{delay:i*0.25,duration:0.5,ease:[0.16,1,0.3,1]}}
+                className={`relative rounded-xl p-3 border-2 transition-all duration-300 ${
+                  broken && isTarget 
+                    ? 'border-red-400 bg-red-50 animate-block-shake' 
+                    : `${b.bg} border-white shadow-lg`
+                }`}
+                style={{minWidth:85,transformStyle:'preserve-3d'}}>
+                
+                {/* Block header with gradient */}
+                <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-xl bg-gradient-to-r ${b.g} opacity-60`}/>
+                
+                {/* Content */}
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[9px] font-bold text-slate-400">Block #{b.id}</span>
+                    {broken && isTarget && (
+                      <motion.div 
+                        animate={{rotate:[0,15,-15,0],scale:[1,1.2,1]}} 
+                        transition={{repeat:Infinity,duration:0.3}}
+                        className="text-red-500">
+                        <AlertTriangle className="w-3 h-3"/>
+                      </motion.div>
+                    )}
+                  </div>
+                  
+                  <div className={`text-[12px] font-black font-mono tracking-tight ${broken?'text-red-600':b.tc}`}>
+                    {broken && isTarget ? (
+                      <motion.span 
+                        animate={{opacity:[1,0.3,1]}} 
+                        transition={{repeat:Infinity,duration:0.2}}
+                        className="font-mono">CORRUPTED</motion.span>
+                    ) : b.hash}
+                  </div>
+                  
+                  <div className="text-[9px] text-slate-400 mt-1 font-mono truncate flex items-center gap-1">
+                    <ArrowRight className="w-2 h-2 text-slate-300"/>
+                    {broken && isTarget ? 'INVALID' : b.prev}
+                  </div>
+                </div>
+                
+                {/* Explosion effect for tampered block */}
+                {showExplosion && isTarget && broken && (
+                  <motion.div 
+                    initial={{scale:0,opacity:1}}
+                    animate={{scale:[0,2,3],opacity:[1,0.5,0]}}
+                    transition={{duration:0.6}}
+                    className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-full h-full rounded-xl bg-red-400 blur-xl"/>
+                  </motion.div>
                 )}
               </motion.div>
+              
+              {/* Connection arrow with glow effect */}
               {i<blocks.length-1 && (
-                <motion.div initial={{scaleX:0}} animate={phase>0?{scaleX:1}:{scaleX:0}} transition={{delay:i*0.25+0.3,duration:0.3}}>
-                  <ArrowRight className={`w-3 h-3 mx-0.5 ${broken&&i>=1?'text-red-400':'text-violet-300'}`}/>
+                <motion.div 
+                  initial={{scaleX:0,opacity:0}} 
+                  animate={phase>0?{scaleX:1,opacity:1}:{scaleX:0,opacity:0}} 
+                  transition={{delay:i*0.25+0.3,duration:0.4,ease:[0.16,1,0.3,1]}}
+                  className="relative">
+                  <ArrowRight className={`w-4 h-4 ${broken&&i>=1?'text-red-400':'text-slate-300'}`}/>
+                  {/* Glow line under arrow */}
+                  <motion.div 
+                    animate={{opacity:[0.3,0.8,0.3]}}
+                    transition={{repeat:Infinity,duration:1.5,delay:i*0.2}}
+                    className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-400 to-transparent"
+                  />
                 </motion.div>
               )}
             </React.Fragment>
@@ -420,271 +753,704 @@ function HashDiagram() {
         })}
       </div>
 
-      {/* Status bar */}
-      <motion.div animate={{opacity:[0.8,1,0.8]}} transition={{repeat:Infinity,duration:2}}
-        className={`flex items-center gap-3 w-full max-w-lg px-4 py-3 rounded-2xl border transition-all duration-500 ${tampered?'bg-red-50 border-red-200':'glass-green border-green-200/60'}`}>
-        <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${tampered?'bg-red-100':'bg-green-100'}`}>
-          {tampered
-            ? <AlertTriangle className="w-4 h-4 text-red-500"/>
-            : <Shield className="w-4 h-4 text-green-600"/>}
+      {/* Enhanced status bar with holographic effect */}
+      <motion.div 
+        animate={tampered?{borderColor:'rgba(239,68,68,0.4)'}:{borderColor:'rgba(16,185,129,0.3)'}}
+        className={`flex items-center gap-4 w-full max-w-xl px-5 py-4 rounded-2xl border-2 transition-all duration-500 relative overflow-hidden ${
+          tampered?'bg-red-50/80':'bg-emerald-50/80'
+        }`}>
+        
+        {/* Shimmer effect */}
+        <div className="absolute inset-0 animate-shimmer opacity-20"/>
+        
+        {/* Icon with pulse */}
+        <motion.div 
+          animate={tampered?{scale:[1,1.1,1]}:{scale:1}}
+          transition={{repeat:Infinity,duration:1}}
+          className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-lg ${
+            tampered?'bg-red-100 shadow-red-200':'bg-emerald-100 shadow-emerald-200'
+          }`}>
+          {tampered ? (
+            <motion.div animate={{rotate:[0,10,-10,0]}} transition={{repeat:Infinity,duration:0.5}}>
+              <AlertTriangle className="w-6 h-6 text-red-600"/>
+            </motion.div>
+          ) : (
+            <motion.div animate={{scale:[1,1.1,1]}} transition={{repeat:Infinity,duration:2}}>
+              <Shield className="w-6 h-6 text-emerald-600"/>
+            </motion.div>
+          )}
+        </motion.div>
+        
+        {/* Status text */}
+        <div className="relative z-10">
+          <div className={`text-sm font-bold ${tampered?'text-red-700':'text-emerald-700'}`}>
+            {tampered ? (
+              <span className="flex items-center gap-2">
+                Chain Compromised
+                <motion.span animate={{opacity:[0,1,0]}} transition={{repeat:Infinity,duration:0.8}} className="text-red-500">▮</motion.span>
+              </span>
+            ) : 'Chain Integrity Verified'}
+          </div>
+          <div className={`text-[11px] font-mono mt-0.5 ${tampered?'text-red-500':'text-emerald-600'}`}>
+            {tampered ? 'SHA-256 mismatch detected · Auto-lock engaged' : 'SHA-256 chain intact · EEPROM sealed'}
+          </div>
         </div>
-        <div>
-          <div className={`text-xs font-bold ${tampered?'text-red-600':'text-green-700'}`}>
-            {tampered ? 'Chain broken at Block #3 — Machine LOCKED' : 'Chain integrity verified — All blocks valid'}
+        
+        {/* Progress indicator */}
+        <div className="ml-auto flex flex-col items-end gap-1">
+          <div className="flex gap-0.5">
+            {[0,1,2,3].map(idx=>{
+              const isActive = phase === 0 ? idx < 1 : phase === 1 ? idx < 4 : idx < 2;
+              return (
+                <motion.div 
+                  key={idx}
+                  animate={{ 
+                    backgroundColor: isActive 
+                      ? tampered && idx >= 2 ? '#ef4444' : '#10b981'
+                      : '#e2e8f0',
+                    scale: isActive ? 1 : 0.8
+                  }}
+                  className="w-2 h-2 rounded-full"
+                />
+              );
+            })}
           </div>
-          <div className={`text-[10px] font-mono mt-0.5 ${tampered?'text-red-400':'text-green-500'}`}>
-            {tampered ? 'SHA-256 mismatch · Power cut in <30ms' : 'SHA-256 chain intact · EEPROM sealed'}
-          </div>
+          <span className="text-[9px] text-slate-400 font-mono">
+            {phase===0?'Building...':phase===1?'Valid':'Locked'}
+          </span>
         </div>
       </motion.div>
 
-      <div className="text-[10px] text-slate-400 font-mono text-center">
-        Demo: building → valid → tamper detected → repeat
+      {/* Demo cycle indicator */}
+      <div className="text-[10px] text-slate-400 font-mono text-center flex items-center gap-2">
+        <span>Demo cycle:</span>
+        <span className={phase===0?'text-amber-600 font-bold':'text-slate-400'}>Build</span>
+        <ArrowRight className="w-3 h-3"/>
+        <span className={phase===1?'text-emerald-600 font-bold':'text-slate-400'}>Validate</span>
+        <ArrowRight className="w-3 h-3"/>
+        <span className={phase===2?'text-red-600 font-bold':'text-slate-400'}>Detect</span>
+        <ArrowRight className="w-3 h-3"/>
+        <span className="text-slate-400">Repeat</span>
       </div>
     </div>
   );
 }
 
-/** 03 — Hardware Watchdog: CPU ↔ MCU 10ms ping, power cut on miss */
+/** 03 — Hardware Watchdog: CINEMATIC VERSION with circuit board aesthetic, electrical pulses, lightning */
 function WatchdogDiagram() {
   const [pingActive, setPingActive] = React.useState(true);
   const [powerCut, setPowerCut] = React.useState(false);
   const [cycle, setCycle] = React.useState(0);
+  const [showLightning, setShowLightning] = React.useState(false);
 
   React.useEffect(()=>{
-    setPingActive(true); setPowerCut(false);
+    setPingActive(true); setPowerCut(false); setShowLightning(false);
     const t1 = setTimeout(()=>setPingActive(false), 3500);
-    const t2 = setTimeout(()=>setPowerCut(true), 4200);
-    const t3 = setTimeout(()=>{ setPingActive(true); setPowerCut(false); setCycle(c=>c+1); }, 7000);
+    const t2 = setTimeout(()=>{ setPowerCut(true); setShowLightning(true); }, 4200);
+    const t3 = setTimeout(()=>{ setPingActive(true); setPowerCut(false); setShowLightning(false); setCycle(c=>c+1); }, 7000);
     return ()=>{ clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   },[cycle]);
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-6 p-8 select-none">
-      <div className="w-full flex items-center gap-2 mb-1">
-        <div className="w-3 h-3 rounded-full bg-red-300/60"/><div className="w-3 h-3 rounded-full bg-yellow-300/60"/><div className="w-3 h-3 rounded-full bg-green-300/60"/>
-        <span className="ml-3 text-[11px] font-mono text-green-500/70 tracking-widest uppercase">Hardware Watchdog</span>
+    <div className="w-full h-full flex flex-col items-center justify-center gap-5 p-6 sm:p-8 select-none relative overflow-hidden">
+      {/* Circuit board background pattern */}
+      <div className="absolute inset-0 opacity-[0.04]" style={{
+        backgroundImage:`
+          linear-gradient(90deg,#64748b 1px,transparent 1px),
+          linear-gradient(180deg,#64748b 1px,transparent 1px)
+        `,
+        backgroundSize:'40px 40px'
+      }}/>
+      
+      {/* Lightning flash overlay */}
+      {showLightning && (
+        <motion.div 
+          initial={{opacity:0}} 
+          animate={{opacity:[0,0.3,0,0.5,0]}} 
+          transition={{duration:0.5}}
+          className="absolute inset-0 bg-red-100 pointer-events-none z-20"
+        />
+      )}
+      
+      {/* Header with live indicator */}
+      <div className="w-full flex items-center gap-2 mb-2 relative z-10">
+        <div className="flex gap-1.5">
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500"/>
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.3}} className="w-3 h-3 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500"/>
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.6}} className="w-3 h-3 rounded-full bg-gradient-to-br from-green-400 to-emerald-500"/>
+        </div>
+        <span className="ml-3 text-[11px] font-mono text-slate-400 tracking-widest uppercase">Hardware Watchdog</span>
+        
+        <motion.div 
+          animate={{opacity:pingActive?1:0.3}}
+          className="ml-auto flex items-center gap-1.5 px-2 py-1 rounded-full bg-slate-100 border border-slate-200">
+          <motion.div 
+            animate={{scale:[1,1.3,1]}} 
+            transition={{repeat:Infinity,duration:pingActive?0.5:1.5}}
+            className={`w-1.5 h-1.5 rounded-full ${pingActive?'bg-green-500':'bg-red-400'}`}
+          />
+          <span className="text-[9px] font-bold text-slate-500 font-mono">
+            {pingActive?'LIVE':'OFFLINE'}
+          </span>
+        </motion.div>
       </div>
 
-      <div className="flex items-center gap-8 w-full max-w-md justify-center">
-        {/* Main CPU */}
+      <div className="flex items-center gap-6 w-full max-w-md justify-center relative z-10">
+        {/* Main CPU — Circuit board style */}
         <div className="flex flex-col items-center gap-2">
           <motion.div
-            animate={powerCut?{scale:[1,0.92,0.92],opacity:[1,1,0.3]}:{scale:1,opacity:1}}
-            transition={{duration:0.4}}
-            className={`w-20 h-20 rounded-2xl flex flex-col items-center justify-center border-2 transition-all duration-300 ${powerCut?'bg-red-50 border-red-300':'glass-indigo border-indigo-200'}`}>
-            <Cpu className={`w-8 h-8 mb-1 ${powerCut?'text-red-400':'text-indigo-500'}`}/>
-            <div className={`text-[9px] font-bold font-mono ${powerCut?'text-red-500':'text-indigo-600'}`}>MAIN CPU</div>
+            animate={powerCut?{scale:[1,0.95,0.95],opacity:0.5}:{scale:1,opacity:1}}
+            transition={{duration:0.3}}
+            className={`w-24 h-24 rounded-2xl flex flex-col items-center justify-center border-2 relative overflow-hidden ${
+              powerCut?'bg-red-50 border-red-300':'bg-slate-50 border-slate-200'
+            }`}>
+            {/* Circuit trace decoration */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-2 left-2 w-8 h-px bg-slate-600"/>
+              <div className="absolute top-2 left-2 w-px h-8 bg-slate-600"/>
+              <div className="absolute bottom-2 right-2 w-8 h-px bg-slate-600"/>
+              <div className="absolute bottom-2 right-2 w-px h-8 bg-slate-600"/>
+            </div>
+            
+            <Cpu className={`w-10 h-10 mb-1 ${powerCut?'text-red-400':'text-slate-600'}`}/>
+            <div className={`text-[10px] font-bold font-mono ${powerCut?'text-red-500':'text-slate-700'}`}>MAIN CPU</div>
+            
+            {/* Status LED */}
+            <motion.div 
+              animate={powerCut?{opacity:0}:{opacity:[1,0.3,1]}}
+              transition={{repeat:Infinity,duration:1}}
+              className="absolute top-2 right-2 w-2 h-2 rounded-full bg-green-400"
+            />
           </motion.div>
-          {powerCut && (
-            <motion.div initial={{opacity:0,y:-4}} animate={{opacity:1,y:0}}
-              className="text-[10px] font-bold text-red-500 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full font-mono">
+          
+          {powerCut ? (
+            <motion.div 
+              initial={{opacity:0,y:-4}} 
+              animate={{opacity:1,y:0}}
+              className="flex items-center gap-1 text-[10px] font-bold text-red-500 bg-red-50 border border-red-200 px-2 py-1 rounded-full font-mono">
+              <WifiOff className="w-3 h-3"/>
               POWER CUT
             </motion.div>
-          )}
-          {!powerCut && (
-            <div className="text-[10px] text-slate-400 font-mono">Running</div>
+          ) : (
+            <div className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+              <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:1}} className="w-1.5 h-1.5 rounded-full bg-green-400"/>
+              Running
+            </div>
           )}
         </div>
 
-        {/* Ping channel */}
-        <div className="flex flex-col items-center gap-1" style={{width:80}}>
-          {/* Ping going right */}
-          <div className="text-[9px] text-slate-400 font-mono mb-1">10ms PING</div>
-          <div className="relative w-full h-5 flex items-center">
-            <div className={`w-full h-px transition-colors duration-300 ${pingActive?'bg-green-300':'bg-red-200'}`}/>
-            {pingActive && [0,1].map(i=>(
-              <motion.div key={i} className="absolute w-2 h-2 rounded-full bg-green-400"
-                style={{boxShadow:'0 0 8px rgba(34,197,94,0.8)',top:'50%',transform:'translateY(-50%)'}}
-                animate={{left:['-8%','108%']}}
-                transition={{duration:0.5,delay:i*0.28,repeat:Infinity,ease:'linear'}}/>
+        {/* Ping channel — Enhanced electrical pulses */}
+        <div className="flex flex-col items-center gap-1" style={{width:100}}>
+          <div className="text-[9px] font-mono text-slate-400 mb-1 uppercase tracking-wider">10ms Ping</div>
+          
+          {/* Ping channel (CPU → MCU) */}
+          <div className="relative w-full h-6 flex items-center">
+            {/* Channel background */}
+            <div className={`absolute w-full h-0.5 rounded-full transition-colors duration-500 ${pingActive?'bg-slate-200':'bg-red-100'}`}/>
+            
+            {/* Active signal indicator */}
+            {pingActive && (
+              <motion.div 
+                animate={{opacity:[0.3,1,0.3]}}
+                transition={{repeat:Infinity,duration:0.5}}
+                className="absolute w-full h-0.5 rounded-full bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-400"
+              />
+            )}
+            
+            {/* Electrical pulse packets */}
+            {pingActive && [0,1,2].map(i=>(
+              <motion.div 
+                key={i} 
+                className="absolute w-3 h-3 rounded-full z-10"
+                style={{
+                  background:'radial-gradient(circle,#10b981 0%,#34d399 50%,transparent 70%)',
+                  boxShadow:'0 0 12px rgba(16,185,129,0.8), 0 0 24px rgba(16,185,129,0.4)',
+                  top:'50%',
+                  transform:'translateY(-50%)'
+                }}
+                animate={{left:['-10%','110%'],scale:[0.8,1.2,0.8]}}
+                transition={{duration:0.6,delay:i*0.2,repeat:Infinity,ease:'linear'}}
+              />
             ))}
+            
+            {/* Broken connection indicator */}
             {!pingActive && (
-              <motion.div animate={{opacity:[1,0,1]}} transition={{repeat:Infinity,duration:0.4}}
+              <motion.div 
+                initial={{scale:0}} 
+                animate={{scale:1}} 
                 className="absolute inset-0 flex items-center justify-center">
-                <X className="w-3 h-3 text-red-400"/>
+                <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-red-50 border border-red-200">
+                  <X className="w-3 h-3 text-red-500"/>
+                  <span className="text-[8px] font-bold text-red-500 font-mono">TIMEOUT</span>
+                </div>
               </motion.div>
             )}
           </div>
-          {/* Ack going left */}
-          <div className="relative w-full h-5 flex items-center">
-            <div className={`w-full h-px transition-colors duration-300 ${pingActive?'bg-indigo-300':'bg-red-200'}`}/>
-            {pingActive && [0,1].map(i=>(
-              <motion.div key={i} className="absolute w-2 h-2 rounded-full bg-indigo-400"
-                style={{boxShadow:'0 0 8px rgba(99,102,241,0.8)',top:'50%',transform:'translateY(-50%)'}}
-                animate={{left:['108%','-8%']}}
-                transition={{duration:0.5,delay:i*0.28+0.1,repeat:Infinity,ease:'linear'}}/>
+          
+          {/* Bidirectional indicator */}
+          <div className="flex items-center gap-1 my-1">
+            <motion.div 
+              animate={pingActive?{opacity:[0.3,1,0.3]}:{opacity:0.3}}
+              transition={{repeat:Infinity,duration:1}}
+              className="w-6 h-px bg-gradient-to-r from-emerald-400 to-transparent rounded-full"
+            />
+            <div className="w-4 h-4 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">
+              <Activity className="w-2.5 h-2.5 text-slate-400"/>
+            </div>
+            <motion.div 
+              animate={pingActive?{opacity:[0.3,1,0.3]}:{opacity:0.3}}
+              transition={{repeat:Infinity,duration:1,delay:0.5}}
+              className="w-6 h-px bg-gradient-to-l from-slate-400 to-transparent rounded-full"
+            />
+          </div>
+          
+          {/* Ack channel (MCU → CPU) */}
+          <div className="relative w-full h-6 flex items-center">
+            <div className={`absolute w-full h-0.5 rounded-full transition-colors duration-500 ${pingActive?'bg-slate-200':'bg-red-100'}`}/>
+            
+            {pingActive && [0,1,2].map(i=>(
+              <motion.div 
+                key={i} 
+                className="absolute w-2.5 h-2.5 rounded-full z-10"
+                style={{
+                  background:'radial-gradient(circle,#64748b 0%,#94a3b8 50%,transparent 70%)',
+                  boxShadow:'0 0 10px rgba(100,116,139,0.6)',
+                  top:'50%',
+                  transform:'translateY(-50%)'
+                }}
+                animate={{left:['110%','-10%'],scale:[0.8,1.1,0.8]}}
+                transition={{duration:0.5,delay:i*0.25+0.1,repeat:Infinity,ease:'linear'}}
+              />
             ))}
           </div>
-          <div className="text-[9px] text-slate-400 font-mono mt-1">ACK</div>
-          {!pingActive && (
-            <motion.div initial={{opacity:0}} animate={{opacity:1}}
-              className="mt-1 text-[9px] font-bold text-red-500 font-mono text-center">PING<br/>STOPPED</motion.div>
-          )}
+          
+          <span className="text-[9px] text-slate-400 font-mono mt-1">ACK Response</span>
         </div>
 
-        {/* Watchdog MCU */}
+        {/* Watchdog MCU — Enhanced styling */}
         <div className="flex flex-col items-center gap-2">
           <motion.div
-            animate={powerCut?{borderColor:'#fca5a5',scale:1.05}:{borderColor:'#6ee7b7'}}
+            animate={powerCut?{scale:1.05}:{scale:1}}
             transition={{duration:0.3}}
-            className="w-20 h-20 rounded-2xl glass-green border-2 border-green-200 flex flex-col items-center justify-center">
-            <Activity className={`w-8 h-8 mb-1 ${powerCut?'text-red-500':'text-green-600'}`}/>
-            <div className="text-[9px] font-bold font-mono text-green-700">WDT MCU</div>
+            className={`w-24 h-24 rounded-2xl flex flex-col items-center justify-center border-2 relative overflow-hidden ${
+              powerCut?'bg-red-50 border-red-300':'bg-emerald-50 border-emerald-200'
+            }`}>
+            {/* Circuit decoration */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-2 right-2 w-8 h-px bg-slate-600"/>
+              <div className="absolute top-2 right-2 w-px h-8 bg-slate-600"/>
+              <div className="absolute bottom-2 left-2 w-8 h-px bg-slate-600"/>
+              <div className="absolute bottom-2 left-2 w-px h-8 bg-slate-600"/>
+            </div>
+            
+            <Activity className={`w-10 h-10 mb-1 ${powerCut?'text-red-500':'text-emerald-600'}`}/>
+            <div className={`text-[10px] font-bold font-mono ${powerCut?'text-red-600':'text-emerald-700'}`}>WDT MCU</div>
+            
+            {/* Status LED */}
+            <motion.div 
+              animate={powerCut?{opacity:[1,0.3,1]}:{opacity:1}}
+              transition={{repeat:Infinity,duration:0.3}}
+              className={`absolute top-2 right-2 w-2 h-2 rounded-full ${powerCut?'bg-red-500':'bg-emerald-400'}`}
+            />
           </motion.div>
+          
           <motion.div
-            animate={powerCut?{opacity:1}:{opacity:0.5}}
-            className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded-full border ${powerCut?'text-red-600 bg-red-50 border-red-300':'text-green-600 bg-green-50 border-green-200'}`}>
-            {powerCut?'CUTTING POWER':'Monitoring'}
+            animate={powerCut?{scale:[1,1.05,1]}:{scale:1}}
+            transition={{repeat:powerCut?Infinity:0,duration:0.5}}
+            className={`flex items-center gap-1 text-[10px] font-bold font-mono px-3 py-1.5 rounded-full border ${
+              powerCut?'text-red-600 bg-red-50 border-red-200':'text-emerald-600 bg-emerald-50 border-emerald-200'
+            }`}>
+            {powerCut?(
+              <><WifiOff className="w-3 h-3"/> CUTTING POWER</>
+            ):('🛡️ Monitoring')}
           </motion.div>
         </div>
       </div>
 
-      {/* Timeline: what happens */}
-      <div className="grid grid-cols-3 gap-2 w-full max-w-md">
+      {/* Enhanced timeline cards */}
+      <div className="grid grid-cols-3 gap-2 w-full max-w-md relative z-10">
         {[
-          {t:'Ping stops',d:'CPU crash / freeze / tamper',c:'text-red-500',bg:'bg-red-50 border-red-200'},
-          {t:'< 30ms',d:'Watchdog detects miss',c:'text-orange-600',bg:'bg-orange-50 border-orange-200'},
-          {t:'Power CUT',d:'Instant hardware reset',c:'text-green-700',bg:'bg-green-50 border-green-200'},
+          {t:'Ping Stops',d:'CPU crash/freeze',icon:X,c:'text-red-600',bg:'bg-red-50',border:'border-red-200',active:!pingActive},
+          {t:'< 30ms',d:'Watchdog detects',icon:Activity,c:'text-amber-600',bg:'bg-amber-50',border:'border-amber-200',active:!pingActive},
+          {t:'Power Cut',d:'Hardware reset',icon:WifiOff,c:'text-emerald-600',bg:'bg-emerald-50',border:'border-emerald-200',active:powerCut},
         ].map((s,i)=>(
-          <motion.div key={i}
-            animate={!pingActive&&i===0?{scale:1.05}:powerCut&&i===2?{scale:1.05}:{scale:1}}
-            className={`text-center p-2 rounded-xl border text-[10px] transition-all duration-300 ${s.bg}`}>
-            <div className={`font-black ${s.c} font-mono`}>{s.t}</div>
-            <div className="text-slate-500 mt-0.5 leading-tight">{s.d}</div>
+          <motion.div 
+            key={i}
+            animate={s.active?{scale:1.03,y:-2}:{scale:1,y:0}}
+            transition={{duration:0.3}}
+            className={`text-center p-3 rounded-xl border ${s.bg} ${s.border} transition-all duration-300 relative overflow-hidden`}>
+            {/* Active indicator bar */}
+            <motion.div 
+              animate={s.active?{opacity:1,scaleX:1}:{opacity:0,scaleX:0}}
+              className={`absolute bottom-0 left-2 right-2 h-0.5 rounded-full ${s.active?(s.c.includes('red')?'bg-red-500':'bg-emerald-500'):'bg-transparent'}`}
+            />
+            
+            <div className="flex justify-center mb-1">
+              <s.icon className={`w-4 h-4 ${s.c}`}/>
+            </div>
+            <div className={`font-black ${s.c} font-mono text-[10px]`}>{s.t}</div>
+            <div className="text-slate-500 mt-0.5 leading-tight text-[9px]">{s.d}</div>
           </motion.div>
         ))}
       </div>
-      <div className="text-[10px] text-slate-400 font-mono">Software cannot override the watchdog — it is separate hardware</div>
+      
+      {/* Footer note */}
+      <div className="text-[10px] text-slate-400 font-mono text-center relative z-10 flex items-center gap-2">
+        <Shield className="w-3 h-3"/>
+        Software cannot override hardware watchdog — independent circuit protection
+      </div>
     </div>
   );
 }
 
-/** 04 — VVPAT: animated vote → paper print → 5s view → ballot box */
+/** 04 — VVPAT: CINEMATIC VERSION with realistic printer physics, paper slip animation, enhanced steps */
 function VVPATDiagram() {
   const [step, setStep] = React.useState(0);
   const [vvpatCycle, setVvpatCycle] = React.useState(0);
+  const [printProgress, setPrintProgress] = React.useState(0);
+  const [viewCountdown, setViewCountdown] = React.useState(5);
+  
   // steps: 0=idle, 1=vote tapped, 2=printing, 3=viewing, 4=deposited
   React.useEffect(()=>{
     setStep(0);
-    const t1 = setTimeout(()=>setStep(1), 1200);
-    const t2 = setTimeout(()=>setStep(2), 2400);
-    const t3 = setTimeout(()=>setStep(3), 3600);
-    const t4 = setTimeout(()=>setStep(4), 6000);
-    const t5 = setTimeout(()=>setVvpatCycle(c=>c+1), 8500);
-    return ()=>{ clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); };
+    setPrintProgress(0);
+    setViewCountdown(5);
+    
+    const t1 = setTimeout(()=>setStep(1), 800);
+    const t2 = setTimeout(()=>setStep(2), 1600);
+    
+    // Print progress animation
+    const printInterval = setInterval(()=>{
+      setPrintProgress(p=>{
+        if(p>=100){clearInterval(printInterval);return 100;}
+        return p+10;
+      });
+    },150);
+    const stopPrint = setTimeout(()=>clearInterval(printInterval), 3200);
+    
+    const t3 = setTimeout(()=>{setStep(3);setPrintProgress(100);}, 3200);
+    
+    // View countdown
+    const countdownInterval = setInterval(()=>{
+      setViewCountdown(c=>c>0?c-1:0);
+    },1000);
+    const stopCountdown = setTimeout(()=>clearInterval(countdownInterval), 8500);
+    
+    const t4 = setTimeout(()=>setStep(4), 8500);
+    const t5 = setTimeout(()=>setVvpatCycle(c=>c+1), 11000);
+    
+    return ()=>{
+      clearTimeout(t1);clearTimeout(t2);clearTimeout(t3);clearTimeout(t4);clearTimeout(t5);
+      clearTimeout(stopPrint);clearTimeout(stopCountdown);
+      clearInterval(printInterval);clearInterval(countdownInterval);
+    };
   },[vvpatCycle]);
 
   const candidates = ['BJP — Candidate A','INC — Candidate B','AAP — Candidate C'];
   const chosen = 1;
+  const steps = [
+    {icon:'👆',label:'Vote Cast',color:'bg-slate-100'},
+    {icon:'🖨️',label:'Printing',color:'bg-amber-100'},
+    {icon:'👁️',label:'Verify 5s',color:'bg-blue-100'},
+    {icon:'🗳️',label:'Secured',color:'bg-emerald-100'}
+  ];
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-5 p-8 select-none">
-      <div className="w-full flex items-center gap-2 mb-1">
-        <div className="w-3 h-3 rounded-full bg-red-300/60"/><div className="w-3 h-3 rounded-full bg-yellow-300/60"/><div className="w-3 h-3 rounded-full bg-green-300/60"/>
-        <span className="ml-3 text-[11px] font-mono text-orange-400/70 tracking-widest uppercase">VVPAT Paper Proof</span>
+    <div className="w-full h-full flex flex-col items-center justify-center gap-4 p-6 sm:p-8 select-none relative overflow-hidden">
+      {/* Background texture */}
+      <div className="absolute inset-0 opacity-[0.02]" style={{
+        backgroundImage:'repeating-linear-gradient(0deg,transparent,transparent 2px,#64748b 2px,#64748b 4px)'
+      }}/>
+      
+      {/* Header */}
+      <div className="w-full flex items-center gap-2 mb-1 relative z-10">
+        <div className="flex gap-1.5">
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500"/>
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.3}} className="w-3 h-3 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500"/>
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.6}} className="w-3 h-3 rounded-full bg-gradient-to-br from-green-400 to-emerald-500"/>
+        </div>
+        <span className="ml-3 text-[11px] font-mono text-slate-400 tracking-widest uppercase">VVPAT Paper Trail</span>
+        
+        <motion.div 
+          animate={{opacity:[0.5,1,0.5]}} 
+          transition={{repeat:Infinity,duration:1.5}}
+          className="ml-auto flex items-center gap-1.5 px-2 py-1 rounded-full bg-slate-100 border border-slate-200">
+          <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-glow-pulse-green"/>
+          <span className="text-[9px] font-bold text-slate-500 font-mono">LIVE</span>
+        </motion.div>
       </div>
 
-      {/* Step flow: 4 stages */}
-      <div className="flex items-center gap-2 w-full max-w-lg justify-center">
-        {['Tap Vote','Paper Prints','5s View','Deposited'].map((s,i)=>(
-          <React.Fragment key={s}>
+      {/* Enhanced step flow */}
+      <div className="flex items-center gap-1.5 w-full max-w-lg justify-center relative z-10">
+        {steps.map((s,i)=>(
+          <React.Fragment key={s.label}>
             <motion.div
-              animate={step>i?{opacity:1,scale:1}:step===i+1?{opacity:1,scale:1.05}:{opacity:0.35,scale:0.97}}
-              className={`flex-1 text-center py-2 px-1 rounded-xl border text-[10px] font-bold transition-all duration-300
-                ${step>i?'glass-green border-green-200 text-green-700':
-                  step===i+1?'glass-saffron border-orange-200 text-orange-600':
-                  'glass border-white/60 text-slate-400'}`}>
-              <div className="text-sm mb-0.5">{['👆','🖨️','👁️','🗳️'][i]}</div>
-              {s}
-            </motion.div>
-            {i<3 && <ArrowRight className={`w-3 h-3 shrink-0 ${step>i?'text-green-400':'text-slate-300'}`}/>}
+              initial={{opacity:0,y:10}}
+              animate={{
+                opacity:step>=i?1:0.3,
+                scale:step===i?1.05:1,
+                y:step===i?-2:0
+              }}
+              transition={{duration:0.3}}
+              className={`flex-1 text-center py-2.5 px-1 rounded-xl border-2 text-[10px] font-bold transition-all duration-300 relative overflow-hidden ${
+                step>i?'bg-emerald-50 border-emerald-200 text-emerald-700':
+                step===i?'bg-amber-50 border-amber-300 text-amber-700 shadow-lg shadow-amber-100':
+                'bg-slate-50 border-slate-200 text-slate-400'
+              }`}>
+                {/* Active indicator */}
+                {step===i && (
+                  <motion.div 
+                    layoutId="activeStep"
+                    className="absolute inset-x-2 bottom-1 h-0.5 rounded-full bg-current"
+                    transition={{type:'spring',stiffness:500,damping:40}}
+                  />
+                )}
+                
+                <div className="text-lg mb-0.5">{s.icon}</div>
+                <div className="text-[9px]">{s.label}</div>
+                
+                {/* Progress indicator for printing step */}
+                {step===i && i===1 && (
+                  <div className="absolute bottom-0 left-0 h-1 bg-amber-400 rounded-b-xl" style={{width:`${printProgress}%`}}/>
+                )}
+              </motion.div>
+            {i<3 && (
+              <motion.div 
+                animate={{color:step>i?'#10b981':'#cbd5e1'}}
+                className="shrink-0">
+                <ArrowRight className="w-4 h-4"/>
+              </motion.div>
+            )}
           </React.Fragment>
         ))}
       </div>
 
-      {/* EVM + paper slot */}
-      <div className="flex items-start gap-6 w-full max-w-md justify-center">
-        {/* EVM screen */}
-        <div className="flex flex-col items-center gap-2">
-          <div className="glass-indigo rounded-2xl border border-indigo-200 p-3 w-36">
-            <div className="text-[9px] font-bold text-indigo-500 font-mono mb-2 text-center">EVM DISPLAY</div>
-            {candidates.map((c,i)=>(
-              <motion.div key={i}
-                animate={step>=1&&i===chosen?{background:'rgba(139,92,246,0.15)',borderColor:'rgba(139,92,246,0.4)'}:{}}
-                className={`flex items-center gap-1.5 py-1.5 px-2 rounded-lg border border-transparent mb-1 text-[9px] cursor-default transition-all duration-300`}>
-                <div className={`w-3 h-3 rounded-full border-2 flex items-center justify-center ${step>=1&&i===chosen?'border-violet-500 bg-violet-500':'border-slate-300'}`}>
-                  {step>=1&&i===chosen && <div className="w-1.5 h-1.5 rounded-full bg-white"/>}
-                </div>
-                <span className={step>=1&&i===chosen?'text-violet-700 font-bold':'text-slate-500'}>{c}</span>
-              </motion.div>
-            ))}
+      {/* EVM + VVPAT cinematic view */}
+      <div className="flex items-start gap-4 w-full max-w-md justify-center relative z-10">
+        {/* EVM Unit */}
+        <motion.div 
+          initial={{opacity:0,x:-20}}
+          animate={{opacity:1,x:0}}
+          transition={{duration:0.5}}
+          className="flex flex-col items-center gap-2">
+          <div className="bg-slate-50 rounded-2xl border-2 border-slate-200 p-4 w-40 shadow-lg shadow-slate-100">
+            {/* EVM header */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-green-400 animate-glow-pulse-green"/>
+                <span className="text-[9px] font-bold text-slate-600 font-mono">EVM UNIT</span>
+              </div>
+              <span className="text-[8px] text-slate-400 font-mono">B2847-MH</span>
+            </div>
+            
+            {/* Candidate list */}
+            <div className="space-y-1.5">
+              {candidates.map((c,i)=>(
+                <motion.div key={i}
+                  animate={step>=1&&i===chosen?{
+                    backgroundColor:'rgba(232,119,34,0.08)',
+                    borderColor:'rgba(232,119,34,0.3)',
+                    scale:[1,1.02,1]
+                  }:{}}
+                  transition={{duration:0.3}}
+                  className={`flex items-center gap-2 py-2 px-2.5 rounded-lg border transition-all duration-300 ${
+                    step>=1&&i===chosen?'border-amber-200 bg-amber-50/50':'border-slate-100'
+                  }`}>
+                  <motion.div 
+                    animate={step>=1&&i===chosen?{scale:[1,1.2,1]}:{}}
+                    transition={{repeat:step>=1&&i===chosen?Infinity:0,duration:0.5}}
+                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                      step>=1&&i===chosen?'border-amber-500 bg-amber-500':'border-slate-300'
+                    }`}>
+                    {step>=1&&i===chosen && (
+                      <motion.div 
+                        initial={{scale:0}} 
+                        animate={{scale:1}} 
+                        className="w-2 h-2 rounded-full bg-white shadow-sm"
+                      />
+                    )}
+                  </motion.div>
+                  <span className={`text-[10px] ${step>=1&&i===chosen?'text-slate-800 font-bold':'text-slate-500'}`}>
+                    {c}
+                  </span>
+                  {step>=1&&i===chosen && (
+                    <motion.div 
+                      initial={{opacity:0,scale:0}} 
+                      animate={{opacity:1,scale:1}}
+                      className="ml-auto">
+                      <CheckCircle2 className="w-4 h-4 text-green-500"/>
+                    </motion.div>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+            
+            {/* Status footer */}
             {step>=1 && (
-              <motion.div initial={{opacity:0,y:4}} animate={{opacity:1,y:0}}
-                className="mt-2 text-center text-[9px] font-bold text-violet-600 bg-violet-50 border border-violet-200 rounded-lg py-1">
-                ✓ RECORDED
+              <motion.div 
+                initial={{opacity:0,y:10}}
+                animate={{opacity:1,y:0}}
+                className="mt-3 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg bg-green-50 border border-green-200">
+                <motion.div animate={{scale:[1,1.3,1]}} transition={{repeat:Infinity,duration:1}} className="w-1.5 h-1.5 rounded-full bg-green-500"/>
+                <span className="text-[9px] font-bold text-green-600 font-mono">VOTE RECORDED</span>
               </motion.div>
             )}
           </div>
-        </div>
+        </motion.div>
 
-        {/* VVPAT printer + paper */}
-        <div className="flex flex-col items-center gap-1">
-          <div className={`w-32 h-10 rounded-xl border-2 flex items-center px-3 gap-2 transition-all duration-300 ${step>=2?'glass-saffron border-orange-300':'glass border-white/60'}`}>
-            <Printer className={`w-4 h-4 shrink-0 ${step>=2?'text-orange-500':'text-slate-300'}`}/>
-            <div className="text-[9px] font-bold font-mono text-slate-500">VVPAT</div>
-            {step===2 && (
-              <motion.div animate={{opacity:[1,0.3,1]}} transition={{repeat:Infinity,duration:0.4}} className="ml-auto">
-                <div className="w-1.5 h-1.5 rounded-full bg-orange-400"/>
-              </motion.div>
-            )}
-          </div>
-
-          {/* Paper slip */}
-          <motion.div
-            initial={{height:0,opacity:0}}
-            animate={step>=2?{height:'auto',opacity:1}:{height:0,opacity:0}}
-            transition={{duration:0.5,ease:'easeOut'}}
-            className="overflow-hidden w-28">
-            <div className={`rounded-b-xl border-x-2 border-b-2 transition-all duration-500 ${step>=4?'border-green-300 opacity-40':'border-orange-200'} bg-white shadow-sm`}>
-              <div className="p-2 space-y-1">
-                <div className="text-[8px] font-bold text-slate-600 text-center border-b border-slate-100 pb-1">VOTE RECEIPT</div>
-                <div className="text-[8px] text-violet-700 font-bold">✓ {candidates[chosen]}</div>
-                <div className="text-[8px] text-slate-400">Booth: 2847-MH</div>
-                <div className="h-px bg-dashed-slate-100 my-0.5"/>
-                <div className="text-[7px] text-slate-300 font-mono">ECI SIGNED</div>
+        {/* VVPAT Printer Unit */}
+        <motion.div 
+          initial={{opacity:0,x:20}}
+          animate={{opacity:1,x:0}}
+          transition={{duration:0.5,delay:0.2}}
+          className="flex flex-col items-center gap-2">
+          {/* Printer head */}
+          <div className={`w-36 rounded-xl border-2 p-3 transition-all duration-500 relative overflow-hidden ${
+            step>=2?'bg-amber-50 border-amber-200 shadow-lg shadow-amber-100':'bg-slate-50 border-slate-200'
+          }`}>
+            {/* Status LED */}
+            <div className="absolute top-2 right-2 flex items-center gap-1">
+              {step>=2 && step<4 && (
+                <motion.div 
+                  animate={{opacity:[1,0.3,1]}}
+                  transition={{repeat:Infinity,duration:0.8}}
+                  className="w-1.5 h-1.5 rounded-full bg-amber-500"
+                />
+              )}
+            </div>
+            
+            <div className="flex items-center gap-2 mb-2">
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${step>=2?'bg-amber-100':'bg-slate-100'}`}>
+                <Printer className={`w-4 h-4 ${step>=2?'text-amber-600':'text-slate-400'}`}/>
+              </div>
+              <div>
+                <div className="text-[10px] font-bold text-slate-700 font-mono">VVPAT</div>
+                <div className="text-[8px] text-slate-400 font-mono">Printer Unit</div>
               </div>
             </div>
+            
+            {/* Print progress bar */}
+            {step===2 && (
+              <div className="mt-2">
+                <div className="flex justify-between text-[8px] text-amber-600 font-mono mb-1">
+                  <span>Printing</span>
+                  <span>{printProgress}%</span>
+                </div>
+                <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                  <motion.div 
+                    className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-400"
+                    style={{width:`${printProgress}%`}}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Paper slot */}
+          <div className="w-32 h-3 bg-slate-800 rounded-full shadow-inner relative z-20">
+            <div className="absolute inset-x-2 top-0.5 h-0.5 bg-slate-600 rounded-full"/>
+          </div>
+
+          {/* Paper slip — Cinematic animation */}
+          <motion.div
+            initial={{height:0,opacity:0,y:-10}}
+            animate={step>=2?{height:'auto',opacity:1,y:0}:{height:0,opacity:0,y:-10}}
+            transition={{duration:0.6,ease:[0.16,1,0.3,1]}}
+            className="overflow-hidden w-30 -mt-1 relative z-10">
+            <motion.div 
+              animate={step>=4?{opacity:0.5,y:5}:{opacity:1,y:0}}
+              className={`rounded-b-lg border-x-2 border-b-2 transition-all duration-500 bg-white shadow-lg ${
+                step>=4?'border-emerald-200':'border-amber-200'
+              }`}>
+              <div className="p-3 space-y-1.5">
+                {/* Receipt header */}
+                <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                  <span className="text-[8px] font-black text-slate-700 tracking-wide">VOTE RECEIPT</span>
+                  <span className="text-[7px] text-slate-400 font-mono">ECI-VVPAT</span>
+                </div>
+                
+                {/* Candidate selection */}
+                <div className="flex items-start gap-1.5">
+                  <motion.div 
+                    initial={{scale:0}} 
+                    animate={step>=2?{scale:1}:{}}
+                    transition={{delay:0.3,type:'spring'}}
+                    className="w-4 h-4 rounded bg-green-100 flex items-center justify-center shrink-0 mt-0.5">
+                    <CheckCircle2 className="w-3 h-3 text-green-600"/>
+                  </motion.div>
+                  <div>
+                    <div className="text-[9px] text-slate-800 font-bold leading-tight">{candidates[chosen]}</div>
+                    <div className="text-[7px] text-slate-400 font-mono">Selected via EVM</div>
+                  </div>
+                </div>
+                
+                {/* Booth info */}
+                <div className="text-[8px] text-slate-500 font-mono flex items-center gap-1">
+                  <span className="px-1 py-0.5 rounded bg-slate-100 text-slate-600">BOOTH 2847-MH</span>
+                  <span>•</span>
+                  <span>{new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
+                </div>
+                
+                {/* Signature line */}
+                <div className="pt-1 border-t border-dashed border-slate-200">
+                  <div className="text-[7px] text-slate-300 font-mono">ECI DIGITALLY SIGNED</div>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
 
-          {/* 5s timer */}
+          {/* View timer */}
           {step===3 && (
-            <motion.div initial={{opacity:0}} animate={{opacity:1}}
-              className="text-[10px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-200 rounded-full px-3 py-1 font-mono">
-              Viewing 5s →
+            <motion.div 
+              initial={{opacity:0,scale:0.9}} 
+              animate={{opacity:1,scale:1}}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200">
+              <motion.div 
+                animate={{rotate:360}}
+                transition={{duration:5,ease:'linear'}}
+                className="w-4 h-4 rounded-full border-2 border-blue-400 border-t-transparent"
+              />
+              <span className="text-[10px] font-bold text-blue-600 font-mono">
+                View {viewCountdown}s
+              </span>
             </motion.div>
           )}
 
-          {/* Deposited */}
+          {/* Deposited status */}
           {step>=4 && (
-            <motion.div initial={{opacity:0,y:4}} animate={{opacity:1,y:0}}
-              className="text-[10px] font-bold text-green-600 bg-green-50 border border-green-200 rounded-full px-3 py-1 font-mono flex items-center gap-1">
-              <CheckCircle2 className="w-3 h-3"/> Ballot Box
+            <motion.div 
+              initial={{opacity:0,y:10}} 
+              animate={{opacity:1,y:0}}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 shadow-lg shadow-emerald-100">
+              <motion.div 
+                initial={{scale:0}} 
+                animate={{scale:1}}
+                transition={{type:'spring',stiffness:500}}
+              >
+                <CheckCircle2 className="w-4 h-4 text-emerald-600"/>
+              </motion.div>
+              <span className="text-[10px] font-bold text-emerald-700 font-mono">BALLOT BOX</span>
             </motion.div>
           )}
-        </div>
+        </motion.div>
       </div>
 
-      <div className="text-[10px] text-slate-400 font-mono text-center max-w-xs">
-        Paper is the legally binding ground truth — physics beats cryptography
-      </div>
+      {/* Footer message */}
+      <motion.div 
+        initial={{opacity:0}}
+        animate={{opacity:1}}
+        transition={{delay:0.5}}
+        className="text-[10px] text-slate-400 font-mono text-center max-w-xs flex items-center gap-1.5 relative z-10">
+        <Shield className="w-3 h-3"/>
+        Paper trail is legally binding — physics beats cryptography
+      </motion.div>
     </div>
   );
 }
 
 
 /* ══════════════════════════════════════════════════════════════════
-   RECONCILIATION DIAGRAM — A=B=C animated three-stream convergence
+   RECONCILIATION DIAGRAM — CINEMATIC VERSION with flowing particles, holographic verification
 ══════════════════════════════════════════════════════════════════ */
 function ReconcDiagram() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -692,152 +1458,500 @@ function ReconcDiagram() {
   const [match, setMatch] = React.useState(false);
   const [mismatch, setMismatch] = React.useState(false);
   const [cycle, setCycle] = React.useState(0);
+  const [particleBurst, setParticleBurst] = React.useState(false);
 
   React.useEffect(()=>{
     if (!inView) return;
-    setMatch(false); setMismatch(false);
-    const t1 = setTimeout(()=>setMatch(true), 2000);
-    const t2 = setTimeout(()=>{ setMatch(false); setMismatch(true); }, 5000);
+    setMatch(false); setMismatch(false); setParticleBurst(false);
+    const t1 = setTimeout(()=>{setMatch(true);setParticleBurst(true);}, 2000);
+    const t2 = setTimeout(()=>{ setMatch(false); setMismatch(true); setParticleBurst(false);}, 5000);
     const t3 = setTimeout(()=>setCycle(c=>c+1), 8000);
     return ()=>{ clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   },[cycle, inView]);
 
   const streams = [
-    { label:'A', name:'Server Log', sub:'Node A · Online DB', g:'from-indigo-500 to-blue-500', bg:'glass-indigo', tc:'text-indigo-600', count:'9,42,183' },
-    { label:'B', name:'EEPROM Chain', sub:'Node B · Hash Ledger', g:'from-violet-500 to-purple-600', bg:'glass-violet', tc:'text-violet-600', count:'9,42,183' },
-    { label:'C', name:'VVPAT Paper', sub:'Ballot Box · Physical', g:'from-green-400 to-emerald-500', bg:'glass-green', tc:'text-green-700', count: mismatch?'9,42,101':'9,42,183' },
+    { label:'A', name:'Server Log', sub:'Node A · Online DB', color:'#64748b', bg:'bg-slate-100', border:'border-slate-200', icon:Database, count:'9,42,183' },
+    { label:'B', name:'EEPROM Chain', sub:'Node B · Hash Ledger', color:'#0f766e', bg:'bg-teal-50', border:'border-teal-200', icon:Activity, count:'9,42,183' },
+    { label:'C', name:'VVPAT Paper', sub:'Ballot Box · Physical', color:'#059669', bg:'bg-emerald-50', border:'border-emerald-200', icon:Printer, count:mismatch?'9,42,101':'9,42,183' },
   ];
 
   return (
-    <div ref={wrapRef} className="w-full glass-solid rounded-3xl p-6 sm:p-8 select-none overflow-hidden">
-      <div className="flex items-center gap-2 mb-6">
-        <div className="w-3 h-3 rounded-full bg-red-300/60"/><div className="w-3 h-3 rounded-full bg-yellow-300/60"/><div className="w-3 h-3 rounded-full bg-green-300/60"/>
-        <span className="ml-3 text-[11px] font-mono text-violet-400/60 tracking-widest uppercase">Triple Reconciliation Engine</span>
+    <div ref={wrapRef} className="w-full glass-cinematic rounded-3xl p-6 sm:p-8 select-none overflow-hidden relative">
+      {/* Background flowing particles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(6)].map((_,i)=>(
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 rounded-full bg-amber-400/30"
+            style={{
+              left:`${15 + i * 15}%`,
+              top:'20%'
+            }}
+            animate={{
+              y:[0,120,0],
+              opacity:[0,0.6,0],
+              scale:[0.5,1,0.5]
+            }}
+            transition={{
+              duration:3,
+              delay:i*0.5,
+              repeat:Infinity,
+              ease:'easeInOut'
+            }}
+          />
+        ))}
       </div>
 
-      {/* Three streams flowing down */}
-      <div className="flex gap-3 mb-4">
-        {streams.map((s,i)=>(
-          <motion.div key={i}
-            initial={{opacity:0,y:-16}} animate={{opacity:1,y:0}} transition={{delay:i*0.2,duration:0.5}}
-            className={`flex-1 rounded-2xl p-3 ${s.bg} border border-white/60`}>
-            <div className={`text-xl font-black font-mono ${s.tc} mb-1`}>{s.label}</div>
-            <div className={`text-[11px] font-bold ${s.tc}`}>{s.name}</div>
-            <div className="text-[9px] text-slate-400 mb-2">{s.sub}</div>
-            <motion.div
-              animate={match||(!mismatch)?{opacity:1}:{opacity:0.5}}
-              className={`text-base font-black font-mono ${mismatch&&s.label==='C'?'text-red-500':s.tc}`}>
-              {s.count}
+      {/* Header with status */}
+      <div className="flex items-center gap-2 mb-6 relative z-10">
+        <div className="flex gap-1.5">
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500"/>
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.3}} className="w-3 h-3 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500"/>
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.6}} className="w-3 h-3 rounded-full bg-gradient-to-br from-green-400 to-emerald-500"/>
+        </div>
+        <span className="ml-3 text-[11px] font-mono text-slate-400 tracking-widest uppercase">Triple Reconciliation Engine</span>
+        
+        {/* Live status badge */}
+        <motion.div 
+          animate={{opacity:[0.5,1,0.5]}} 
+          transition={{repeat:Infinity,duration:1.5}}
+          className="ml-auto flex items-center gap-1.5 px-2 py-1 rounded-full bg-slate-100 border border-slate-200">
+          <div className={`w-1.5 h-1.5 rounded-full ${match?'bg-emerald-500':mismatch?'bg-red-500':'bg-amber-500'} animate-glow-pulse`}/>
+          <span className="text-[9px] font-bold text-slate-500 font-mono">
+            {match?'VERIFIED':mismatch?'ALERT':'PROCESSING'}
+          </span>
+        </motion.div>
+      </div>
+
+      {/* Three streams with flowing data */}
+      <div className="flex gap-3 mb-5 relative z-10">
+        {streams.map((s,i)=>{
+          const hasMismatch = mismatch && s.label === 'C';
+          return (
+            <motion.div key={i}
+              initial={{opacity:0,y:-20,scale:0.95}} 
+              animate={{opacity:1,y:0,scale:1}} 
+              transition={{delay:i*0.15,duration:0.5,ease:[0.16,1,0.3,1]}}
+              className={`flex-1 rounded-2xl p-4 ${s.bg} ${s.border} border-2 relative overflow-hidden group`}>
+              {/* Shimmer effect */}
+              <div className="absolute inset-0 animate-shimmer opacity-20"/>
+              
+              {/* Stream header */}
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-white shadow-sm">
+                  <s.icon className="w-4 h-4" style={{color:s.color}}/>
+                </div>
+                <div className={`text-2xl font-black font-mono`} style={{color:s.color}}>{s.label}</div>
+              </div>
+              
+              <div className="text-[12px] font-bold text-slate-700 mb-1">{s.name}</div>
+              <div className="text-[10px] text-slate-400 mb-3 font-mono">{s.sub}</div>
+              
+              {/* Count with animation */}
+              <motion.div
+                animate={hasMismatch?{x:[0,-2,2,-2,0]}:{}}
+                transition={{repeat:hasMismatch?Infinity:0,duration:0.3}}
+                className={`text-lg font-black font-mono ${hasMismatch?'text-red-600':'text-slate-800'}`}>
+                {s.count}
+              </motion.div>
+              <div className="text-[10px] text-slate-400">verified votes</div>
+              
+              {/* Data flow particles */}
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-1">
+                {[0,1,2].map(j=>{
+                  const isMismatch = mismatch && i === 2;
+                  return (
+                    <motion.div
+                      key={j}
+                      animate={{
+                        opacity:[0,1,0],
+                        y:[-10,10],
+                      }}
+                      transition={{
+                        duration:1.5,
+                        delay:j*0.3,
+                        repeat:Infinity,
+                        ease:'easeInOut'
+                      }}
+                      className={`w-1.5 h-1.5 rounded-full ${isMismatch?'bg-red-400':'bg-current'}`}
+                      style={{color:s.color,opacity:0.4}}
+                    />
+                  );
+                })}
+              </div>
             </motion.div>
-            <div className="text-[9px] text-slate-400">votes</div>
-          </motion.div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* Convergence arrows */}
-      <div className="flex justify-center gap-3 mb-3">
-        {[0,1,2].map(i=>(
-          <motion.div key={i} animate={{y:[0,4,0]}} transition={{repeat:Infinity,duration:1.2,delay:i*0.15}}>
-            <svg width="24" height="16" viewBox="0 0 24 16">
-              <path d="M12 0 L12 16 M6 10 L12 16 L18 10" stroke={match?'#22c55e':mismatch&&i===2?'#ef4444':'#8b5cf6'} strokeWidth="2" fill="none" strokeLinecap="round"/>
-            </svg>
-          </motion.div>
-        ))}
+      {/* Convergence zone with flowing particles */}
+      <div className="relative h-16 mb-4">
+        {/* Particle streams converging */}
+        {[0,1,2].map(streamIdx=>{
+          const isMismatch = mismatch && streamIdx === 2;
+          return (
+            <motion.div
+              key={streamIdx}
+              className="absolute top-0"
+              style={{left:`${15 + streamIdx * 35}%`,width:'2px',height:'100%'}}>
+              {/* Flowing dots */}
+              {[0,1,2,3].map(i=>{
+                const color = isMismatch ? '#ef4444' : streamIdx === 0 ? '#64748b' : streamIdx === 1 ? '#0f766e' : '#059669';
+                return (
+                  <motion.div
+                    key={i}
+                    className="absolute w-2 h-2 rounded-full"
+                    style={{backgroundColor:color,left:'-3px'}}
+                    animate={{
+                      top:['0%','100%'],
+                      opacity:[0,1,0],
+                      scale:[0.5,1,0.5]
+                    }}
+                    transition={{
+                      duration:1.2,
+                      delay:i*0.3 + streamIdx*0.1,
+                      repeat:Infinity,
+                      ease:'linear'
+                    }}
+                  />
+                );
+              })}
+            </motion.div>
+          );
+        })}
+
+        {/* Central convergence point */}
+        <motion.div 
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          animate={match?{scale:[1,1.2,1]}:mismatch?{scale:[1,0.9,1]}:{}}
+          transition={{repeat:Infinity,duration:1}}>
+          <div className={`w-12 h-12 rounded-full flex items-center justify-center border-4 ${
+            match?'bg-emerald-100 border-emerald-400 shadow-lg shadow-emerald-200':
+            mismatch?'bg-red-100 border-red-400 shadow-lg shadow-red-200':
+            'bg-slate-100 border-slate-300'
+          }`}>
+            {match?(
+              <motion.div initial={{scale:0}} animate={{scale:1}} transition={{type:'spring'}}>
+                <CheckCircle2 className="w-6 h-6 text-emerald-600"/>
+              </motion.div>
+            ):mismatch?(
+              <motion.div initial={{scale:0}} animate={{scale:1}} transition={{type:'spring'}}>
+                <AlertTriangle className="w-6 h-6 text-red-600"/>
+              </motion.div>
+            ):null}
+          </div>
+        </motion.div>
       </div>
 
-      {/* Equals gate */}
+      {/* Verification gate with holographic effect */}
       <motion.div
-        animate={match?{borderColor:'rgba(34,197,94,0.5)',background:'rgba(240,253,244,0.8)'}:
-                 mismatch?{borderColor:'rgba(239,68,68,0.5)',background:'rgba(254,242,242,0.8)'}:
-                 {borderColor:'rgba(139,92,246,0.3)',background:'rgba(245,243,255,0.8)'}}
+        animate={match?{
+          borderColor:'rgba(16,185,129,0.5)',
+          boxShadow:'0 0 30px rgba(16,185,129,0.2)'
+        }:mismatch?{
+          borderColor:'rgba(239,68,68,0.5)',
+          boxShadow:'0 0 30px rgba(239,68,68,0.2)'
+        }:{
+          borderColor:'rgba(148,163,184,0.3)',
+          boxShadow:'0 4px 20px rgba(0,0,0,0.05)'
+        }}
         transition={{duration:0.4}}
-        className="rounded-2xl border-2 p-4 text-center transition-all duration-300">
-        {!match && !mismatch && (
-          <div>
-            <div className="text-lg font-black text-violet-500 font-mono mb-1">A = B = C ?</div>
-            <div className="text-xs text-slate-400">Waiting for count completion…</div>
+        className="rounded-2xl border-2 p-5 text-center relative overflow-hidden bg-white/50">
+        
+        {/* Holographic shimmer */}
+        <div className="absolute inset-0 animate-shimmer opacity-10"/>
+        
+        {/* Particle burst on match */}
+        {particleBurst && match && (
+          <div className="absolute inset-0 pointer-events-none">
+            {[...Array(12)].map((_,i)=>{
+              const angle = (i / 12) * 360;
+              return (
+                <motion.div
+                  key={i}
+                  className="absolute w-2 h-2 rounded-full bg-emerald-400 left-1/2 top-1/2"
+                  initial={{x:0,y:0,opacity:1,scale:1}}
+                  animate={{
+                    x:Math.cos(angle * Math.PI / 180) * 80,
+                    y:Math.sin(angle * Math.PI / 180) * 80,
+                    opacity:0,
+                    scale:0
+                  }}
+                  transition={{duration:0.8,ease:'easeOut'}}
+                />
+              );
+            })}
           </div>
         )}
-        {match && (
-          <motion.div initial={{scale:0.8,opacity:0}} animate={{scale:1,opacity:1}}>
-            <div className="text-lg font-black text-green-600 font-mono mb-1">✓ A = B = C</div>
-            <div className="text-xs text-green-600 font-semibold">All three sources match — result CERTIFIED</div>
-          </motion.div>
-        )}
-        {mismatch && (
-          <motion.div initial={{scale:0.8,opacity:0}} animate={{scale:1,opacity:1}}>
-            <div className="text-lg font-black text-red-600 font-mono mb-1">⚠ A ≠ C — MISMATCH</div>
-            <div className="text-xs text-red-500 font-semibold">Forensic investigation triggered · Result FROZEN</div>
-          </motion.div>
-        )}
+        
+        {/* Status content */}
+        <div className="relative z-10">
+          {!match && !mismatch && (
+            <div>
+              <div className="text-xl font-black text-slate-400 font-mono mb-2">A = B = C ?</div>
+              <div className="flex items-center justify-center gap-2">
+                <motion.div animate={{rotate:360}} transition={{duration:1,repeat:Infinity,ease:'linear'}} className="w-4 h-4 rounded-full border-2 border-slate-300 border-t-slate-500"/>
+                <span className="text-sm text-slate-400">Reconciling sources…</span>
+              </div>
+            </div>
+          )}
+          
+          {match && (
+            <motion.div initial={{scale:0.9,opacity:0}} animate={{scale:1,opacity:1}} transition={{type:'spring',stiffness:200}}>
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:1}}>
+                  <CheckCircle2 className="w-6 h-6 text-emerald-500"/>
+                </motion.div>
+                <span className="text-xl font-black text-emerald-700 font-mono">VERIFIED MATCH</span>
+              </div>
+              <div className="text-sm text-emerald-600 font-medium">All three sources align — Election CERTIFIED</div>
+            </motion.div>
+          )}
+          
+          {mismatch && (
+            <motion.div initial={{scale:0.9,opacity:0}} animate={{scale:1,opacity:1}} transition={{type:'spring',stiffness:200}}>
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <motion.div animate={{rotate:[0,10,-10,0]}} transition={{repeat:Infinity,duration:0.5}}>
+                  <AlertTriangle className="w-6 h-6 text-red-500"/>
+                </motion.div>
+                <span className="text-xl font-black text-red-700 font-mono">MISMATCH DETECTED</span>
+              </div>
+              <div className="text-sm text-red-600 font-medium">A ≠ C discrepancy — Investigation TRIGGERED</div>
+            </motion.div>
+          )}
+        </div>
       </motion.div>
-      <div className="text-[10px] text-slate-400 font-mono text-center mt-3">Demo: match → mismatch detected → repeat</div>
+      
+      {/* Demo cycle indicator */}
+      <div className="text-[10px] text-slate-400 font-mono text-center mt-4 flex items-center justify-center gap-2">
+        <span>Demo cycle:</span>
+        <span className={!match&&!mismatch?'text-amber-600 font-bold':'text-slate-400'}>Process</span>
+        <ArrowRight className="w-3 h-3"/>
+        <span className={match?'text-emerald-600 font-bold':'text-slate-400'}>Match</span>
+        <ArrowRight className="w-3 h-3"/>
+        <span className={mismatch?'text-red-600 font-bold':'text-slate-400'}>Alert</span>
+        <ArrowRight className="w-3 h-3"/>
+        <span className="text-slate-400">Repeat</span>
+      </div>
     </div>
   );
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   THREAT SHIELD DIAGRAM — attack paths blocked visualisation
+   THREAT SHIELD DIAGRAM — CINEMATIC VERSION with shield pulses, impact effects, terminal aesthetic
 ══════════════════════════════════════════════════════════════════ */
 function ThreatShieldDiagram() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
   const [activeAttack, setActiveAttack] = React.useState(0);
+  const [showImpact, setShowImpact] = React.useState(false);
+  const [blockedCount, setBlockedCount] = React.useState(0);
+  
   const attacks = [
-    { name:'Remote Hack',   icon:'🌐', path:'Network → Node B', block:'No radio hardware', color:'text-red-500',   bg:'bg-red-50',   border:'border-red-200' },
-    { name:'Signal Tap',    icon:'📡', path:'RF → Intercept',   block:'Optical QR only',  color:'text-orange-500',bg:'bg-orange-50',border:'border-orange-200'},
-    { name:'Memory Forge',  icon:'💾', path:'EEPROM overwrite',  block:'Hash chain locks', color:'text-violet-600',bg:'bg-violet-50',border:'border-violet-200'},
-    { name:'Replay Attack', icon:'🔁', path:'Reuse QR token',   block:'Single-use nonce', color:'text-blue-600',  bg:'bg-blue-50',  border:'border-blue-200' },
+    { name:'Remote Hack',   icon:WifiOff, path:'Network → Node B', block:'No radio hardware', color:'#ef4444',   bg:'bg-red-50',   border:'border-red-200', tc:'text-red-600' },
+    { name:'Signal Tap',    icon:Activity, path:'RF → Intercept',   block:'Optical QR only',  color:'#f97316',bg:'bg-orange-50',border:'border-orange-200', tc:'text-orange-600'},
+    { name:'Memory Forge',  icon:Database, path:'EEPROM overwrite',  block:'Hash chain locks', color:'#7c3aed',bg:'bg-violet-50',border:'border-violet-200', tc:'text-violet-600'},
+    { name:'Replay Attack', icon:ArrowRight, path:'Reuse QR token',   block:'Single-use nonce', color:'#2563eb',  bg:'bg-blue-50',  border:'border-blue-200', tc:'text-blue-600' },
   ];
+  
   React.useEffect(()=>{
     if (!inView) return;
-    const t = setInterval(()=>setActiveAttack(a=>(a+1)%attacks.length),2200);
+    const t = setInterval(()=>{
+      setActiveAttack(a=>{
+        const next = (a+1)%attacks.length;
+        setShowImpact(true);
+        setBlockedCount(c=>c+1);
+        setTimeout(()=>setShowImpact(false),400);
+        return next;
+      });
+    },2500);
     return ()=>clearInterval(t);
   },[inView, attacks.length]);
+  
   const a = attacks[activeAttack];
+  
   return (
-    <div ref={wrapRef} className="glass-solid rounded-3xl p-4 sm:p-6 select-none">
-      <div className="text-[11px] font-mono text-violet-400/60 tracking-widest uppercase mb-4">Live Attack Simulation</div>
-      {/* Selector */}
-      <div className="grid grid-cols-4 gap-1.5 mb-5">
+    <div ref={wrapRef} className="glass-cinematic rounded-3xl p-5 sm:p-6 select-none relative overflow-hidden">
+      {/* Terminal grid background */}
+      <div className="absolute inset-0 opacity-[0.02]" style={{
+        backgroundImage:'linear-gradient(90deg,#000 1px,transparent 1px),linear-gradient(180deg,#000 1px,transparent 1px)',
+        backgroundSize:'20px 20px'
+      }}/>
+      
+      {/* Impact flash effect */}
+      {showImpact && (
+        <motion.div 
+          initial={{opacity:0.3}}
+          animate={{opacity:0}}
+          transition={{duration:0.3}}
+          className="absolute inset-0 bg-red-100 pointer-events-none z-10"
+        />
+      )}
+      
+      {/* Header with attack counter */}
+      <div className="flex items-center justify-between mb-5 relative z-10">
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1.5">
+            <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500"/>
+            <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.3}} className="w-3 h-3 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500"/>
+            <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.6}} className="w-3 h-3 rounded-full bg-gradient-to-br from-green-400 to-emerald-500"/>
+          </div>
+          <span className="ml-3 text-[11px] font-mono text-slate-400 tracking-widest uppercase">Attack Vector Simulation</span>
+        </div>
+        
+        {/* Blocked counter */}
+        <motion.div 
+          key={blockedCount}
+          initial={{scale:1.2}}
+          animate={{scale:1}}
+          className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-50 border border-emerald-200">
+          <Shield className="w-3 h-3 text-emerald-600"/>
+          <span className="text-[10px] font-bold text-emerald-700 font-mono">
+            {blockedCount.toString().padStart(3,'0')} BLOCKED
+          </span>
+        </motion.div>
+      </div>
+      
+      {/* Attack selector tabs */}
+      <div className="grid grid-cols-4 gap-2 mb-5 relative z-10">
         {attacks.map((att,i)=>(
-          <button key={i} onClick={()=>setActiveAttack(i)}
-            className={`text-center p-2 rounded-xl text-[10px] font-bold border transition-all duration-200 ${activeAttack===i?att.bg+' '+att.border+' '+att.color:'glass border-white/60 text-slate-400'}`}>
-            <div className="text-lg mb-0.5">{att.icon}</div>
-            {att.name}
-          </button>
+          <motion.button 
+            key={i} 
+            onClick={()=>setActiveAttack(i)}
+            whileHover={{scale:1.02}}
+            whileTap={{scale:0.98}}
+            className={`text-center p-2.5 rounded-xl text-[10px] font-bold border-2 transition-all duration-300 relative overflow-hidden ${
+              activeAttack===i
+                ?`${att.bg} ${att.border} ${att.tc} shadow-md` 
+                :'bg-slate-50 border-slate-200 text-slate-400 hover:bg-slate-100'
+            }`}>
+            {activeAttack===i && (
+              <motion.div 
+                layoutId="activeAttack"
+                className="absolute inset-0 bg-white/50"
+                transition={{type:'spring',stiffness:500,damping:40}}
+              />
+            )}
+            <div className="relative z-10">
+              <div className="flex justify-center mb-1">
+                <att.icon className="w-4 h-4"/>
+              </div>
+              <span className="text-[9px]">{att.name}</span>
+            </div>
+          </motion.button>
         ))}
       </div>
-      {/* Attack flow */}
+      
+      {/* Attack flow visualization */}
       <AnimatePresence mode="wait">
-        <motion.div key={activeAttack} initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}} transition={{duration:0.25}}>
+        <motion.div 
+          key={activeAttack} 
+          initial={{opacity:0,y:12,scale:0.98}} 
+          animate={{opacity:1,y:0,scale:1}} 
+          exit={{opacity:0,y:-12,scale:0.98}} 
+          transition={{duration:0.3,ease:[0.16,1,0.3,1]}}
+          className="relative z-10">
+          
           <div className="flex items-center gap-3 mb-4">
-            {/* Attacker */}
-            <div className={`flex-1 text-center p-3 rounded-2xl ${a.bg} border ${a.border}`}>
-              <div className="text-2xl mb-1">{a.icon}</div>
-              <div className={`text-[11px] font-bold ${a.color}`}>{a.name}</div>
-              <div className="text-[9px] text-slate-400 mt-0.5">{a.path}</div>
-            </div>
-            {/* Arrow with X */}
-            <div className="flex flex-col items-center gap-1">
-              <motion.div animate={{x:[0,8,0]}} transition={{repeat:Infinity,duration:0.8}}>
-                <ArrowRight className={`w-5 h-5 ${a.color}`}/>
+            {/* Attacker node */}
+            <motion.div 
+              animate={showImpact?{x:[0,5,0]}:{}}
+              transition={{duration:0.2}}
+              className={`flex-1 text-center p-4 rounded-2xl ${a.bg} ${a.border} border-2 relative overflow-hidden`}>
+              <div className="absolute top-2 left-2 flex items-center gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"/>
+                <span className="text-[8px] font-mono text-red-400 uppercase">Threat</span>
+              </div>
+              <div className="mt-3">
+                <div className="w-12 h-12 rounded-xl bg-white shadow-md flex items-center justify-center mx-auto mb-2">
+                  <a.icon className="w-6 h-6" style={{color:a.color}}/>
+                </div>
+                <div className={`text-[12px] font-bold ${a.tc}`}>{a.name}</div>
+                <div className="text-[10px] text-slate-400 mt-1 font-mono">{a.path}</div>
+              </div>
+            </motion.div>
+            
+            {/* Attack arrow with collision */}
+            <div className="flex flex-col items-center gap-1 relative">
+              {/* Animated arrow */}
+              <motion.div 
+                animate={{x:[0,12,0],opacity:showImpact?[1,0.3,1]:[0.5,1,0.5]}}
+                transition={{repeat:Infinity,duration:0.6}}>
+                <ArrowRight className="w-6 h-6" style={{color:a.color}}/>
               </motion.div>
-              <motion.div animate={{scale:[1,1.2,1],opacity:[1,0.6,1]}} transition={{repeat:Infinity,duration:0.6}}
-                className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
-                <X className="w-3.5 h-3.5 text-white"/>
+              
+              {/* Impact X mark */}
+              <motion.div 
+                animate={showImpact?{scale:[1,1.4,1],rotate:[0,90,0]}:{scale:[1,1.2,1]}}
+                transition={{repeat:showImpact?0:Infinity,duration:showImpact?0.3:0.6}}
+                className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center shadow-lg shadow-red-200 relative">
+                <X className="w-5 h-5 text-white"/>
+                
+                {/* Ripple effect on impact */}
+                {showImpact && (
+                  <>
+                    <motion.div 
+                      initial={{scale:1,opacity:0.5}}
+                      animate={{scale:2,opacity:0}}
+                      transition={{duration:0.4}}
+                      className="absolute inset-0 rounded-full bg-red-400"
+                    />
+                    <motion.div 
+                      initial={{scale:1,opacity:0.3}}
+                      animate={{scale:2.5,opacity:0}}
+                      transition={{duration:0.5,delay:0.1}}
+                      className="absolute inset-0 rounded-full bg-red-300"
+                    />
+                  </>
+                )}
               </motion.div>
+              
+              <span className="text-[9px] font-bold text-red-500 font-mono">BLOCKED</span>
             </div>
-            {/* Shield */}
-            <div className="flex-1 text-center p-3 rounded-2xl glass-green border border-green-200">
-              <div className="text-2xl mb-1">🛡️</div>
-              <div className="text-[11px] font-bold text-green-700">BLOCKED</div>
-              <div className="text-[9px] text-green-600 mt-0.5 font-semibold">{a.block}</div>
+            
+            {/* Shield defense node */}
+            <motion.div 
+              animate={showImpact?{scale:[1,0.95,1.02,1]}:{scale:1}}
+              transition={{duration:0.3}}
+              className="flex-1 text-center p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-200 relative overflow-hidden">
+              {/* Shield glow effect */}
+              <motion.div 
+                animate={showImpact?{opacity:[0.3,0.6,0.3]}:{opacity:0.2}}
+                transition={{duration:0.5}}
+                className="absolute inset-0 bg-gradient-to-br from-emerald-200 to-transparent"
+              />
+              
+              <div className="relative z-10">
+                <div className="absolute top-2 right-2 flex items-center gap-1">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-glow-pulse-green"/>
+                  <span className="text-[8px] font-mono text-emerald-500 uppercase">Active</span>
+                </div>
+                
+                <div className="mt-3">
+                  <motion.div 
+                    animate={{scale:[1,1.1,1]}}
+                    transition={{repeat:Infinity,duration:2}}
+                    className="w-12 h-12 rounded-xl bg-white shadow-md flex items-center justify-center mx-auto mb-2">
+                    <Shield className="w-6 h-6 text-emerald-600"/>
+                  </motion.div>
+                  <div className="text-[12px] font-bold text-emerald-700">DEFLECTED</div>
+                  <div className="text-[10px] text-emerald-600 mt-1 font-semibold">{a.block}</div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+          
+          {/* Security layer info */}
+          <motion.div 
+            initial={{opacity:0,y:10}}
+            animate={{opacity:1,y:0}}
+            transition={{delay:0.2}}
+            className="text-center py-3 px-4 rounded-2xl bg-slate-50 border-2 border-slate-200">
+            <div className="flex items-center justify-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-500"/>
+              <span className="text-xs font-bold text-slate-700">Zero-Gap neutralizes at the <span className="text-emerald-600">hardware layer</span></span>
             </div>
-          </div>
-          <div className="text-center py-2 px-4 rounded-2xl bg-green-50 border border-green-200">
-            <div className="text-xs font-bold text-green-700">Zero-Gap neutralises this vector at the hardware layer</div>
-          </div>
+          </motion.div>
         </motion.div>
       </AnimatePresence>
     </div>
@@ -845,13 +1959,14 @@ function ThreatShieldDiagram() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   DEPLOYMENT MAP DIAGRAM — India map with phase progress
+   DEPLOYMENT MAP DIAGRAM — CINEMATIC VERSION with animated heatmap, scan effects
 ══════════════════════════════════════════════════════════════════ */
 function DeploymentDiagram() {
+  const [scanPosition, setScanPosition] = React.useState(0);
   const phases = [
-    { label:'Phase 1', sub:'Pilot · 500 Booths', pct:100, g:'from-orange-400 to-pink-500', years:'Yr 1–2', states:['MH','DL','KA'] },
-    { label:'Phase 2', sub:'Scale · 10 States',  pct:60,  g:'from-indigo-500 to-blue-500', years:'Yr 2–3', states:['MH','DL','KA','UP','TN','AP','WB','GJ','RJ','MP'] },
-    { label:'Phase 3', sub:'National · Lok Sabha',pct:0,  g:'from-green-400 to-emerald-500',years:'Yr 3–5', states:['ALL'] },
+    { label:'Phase 1', sub:'Pilot · 500 Booths', pct:100, color:'#E87722', years:'Yr 1–2', states:['MH','DL','KA'] },
+    { label:'Phase 2', sub:'Scale · 10 States',  pct:60,  color:'#1E3A8A', years:'Yr 2–3', states:['MH','DL','KA','UP','TN','AP','WB','GJ','RJ','MP'] },
+    { label:'Phase 3', sub:'National · Lok Sabha',pct:0,  color:'#0F7A3A', years:'Yr 3–5', states:['ALL'] },
   ];
   const stateGrid = [
     ['J&K','HP','UK','PB','HR','DL','RJ'],
@@ -861,165 +1976,320 @@ function DeploymentDiagram() {
   ];
   const phase1 = ['MH','DL','KA'];
   const phase2 = ['MH','DL','KA','UP','TN','AP','WB','GJ','RJ','MP'];
+  
+  // Scanner animation
+  React.useEffect(()=>{
+    const t = setInterval(()=>{
+      setScanPosition(p=>(p+1)%4);
+    },800);
+    return ()=>clearInterval(t);
+  },[]);
+  
   return (
-    <div className="glass-solid rounded-3xl p-6 select-none">
-      <div className="text-[11px] font-mono text-violet-400/60 tracking-widest uppercase mb-4">National Deployment Roadmap</div>
-      {/* India state grid */}
-      <div className="mb-5 p-3 rounded-2xl bg-violet-50/60 border border-violet-100">
-        <div className="text-[10px] text-slate-400 font-mono mb-2">State Coverage</div>
-        <div className="space-y-1">
-          {stateGrid.map((row,ri)=>(
-            <div key={ri} className="flex gap-1">
-              {row.map(st=>{
-                const p1 = phase1.includes(st);
-                const p2 = phase2.includes(st);
-                return (
-                  <motion.div key={st}
-                    initial={{opacity:0,scale:0.7}} whileInView={{opacity:1,scale:1}} viewport={{once:true}}
-                    transition={{delay:(ri*7+row.indexOf(st))*0.03,duration:0.3}}
-                    className={`flex-1 text-center py-1 rounded text-[8px] font-bold border transition-all duration-300
-                      ${p1?'bg-gradient-to-br from-orange-400 to-pink-500 text-white border-orange-300':
-                        p2?'bg-gradient-to-br from-indigo-400 to-blue-500 text-white border-indigo-300':
-                        'bg-white/60 text-slate-300 border-slate-100'}`}>
-                    {st}
-                  </motion.div>
-                );
-              })}
-            </div>
-          ))}
+    <div className="glass-cinematic rounded-3xl p-5 sm:p-6 select-none relative overflow-hidden">
+      {/* Scan line effect */}
+      <motion.div 
+        className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent z-10 pointer-events-none"
+        animate={{top:['10%','90%','10%']}}
+        transition={{duration:4,repeat:Infinity,ease:'linear'}}
+      />
+      
+      {/* Header with tricolor accent */}
+      <div className="flex items-center justify-between mb-5 relative z-10">
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1.5">
+            <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500"/>
+            <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.3}} className="w-3 h-3 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500"/>
+            <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.6}} className="w-3 h-3 rounded-full bg-gradient-to-br from-green-400 to-emerald-500"/>
+          </div>
+          <span className="ml-3 text-[11px] font-mono text-slate-400 tracking-widest uppercase">National Deployment Roadmap</span>
         </div>
-        <div className="flex gap-3 mt-2">
-          {[{c:'bg-gradient-to-r from-orange-400 to-pink-500',l:'Phase 1'},
-            {c:'bg-gradient-to-r from-indigo-400 to-blue-500',l:'Phase 2'},
-            {c:'bg-white/60 border border-slate-200',l:'Phase 3'}].map((leg,i)=>(
-            <div key={i} className="flex items-center gap-1">
-              <div className={`w-3 h-3 rounded ${leg.c}`}/>
-              <span className="text-[9px] text-slate-500">{leg.l}</span>
-            </div>
-          ))}
+        
+        <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-slate-100 border border-slate-200">
+          <span className="text-[9px] font-bold text-slate-500 font-mono">INDIA</span>
         </div>
       </div>
-      {/* Phase bars */}
-      {phases.map((p,i)=>(
-        <div key={i} className="mb-3">
-          <div className="flex justify-between items-center mb-1">
-            <div>
-              <span className="text-[11px] font-bold text-slate-700">{p.label}</span>
-              <span className="text-[10px] text-slate-400 ml-2">{p.sub}</span>
-            </div>
-            <span className="text-[10px] font-mono text-violet-500">{p.years}</span>
-          </div>
-          <div className="h-2.5 rounded-full bg-violet-50 overflow-hidden border border-violet-100">
-            <motion.div
-              initial={{width:0}} whileInView={{width:`${p.pct}%`}} viewport={{once:true}}
-              transition={{delay:i*0.2+0.3,duration:1.2,ease:[0.16,1,0.3,1]}}
-              className={`h-full rounded-full bg-gradient-to-r ${p.g}`}/>
+      
+      {/* India state grid — Cinematic heatmap */}
+      <div className="mb-5 p-4 rounded-2xl bg-slate-50 border-2 border-slate-100 relative">
+        <div className="flex items-center justify-between mb-3">
+          <div className="text-[10px] text-slate-400 font-mono">State Coverage Heatmap</div>
+          <div className="flex items-center gap-2">
+            {[
+              {c:'#E87722',l:'Phase 1'},
+              {c:'#1E3A8A',l:'Phase 2'},
+              {c:'#e2e8f0',l:'Future'}
+            ].map((leg,i)=>(
+              <div key={i} className="flex items-center gap-1">
+                <div className="w-2 h-2 rounded" style={{backgroundColor:leg.c}}/>
+                <span className="text-[8px] text-slate-500">{leg.l}</span>
+              </div>
+            ))}
           </div>
         </div>
-      ))}
-      <div className="mt-3 text-center text-[10px] font-mono text-green-600 bg-green-50 border border-green-200 rounded-xl py-2">
-        🗳️ Target: Lok Sabha 2029 — Full National Coverage
+        
+        <div className="space-y-1.5">
+          {stateGrid.map((row,ri)=>{
+            const isScanning = scanPosition === ri;
+            return (
+              <motion.div 
+                key={ri} 
+                className={`flex gap-1.5 rounded-lg p-1 transition-colors ${isScanning?'bg-amber-50/50':''}`}>
+                {row.map((st,si)=>{
+                  const p1 = phase1.includes(st);
+                  const p2 = phase2.includes(st);
+                  const isActive = isScanning && si < 4;
+                  return (
+                    <motion.div key={st}
+                      initial={{opacity:0,scale:0.8}} 
+                      whileInView={{opacity:1,scale:1}} 
+                      viewport={{once:true}}
+                      transition={{delay:(ri*7+si)*0.02,duration:0.3}}
+                      whileHover={{scale:1.1,zIndex:10}}
+                      className={`flex-1 text-center py-2 rounded-lg text-[9px] font-bold border-2 transition-all duration-300 cursor-default ${
+                        p1?'bg-gradient-to-br from-amber-400 to-orange-500 text-white border-amber-300 shadow-md':
+                        p2?'bg-gradient-to-br from-slate-700 to-slate-800 text-white border-slate-600 shadow-md':
+                        'bg-slate-100 text-slate-400 border-slate-200'
+                      } ${isActive?'ring-2 ring-amber-300 ring-offset-1':''}`}>
+                      {st}
+                      {p1 && (
+                        <motion.div 
+                          animate={{opacity:[0,1,0]}}
+                          transition={{repeat:Infinity,duration:2}}
+                          className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-green-400 border border-white"
+                        />
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
+      
+      {/* Phase bars — Enhanced */}
+      <div className="space-y-3 mb-4">
+        {phases.map((p,i)=>(
+          <div key={i} className="group">
+            <div className="flex justify-between items-center mb-1.5">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black text-white" style={{backgroundColor:p.color}}>
+                  {i+1}
+                </div>
+                <div>
+                  <span className="text-[12px] font-bold text-slate-700">{p.label}</span>
+                  <span className="text-[10px] text-slate-400 ml-2">{p.sub}</span>
+                </div>
+              </div>
+              <span className="text-[10px] font-mono text-slate-400 px-2 py-0.5 rounded-full bg-slate-100">{p.years}</span>
+            </div>
+            <div className="h-3 rounded-full bg-slate-100 overflow-hidden border border-slate-200">
+              <motion.div
+                initial={{width:0}} 
+                whileInView={{width:`${p.pct}%`}} 
+                viewport={{once:true}}
+                transition={{delay:i*0.2+0.3,duration:1.2,ease:[0.16,1,0.3,1]}}
+                className="h-full rounded-full relative"
+                style={{backgroundColor:p.color}}>
+                {/* Animated shine */}
+                <motion.div 
+                  animate={{x:['-100%','200%']}}
+                  transition={{duration:2,repeat:Infinity,delay:i*0.3}}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                />
+              </motion.div>
+            </div>
+            <div className="flex justify-between text-[9px] mt-1">
+              <span className="text-slate-400">{p.pct > 0 ? `${p.pct}% Complete` : 'Pending'}</span>
+              <span className="font-mono font-bold" style={{color:p.color}}>
+                {p.pct === 100 ? '✓ DONE' : p.pct > 0 ? 'IN PROGRESS' : 'PLANNED'}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      {/* Target milestone */}
+      <motion.div 
+        animate={{scale:[1,1.02,1]}}
+        transition={{repeat:Infinity,duration:3}}
+        className="text-center py-3 px-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-200 shadow-lg shadow-emerald-100">
+        <div className="flex items-center justify-center gap-2">
+          <motion.div animate={{rotate:[0,10,-10,0]}} transition={{repeat:Infinity,duration:1}}>
+            <span className="text-lg">🗳️</span>
+          </motion.div>
+          <span className="text-[11px] font-bold text-emerald-700 font-mono">TARGET: Lok Sabha 2029 — Full National Coverage</span>
+        </div>
+      </motion.div>
     </div>
   );
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   COST COMPARISON DIAGRAM — animated visual breakdown
+   COST COMPARISON DIAGRAM — CINEMATIC VERSION with animated counters, holographic ring
 ══════════════════════════════════════════════════════════════════ */
 function CostComparisonDiagram() {
   const items = [
-    { label:'Node A Terminals',  amt:3675, pct:22, g:'from-indigo-500 to-blue-500', tc:'text-indigo-600' },
-    { label:'Node B EVMs',       amt:4463, pct:27, g:'from-violet-500 to-purple-600',tc:'text-violet-600' },
-    { label:'Voter Smart Cards', amt:8313, pct:50, g:'from-green-400 to-emerald-500',tc:'text-green-700' },
-    { label:'Infrastructure',    amt:1000, pct:6,  g:'from-orange-400 to-pink-500',  tc:'text-orange-600' },
-    { label:'Training',          amt:500,  pct:3,  g:'from-pink-400 to-rose-500',    tc:'text-pink-600' },
+    { label:'Node A Terminals',  amt:3675, pct:22, color:'#64748b', bg:'bg-slate-100' },
+    { label:'Node B EVMs',       amt:4463, pct:27, color:'#0f766e', bg:'bg-teal-100' },
+    { label:'Voter Smart Cards', amt:8313, pct:50, color:'#059669', bg:'bg-emerald-100' },
+    { label:'Infrastructure',    amt:1000, pct:6,  color:'#E87722', bg:'bg-amber-100' },
+    { label:'Training',          amt:500,  pct:3,  color:'#dc2626', bg:'bg-red-100' },
   ];
   const total = 17951;
   const electionCost = 120000;
+  const [animatedTotal, setAnimatedTotal] = React.useState(0);
+  
+  // Animated counter
+  React.useEffect(()=>{
+    let start = 0;
+    const duration = 1500;
+    const increment = total / (duration / 16);
+    const timer = setInterval(()=>{
+      start += increment;
+      if(start >= total){
+        setAnimatedTotal(total);
+        clearInterval(timer);
+      } else {
+        setAnimatedTotal(Math.floor(start));
+      }
+    },16);
+    return ()=>clearInterval(timer);
+  },[]);
+  
   return (
-    <div className="glass-solid rounded-3xl p-6 select-none">
-      <div className="text-[11px] font-mono text-violet-400/60 tracking-widest uppercase mb-4">One-Time Investment vs Election Cost</div>
+    <div className="glass-cinematic rounded-3xl p-5 sm:p-6 select-none relative overflow-hidden">
+      {/* Background rings */}
+      <div className="absolute -right-20 -top-20 w-40 h-40 rounded-full border border-slate-100 opacity-50"/>
+      <div className="absolute -right-16 -top-16 w-32 h-32 rounded-full border border-slate-100 opacity-30"/>
+      
+      {/* Header */}
+      <div className="flex items-center gap-2 mb-5">
+        <div className="flex gap-1.5">
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500"/>
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.3}} className="w-3 h-3 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500"/>
+          <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2,delay:0.6}} className="w-3 h-3 rounded-full bg-gradient-to-br from-green-400 to-emerald-500"/>
+        </div>
+        <span className="ml-3 text-[11px] font-mono text-slate-400 tracking-widest uppercase">Investment Analysis</span>
+      </div>
 
-      {/* Donut visual using SVG arcs */}
-      <div className="flex items-center gap-5 mb-5">
-        <div className="relative shrink-0" style={{width:100,height:100}}>
-          <svg width="100" height="100" viewBox="0 0 100 100">
+      {/* Donut chart with animated segments */}
+      <div className="flex items-center gap-5 mb-5 relative z-10">
+        <div className="relative shrink-0" style={{width:110,height:110}}>
+          <svg width="110" height="110" viewBox="0 0 110 110" className="-rotate-90">
             {/* Background ring */}
-            <circle cx="50" cy="50" r="38" fill="none" stroke="#ede9fe" strokeWidth="12"/>
-            {/* Segments */}
+            <circle cx="55" cy="55" r="42" fill="none" stroke="#f1f5f9" strokeWidth="14"/>
+            {/* Segments with animation */}
             {(()=>{
               let offset = 0;
-              const circ = 2*Math.PI*38;
+              const circ = 2*Math.PI*42;
               return items.map((item,i)=>{
                 const dash = (item.pct/100)*circ;
-                const el = (
-                  <motion.circle key={i} cx="50" cy="50" r="38" fill="none"
-                    stroke={`url(#g${i})`} strokeWidth="12"
+                return (
+                  <motion.circle key={i} cx="55" cy="55" r="42" fill="none"
+                    stroke={item.color} strokeWidth="14"
                     strokeDasharray={`${dash} ${circ}`}
                     strokeDashoffset={-offset}
-                    strokeLinecap="butt"
+                    strokeLinecap="round"
                     initial={{strokeDasharray:`0 ${circ}`}}
                     whileInView={{strokeDasharray:`${dash} ${circ}`}}
                     viewport={{once:true}}
-                    transition={{delay:i*0.15+0.3,duration:0.8,ease:[0.16,1,0.3,1]}}
-                    transform="rotate(-90 50 50)"
+                    transition={{delay:i*0.1+0.3,duration:0.8,ease:[0.16,1,0.3,1]}}
                   />
                 );
                 offset += dash;
-                return el;
               });
             })()}
-            <defs>
-              {items.map((_item,i)=>(
-                <linearGradient key={i} id={`g${i}`} x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor={['#6366f1','#8b5cf6','#4ade80','#fb923c','#f472b6'][i]}/>
-                  <stop offset="100%" stopColor={['#3b82f6','#a855f7','#22c55e','#ec4899','#e11d48'][i]}/>
-                </linearGradient>
-              ))}
-            </defs>
-            <text x="50" y="47" textAnchor="middle" fontSize="10" fill="#7c3aed" fontWeight="900" fontFamily="monospace">₹{Math.round(total/1000)}K</text>
-            <text x="50" y="59" textAnchor="middle" fontSize="7" fill="#94a3b8" fontFamily="monospace">crore</text>
           </svg>
+          
+          {/* Center counter */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-sm font-black text-slate-800 font-mono">₹{Math.round(animatedTotal/1000)}K</span>
+            <span className="text-[9px] text-slate-400 font-mono">crore</span>
+          </div>
+          
+          {/* Rotating holographic ring */}
+          <motion.div 
+            animate={{rotate:360}}
+            transition={{duration:20,repeat:Infinity,ease:'linear'}}
+            className="absolute inset-0 rounded-full border-2 border-dashed border-slate-200 opacity-30"
+            style={{margin:-8}}
+          />
         </div>
-        <div className="flex-1 space-y-1.5">
-          {items.map((item,i)=>(
-            <div key={i} className="flex items-center gap-2">
-              <div className={`w-2.5 h-2.5 rounded-full bg-gradient-to-r ${item.g} shrink-0`}/>
-              <div className="flex-1 text-[10px] text-slate-600 truncate">{item.label}</div>
-              <div className={`text-[10px] font-bold font-mono ${item.tc}`}>{item.pct}%</div>
-            </div>
-          ))}
+        
+        {/* Legend */}
+        <div className="flex-1 space-y-2">
+          {items.map((item,i)=>{
+            const [hovered,setHovered] = React.useState(false);
+            return (
+              <motion.div 
+                key={i} 
+                onHoverStart={()=>setHovered(true)}
+                onHoverEnd={()=>setHovered(false)}
+                animate={{x:hovered?2:0}}
+                className="flex items-center gap-2 cursor-default">
+                <div className="w-3 h-3 rounded-full shrink-0" style={{backgroundColor:item.color}}/>
+                <div className="flex-1 text-[11px] text-slate-600">{item.label}</div>
+                <div className="text-[11px] font-bold font-mono" style={{color:item.color}}>
+                  ₹{item.amt}Cr
+                </div>
+                <div className="text-[10px] font-mono text-slate-400 w-8 text-right">{item.pct}%</div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Comparison bar */}
-      <div className="rounded-2xl bg-violet-50/60 border border-violet-100 p-3">
-        <div className="text-[10px] text-slate-500 mb-2 font-mono">Zero-Gap vs 2024 Election economic footprint</div>
-        <div className="space-y-2">
+      {/* Comparison bars — Enhanced */}
+      <div className="rounded-2xl bg-slate-50 border-2 border-slate-200 p-4 relative overflow-hidden">
+        <div className="text-[11px] text-slate-500 mb-3 font-mono flex items-center gap-1">
+          <BarChart3 className="w-3 h-3"/>
+          Zero-Gap vs 2024 Election Economic Footprint
+        </div>
+        
+        <div className="space-y-3">
+          {/* Zero-Gap bar */}
           <div>
-            <div className="flex justify-between text-[10px] mb-1">
-              <span className="text-slate-500">Zero-Gap (one-time)</span>
-              <span className="font-bold font-mono text-violet-600">₹{total.toLocaleString()} Cr</span>
+            <div className="flex justify-between text-[11px] mb-1.5">
+              <span className="text-slate-600 font-medium">Zero-Gap (one-time)</span>
+              <span className="font-bold font-mono text-slate-800">₹{total.toLocaleString()} Cr</span>
             </div>
-            <div className="h-3 rounded-full bg-white/80 overflow-hidden border border-violet-100">
-              <motion.div initial={{width:0}} whileInView={{width:`${(total/electionCost)*100}%`}} viewport={{once:true}}
+            <div className="h-4 rounded-full bg-white border border-slate-200 overflow-hidden relative">
+              <motion.div 
+                initial={{width:0}} 
+                whileInView={{width:`${(total/electionCost)*100}%`}} 
+                viewport={{once:true}}
                 transition={{duration:1,ease:[0.16,1,0.3,1],delay:0.3}}
-                className="h-full rounded-full bg-gradient-to-r from-violet-500 to-indigo-500"/>
+                className="h-full rounded-full relative"
+                style={{background:'linear-gradient(90deg,#E87722 0%,#1E3A8A 50%,#0F7A3A 100%)'}}>
+                <motion.div 
+                  animate={{x:['-100%','200%']}}
+                  transition={{duration:2,repeat:Infinity}}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                />
+              </motion.div>
             </div>
           </div>
+          
+          {/* Election cost bar */}
           <div>
-            <div className="flex justify-between text-[10px] mb-1">
-              <span className="text-slate-500">2024 Election footprint</span>
+            <div className="flex justify-between text-[11px] mb-1.5">
+              <span className="text-slate-600 font-medium">2024 Election footprint</span>
               <span className="font-bold font-mono text-slate-400">₹{electionCost.toLocaleString()} Cr</span>
             </div>
-            <div className="h-3 rounded-full bg-white/80 overflow-hidden border border-slate-200">
+            <div className="h-4 rounded-full bg-white border border-slate-200 overflow-hidden">
               <div className="h-full w-full rounded-full bg-gradient-to-r from-slate-200 to-slate-300"/>
             </div>
           </div>
         </div>
-        <div className="mt-2 text-center text-[11px] font-bold text-violet-600">
-          ~15% of one election · secures every election after
+        
+        {/* ROI highlight */}
+        <div className="mt-4 flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-emerald-50 border border-emerald-200">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600"/>
+          <span className="text-[12px] font-bold text-emerald-700">
+            Only ~15% of one election cost · Secures all future elections
+          </span>
         </div>
       </div>
     </div>
