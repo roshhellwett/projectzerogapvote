@@ -47,6 +47,4 @@ This proposal is released as an **open technical blueprint**. The architecture, 
 
 ---
 
-<p align="center">
-  <sub>© 2026 Zenith Open Source Projects. A public initiative by <a href="https://github.com/roshhellwett">@roshhellwett</a></sub>
-</p>
+© 2026 [Zenith Open Source Projects](https://zenithopensourceprojects.vercel.app/). All Rights Reserved. Zenith is a Open Source Project Idea's by @roshhellwett
