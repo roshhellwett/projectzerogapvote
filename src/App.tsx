@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { motion, AnimatePresence, useInView, MotionConfig } from 'framer-motion';
 import {
   Shield, WifiOff, Fingerprint, Cpu, CheckCircle2,
   ExternalLink, Printer, Database, Activity, FileText, Menu, X,
@@ -26,6 +26,13 @@ function MobileNotice() {
       return () => clearTimeout(t);
     }
   }, []);
+  // Lock background scroll while the notice is visible (prevents iOS rubber-band scroll behind modal)
+  useEffect(() => {
+    if (!show) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
+  }, [show]);
   const dismiss = () => {
     sessionStorage.setItem('zg-mobile-notice-dismissed', '1');
     setShow(false);
@@ -236,11 +243,14 @@ function HashPanel() {
    VOTER JOURNEY PANEL — CINEMATIC VERSION with active step trail, progress glow
 ══════════════════════════════════════════════════════════════════ */
 function JourneyPanel() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
   const [activeStep, setActiveStep] = React.useState(0);
   const [completedSteps, setCompletedSteps] = React.useState<number[]>([]);
-  
-  // Cycle through steps animation
+
+  // Cycle through steps animation — only when visible to save CPU/battery
   React.useEffect(()=>{
+    if (!inView) return;
     const interval = setInterval(()=>{
       setActiveStep(prev=>{
         const next = (prev + 1) % 8;
@@ -253,7 +263,7 @@ function JourneyPanel() {
       });
     },2000);
     return ()=>clearInterval(interval);
-  },[]);
+  },[inView]);
   
   const steps = [
     {n:'01',icon:Fingerprint,t:'Smart Card Tap',d:'NFC Voter ID on Node A',color:'#64748b'},
@@ -267,7 +277,7 @@ function JourneyPanel() {
   ];
   
   return (
-    <div className="w-full glass-cinematic rounded-3xl p-6 select-none relative overflow-hidden">
+    <div ref={wrapRef} className="w-full glass-cinematic rounded-3xl p-6 select-none relative overflow-hidden">
       {/* Progress trail background */}
       <div className="absolute left-9 top-20 bottom-10 w-0.5 bg-slate-200 rounded-full">
         <motion.div 
@@ -618,18 +628,21 @@ function AirgapDiagram() {
 
 /** 02 — Hash Chain: CINEMATIC VERSION with 3D depth, glowing connections, explosion effects */
 function HashDiagram() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
   const [tampered, setTampered] = React.useState(false);
   const [phase, setPhase] = React.useState(0); // 0=building, 1=built, 2=tampered
   const [hashCycle, setHashCycle] = React.useState(0);
   const [showExplosion, setShowExplosion] = React.useState(false);
-  
+
   React.useEffect(()=>{
+    if (!inView) return;
     setTampered(false); setPhase(0); setShowExplosion(false);
     const t1 = setTimeout(()=>setPhase(1), 1600);
     const t2 = setTimeout(()=>{ setPhase(2); setTampered(true); setShowExplosion(true); }, 4000);
     const t3 = setTimeout(()=>setHashCycle(c=>c+1), 7500);
     return ()=>{ clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  },[hashCycle]);
+  },[hashCycle, inView]);
 
   const blocks = [
     {id:1, hash:'a3f9c1',prev:'GENESIS', g:'from-slate-600 to-slate-700', tc:'text-slate-700', bg:'bg-slate-100',accent:'#64748b'},
@@ -639,7 +652,7 @@ function HashDiagram() {
   ];
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-5 p-6 sm:p-8 select-none relative overflow-hidden">
+    <div ref={wrapRef} className="w-full h-full flex flex-col items-center justify-center gap-5 p-6 sm:p-8 select-none relative overflow-hidden">
       {/* Background grid effect */}
       <div className="absolute inset-0 opacity-[0.03]" style={{
         backgroundImage:'radial-gradient(circle,#64748b 1px,transparent 1px)',
@@ -838,21 +851,24 @@ function HashDiagram() {
 
 /** 03 — Hardware Watchdog: CINEMATIC VERSION with circuit board aesthetic, electrical pulses, lightning */
 function WatchdogDiagram() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
   const [pingActive, setPingActive] = React.useState(true);
   const [powerCut, setPowerCut] = React.useState(false);
   const [cycle, setCycle] = React.useState(0);
   const [showLightning, setShowLightning] = React.useState(false);
 
   React.useEffect(()=>{
+    if (!inView) return;
     setPingActive(true); setPowerCut(false); setShowLightning(false);
     const t1 = setTimeout(()=>setPingActive(false), 3500);
     const t2 = setTimeout(()=>{ setPowerCut(true); setShowLightning(true); }, 4200);
     const t3 = setTimeout(()=>{ setPingActive(true); setPowerCut(false); setShowLightning(false); setCycle(c=>c+1); }, 7000);
     return ()=>{ clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  },[cycle]);
+  },[cycle, inView]);
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-5 p-6 sm:p-8 select-none relative overflow-hidden">
+    <div ref={wrapRef} className="w-full h-full flex flex-col items-center justify-center gap-5 p-6 sm:p-8 select-none relative overflow-hidden">
       {/* Circuit board background pattern */}
       <div className="absolute inset-0 opacity-[0.04]" style={{
         backgroundImage:`
@@ -1105,21 +1121,24 @@ function WatchdogDiagram() {
 
 /** 04 — VVPAT: CINEMATIC VERSION with realistic printer physics, paper slip animation, enhanced steps */
 function VVPATDiagram() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
   const [step, setStep] = React.useState(0);
   const [vvpatCycle, setVvpatCycle] = React.useState(0);
   const [printProgress, setPrintProgress] = React.useState(0);
   const [viewCountdown, setViewCountdown] = React.useState(5);
-  
+
   // steps: 0=idle, 1=vote tapped, 2=printing, 3=viewing, 4=deposited
   React.useEffect(()=>{
+    if (!inView) return;
     setStep(0);
     setPrintProgress(0);
     setViewCountdown(5);
-    
+
     const t1 = setTimeout(()=>setStep(1), 800);
     const t2 = setTimeout(()=>setStep(2), 1600);
-    
-    // Print progress animation
+
+    // Print progress: 0→100% across the printing window (1.6s → 3.2s)
     const printInterval = setInterval(()=>{
       setPrintProgress(p=>{
         if(p>=100){clearInterval(printInterval);return 100;}
@@ -1127,24 +1146,32 @@ function VVPATDiagram() {
       });
     },150);
     const stopPrint = setTimeout(()=>clearInterval(printInterval), 3200);
-    
+
     const t3 = setTimeout(()=>{setStep(3);setPrintProgress(100);}, 3200);
-    
-    // View countdown
-    const countdownInterval = setInterval(()=>{
-      setViewCountdown(c=>c>0?c-1:0);
-    },1000);
-    const stopCountdown = setTimeout(()=>clearInterval(countdownInterval), 8500);
-    
+
+    // Viewing countdown is synced to the viewing step (3.2s → 8.5s = 5.3s window).
+    // Defer countdown start until the view step actually begins so users see 5→4→3→2→1.
+    let countdownInterval: ReturnType<typeof setInterval> | undefined;
+    const startCountdown = setTimeout(()=>{
+      setViewCountdown(5);
+      countdownInterval = setInterval(()=>{
+        setViewCountdown(c=>c>0?c-1:0);
+      },1000);
+    }, 3200);
+    const stopCountdown = setTimeout(()=>{
+      if (countdownInterval) clearInterval(countdownInterval);
+    }, 8500);
+
     const t4 = setTimeout(()=>setStep(4), 8500);
     const t5 = setTimeout(()=>setVvpatCycle(c=>c+1), 11000);
-    
+
     return ()=>{
       clearTimeout(t1);clearTimeout(t2);clearTimeout(t3);clearTimeout(t4);clearTimeout(t5);
-      clearTimeout(stopPrint);clearTimeout(stopCountdown);
-      clearInterval(printInterval);clearInterval(countdownInterval);
+      clearTimeout(stopPrint);clearTimeout(stopCountdown);clearTimeout(startCountdown);
+      clearInterval(printInterval);
+      if (countdownInterval) clearInterval(countdownInterval);
     };
-  },[vvpatCycle]);
+  },[vvpatCycle, inView]);
 
   const candidates = ['BJP — Candidate A','INC — Candidate B','AAP — Candidate C'];
   const chosen = 1;
@@ -1156,7 +1183,7 @@ function VVPATDiagram() {
   ];
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-4 p-6 sm:p-8 select-none relative overflow-hidden">
+    <div ref={wrapRef} className="w-full h-full flex flex-col items-center justify-center gap-4 p-6 sm:p-8 select-none relative overflow-hidden">
       {/* Background texture */}
       <div className="absolute inset-0 opacity-[0.02]" style={{
         backgroundImage:'repeating-linear-gradient(0deg,transparent,transparent 2px,#64748b 2px,#64748b 4px)'
@@ -1756,16 +1783,15 @@ function ThreatShieldDiagram() {
   
   React.useEffect(()=>{
     if (!inView) return;
+    let impactTimer: ReturnType<typeof setTimeout> | undefined;
     const t = setInterval(()=>{
-      setActiveAttack(a=>{
-        const next = (a+1)%attacks.length;
-        setShowImpact(true);
-        setBlockedCount(c=>c+1);
-        setTimeout(()=>setShowImpact(false),400);
-        return next;
-      });
+      setActiveAttack(a=>(a+1)%attacks.length);
+      setShowImpact(true);
+      setBlockedCount(c=>c+1);
+      if (impactTimer) clearTimeout(impactTimer);
+      impactTimer = setTimeout(()=>setShowImpact(false),400);
     },2500);
-    return ()=>clearInterval(t);
+    return ()=>{ clearInterval(t); if (impactTimer) clearTimeout(impactTimer); };
   },[inView, attacks.length]);
   
   const a = attacks[activeAttack];
@@ -1962,6 +1988,8 @@ function ThreatShieldDiagram() {
    DEPLOYMENT MAP DIAGRAM — CINEMATIC VERSION with animated heatmap, scan effects
 ══════════════════════════════════════════════════════════════════ */
 function DeploymentDiagram() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
   const [scanPosition, setScanPosition] = React.useState(0);
   const phases = [
     { label:'Phase 1', sub:'Pilot · 500 Booths', pct:100, color:'#E87722', years:'Yr 1–2', states:['MH','DL','KA'] },
@@ -1977,16 +2005,17 @@ function DeploymentDiagram() {
   const phase1 = ['MH','DL','KA'];
   const phase2 = ['MH','DL','KA','UP','TN','AP','WB','GJ','RJ','MP'];
   
-  // Scanner animation
+  // Scanner animation — paused when out of view
   React.useEffect(()=>{
+    if (!inView) return;
     const t = setInterval(()=>{
       setScanPosition(p=>(p+1)%4);
     },800);
     return ()=>clearInterval(t);
-  },[]);
+  },[inView]);
   
   return (
-    <div className="glass-cinematic rounded-3xl p-5 sm:p-6 select-none relative overflow-hidden">
+    <div ref={wrapRef} className="glass-cinematic rounded-3xl p-5 sm:p-6 select-none relative overflow-hidden">
       {/* Scan line effect */}
       <motion.div 
         className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent z-10 pointer-events-none"
@@ -2130,6 +2159,8 @@ function DeploymentDiagram() {
    COST COMPARISON DIAGRAM — CINEMATIC VERSION with animated counters, holographic ring
 ══════════════════════════════════════════════════════════════════ */
 function CostComparisonDiagram() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
   const items = [
     { label:'Node A Terminals',  amt:3675, pct:22, color:'#64748b', bg:'bg-slate-100' },
     { label:'Node B EVMs',       amt:4463, pct:27, color:'#0f766e', bg:'bg-teal-100' },
@@ -2141,8 +2172,9 @@ function CostComparisonDiagram() {
   const electionCost = 120000;
   const [animatedTotal, setAnimatedTotal] = React.useState(0);
   
-  // Animated counter
+  // Animated counter — only ticks while visible
   React.useEffect(()=>{
+    if (!inView) return;
     let start = 0;
     const duration = 1500;
     const increment = total / (duration / 16);
@@ -2156,10 +2188,10 @@ function CostComparisonDiagram() {
       }
     },16);
     return ()=>clearInterval(timer);
-  },[]);
+  },[inView, total]);
   
   return (
-    <div className="glass-cinematic rounded-3xl p-5 sm:p-6 select-none relative overflow-hidden">
+    <div ref={wrapRef} className="glass-cinematic rounded-3xl p-5 sm:p-6 select-none relative overflow-hidden">
       {/* Background rings */}
       <div className="absolute -right-20 -top-20 w-40 h-40 rounded-full border border-slate-100 opacity-50"/>
       <div className="absolute -right-16 -top-16 w-32 h-32 rounded-full border border-slate-100 opacity-30"/>
@@ -2180,17 +2212,19 @@ function CostComparisonDiagram() {
           <svg width="110" height="110" viewBox="0 0 110 110" className="-rotate-90">
             {/* Background ring */}
             <circle cx="55" cy="55" r="42" fill="none" stroke="#f1f5f9" strokeWidth="14"/>
-            {/* Segments with animation */}
+            {/* Segments with animation — pre-compute offsets so each segment starts where the previous ended */}
             {(()=>{
-              let offset = 0;
               const circ = 2*Math.PI*42;
+              let runningOffset = 0;
               return items.map((item,i)=>{
                 const dash = (item.pct/100)*circ;
+                const offsetAt = runningOffset;
+                runningOffset += dash;
                 return (
                   <motion.circle key={i} cx="55" cy="55" r="42" fill="none"
                     stroke={item.color} strokeWidth="14"
                     strokeDasharray={`${dash} ${circ}`}
-                    strokeDashoffset={-offset}
+                    strokeDashoffset={-offsetAt}
                     strokeLinecap="round"
                     initial={{strokeDasharray:`0 ${circ}`}}
                     whileInView={{strokeDasharray:`${dash} ${circ}`}}
@@ -2198,7 +2232,6 @@ function CostComparisonDiagram() {
                     transition={{delay:i*0.1+0.3,duration:0.8,ease:[0.16,1,0.3,1]}}
                   />
                 );
-                offset += dash;
               });
             })()}
           </svg>
@@ -2220,24 +2253,19 @@ function CostComparisonDiagram() {
         
         {/* Legend */}
         <div className="flex-1 space-y-2">
-          {items.map((item,i)=>{
-            const [hovered,setHovered] = React.useState(false);
-            return (
-              <motion.div 
-                key={i} 
-                onHoverStart={()=>setHovered(true)}
-                onHoverEnd={()=>setHovered(false)}
-                animate={{x:hovered?2:0}}
-                className="flex items-center gap-2 cursor-default">
-                <div className="w-3 h-3 rounded-full shrink-0" style={{backgroundColor:item.color}}/>
-                <div className="flex-1 text-[11px] text-slate-600">{item.label}</div>
-                <div className="text-[11px] font-bold font-mono" style={{color:item.color}}>
-                  ₹{item.amt}Cr
-                </div>
-                <div className="text-[10px] font-mono text-slate-400 w-8 text-right">{item.pct}%</div>
-              </motion.div>
-            );
-          })}
+          {items.map((item,i)=>(
+            <motion.div 
+              key={i} 
+              whileHover={{x:2}}
+              className="flex items-center gap-2 cursor-default">
+              <div className="w-3 h-3 rounded-full shrink-0" style={{backgroundColor:item.color}}/>
+              <div className="flex-1 text-[11px] text-slate-600">{item.label}</div>
+              <div className="text-[11px] font-bold font-mono" style={{color:item.color}}>
+                ₹{item.amt}Cr
+              </div>
+              <div className="text-[10px] font-mono text-slate-400 w-8 text-right">{item.pct}%</div>
+            </motion.div>
+          ))}
         </div>
       </div>
 
@@ -2373,6 +2401,7 @@ export default function App() {
   ];
 
   return (
+    <MotionConfig reducedMotion="user">
     <div className="min-h-screen bg-page relative overflow-x-hidden">
 
       {/* Progress bar (mutated imperatively via ref — zero re-renders) */}
@@ -2415,7 +2444,10 @@ export default function App() {
             </motion.button>
           </div>
 
-          <button onClick={()=>setMobileOpen(!mobileOpen)} className="lg:hidden p-2 text-slate-500 hover:text-slate-800 transition-colors">
+          <button onClick={()=>setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileOpen}
+            className="lg:hidden inline-flex items-center justify-center w-11 h-11 -mr-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-violet-50 transition-colors">
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </nav>
@@ -2428,7 +2460,7 @@ export default function App() {
                 {navLinks.map((item,i)=>(
                   <motion.button key={item.id} initial={{opacity:0,x:-10}} animate={{opacity:1,x:0}} transition={{delay:i*0.04}}
                     onClick={()=>go(item.id)}
-                    className={`text-left py-2.5 px-3 rounded-xl text-sm font-medium transition-all ${activeSection===item.id?'text-violet-600 bg-violet-50':'text-slate-500 hover:text-slate-800'}`}>
+                    className={`text-left py-3 px-3 min-h-[44px] rounded-xl text-sm font-medium transition-all ${activeSection===item.id?'text-violet-600 bg-violet-50':'text-slate-500 hover:text-slate-800'}`}>
                     {item.label}
                   </motion.button>
                 ))}
@@ -2976,7 +3008,7 @@ export default function App() {
           </div>
         </div>
       </footer>
-
     </div>
+    </MotionConfig>
   );
 }

@@ -18,5 +18,11 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    rules: {
+      // Animation reset patterns intentionally use cascading setState in effects
+      // (e.g. resetting state on each demo cycle). Disabling this new rule rather
+      // than refactoring legitimate animation timelines.
+      'react-hooks/set-state-in-effect': 'off',
+    },
   },
 ])
