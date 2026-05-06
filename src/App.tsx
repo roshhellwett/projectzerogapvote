@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Fragment, type ReactNode } from 'react';
 import { motion, AnimatePresence, useInView, MotionConfig } from 'framer-motion';
 import {
   Shield, WifiOff, Fingerprint, Cpu, CheckCircle2,
@@ -14,7 +14,6 @@ import {
 const PDF = "https://www.slideshare.net/slideshow/zero-gap-voting-architecture-securing-india-s-electronic-voting-system/287278728";
 const ease = [0.16, 1, 0.3, 1] as const;
 
-/* ── Mobile notice popup ───────────────────────────────────── */
 function MobileNotice() {
   const [show, setShow] = useState(false);
   useEffect(() => {
@@ -26,7 +25,6 @@ function MobileNotice() {
       return () => clearTimeout(t);
     }
   }, []);
-  // Lock background scroll while the notice is visible (prevents iOS rubber-band scroll behind modal)
   useEffect(() => {
     if (!show) return;
     const prev = document.body.style.overflow;
@@ -77,8 +75,7 @@ function MobileNotice() {
   );
 }
 
-/* ── Shared check item ─────────────────────────────────────── */
-const Check = ({ children }: { children: React.ReactNode }) => (
+const Check = ({ children }: { children: ReactNode }) => (
   <li className="flex items-start gap-3 text-slate-700 text-base">
     <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 shadow-sm" style={{background:'linear-gradient(135deg,#E87722,#C5601A)'}}>
       <CheckCircle2 className="w-3 h-3 text-white" />
@@ -87,13 +84,10 @@ const Check = ({ children }: { children: React.ReactNode }) => (
   </li>
 );
 
-/* ══════════════════════════════════════════════════════════════════
-   HERO DIAGRAM — the airgap two-node layout, glass style
-══════════════════════════════════════════════════════════════════ */
 function AirgapPanel() {
   return (
     <div className="w-full glass-solid rounded-3xl overflow-hidden p-4 sm:p-8 select-none relative">
-      {/* titlebar */}
+      
       <div className="flex items-center gap-2 mb-4 sm:mb-6">
         <div className="w-3 h-3 rounded-full bg-red-300/60" />
         <div className="w-3 h-3 rounded-full bg-yellow-300/60" />
@@ -102,7 +96,7 @@ function AirgapPanel() {
       </div>
 
       <div className="flex items-center gap-2 sm:gap-4">
-        {/* Node A */}
+        
         <motion.div initial={{opacity:0,x:-20}} animate={{opacity:1,x:0}} transition={{duration:0.6,ease}}
           className="flex-1 min-w-0 glass-indigo rounded-2xl p-3 sm:p-5">
           <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
@@ -126,7 +120,6 @@ function AirgapPanel() {
           </div>
         </motion.div>
 
-        {/* Gap channel */}
         <div className="flex flex-col items-center gap-1.5 sm:gap-2 w-12 sm:w-20 lg:w-24 shrink-0">
           <div className="text-[7px] sm:text-[9px] text-violet-400/60 uppercase tracking-widest font-mono text-center leading-tight">Optical<br/>Channel</div>
           <div className="relative w-full h-8 flex items-center">
@@ -148,7 +141,6 @@ function AirgapPanel() {
           </div>
         </div>
 
-        {/* Node B */}
         <motion.div initial={{opacity:0,x:20}} animate={{opacity:1,x:0}} transition={{duration:0.6,ease,delay:0.15}}
           className="flex-1 min-w-0 glass-saffron rounded-2xl p-3 sm:p-5">
           <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
@@ -174,7 +166,6 @@ function AirgapPanel() {
         </motion.div>
       </div>
 
-      {/* A=B=C row */}
       <div className="grid grid-cols-3 gap-2 pt-4 sm:pt-5 mt-4 sm:mt-5 border-t border-violet-100">
         {[{l:'Server Log', s:'A', c:'text-indigo-600',  bg:'glass-indigo'},
           {l:'EEPROM',     s:'B', c:'text-orange-600',  bg:'glass-saffron'},
@@ -192,9 +183,6 @@ function AirgapPanel() {
   );
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   HASH CHAIN PANEL
-══════════════════════════════════════════════════════════════════ */
 function HashPanel() {
   const blocks = [
     {id:1,hash:'a3f9c1d2',prev:'GENESIS',g:'from-indigo-500 to-blue-500',tc:'text-indigo-600',bg:'glass-indigo'},
@@ -239,17 +227,12 @@ function HashPanel() {
   );
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   VOTER JOURNEY PANEL — CINEMATIC VERSION with active step trail, progress glow
-══════════════════════════════════════════════════════════════════ */
 function JourneyPanel() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [completedSteps, setCompletedSteps] = React.useState<number[]>([]);
-
-  // Cycle through steps animation — only when visible to save CPU/battery
-  React.useEffect(()=>{
+  const [activeStep, setActiveStep] = useState(0);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  useEffect(()=>{
     if (!inView) return;
     const interval = setInterval(()=>{
       setActiveStep(prev=>{
@@ -278,7 +261,7 @@ function JourneyPanel() {
   
   return (
     <div ref={wrapRef} className="w-full glass-cinematic rounded-3xl p-6 select-none relative overflow-hidden">
-      {/* Progress trail background */}
+      
       <div className="absolute left-9 top-20 bottom-10 w-0.5 bg-slate-200 rounded-full">
         <motion.div 
           className="absolute top-0 left-0 right-0 bg-gradient-to-b from-slate-400 via-amber-400 to-emerald-400 rounded-full"
@@ -287,7 +270,6 @@ function JourneyPanel() {
         />
       </div>
       
-      {/* Header */}
       <div className="flex items-center gap-2 mb-5 relative z-10">
         <div className="flex gap-1.5">
           <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500"/>
@@ -309,7 +291,6 @@ function JourneyPanel() {
         </motion.div>
       </div>
       
-      {/* Steps with cinematic styling */}
       <div className="space-y-2 relative z-10">
         {steps.map((s,i)=>{
           const isActive = i === activeStep;
@@ -326,7 +307,7 @@ function JourneyPanel() {
                 isCompleted?'bg-slate-50 border border-slate-200':
                 'bg-slate-50/50 border border-slate-100 opacity-60'
               }`}>
-              {/* Step number/icon */}
+              
               <motion.div 
                 animate={isActive?{scale:[1,1.1,1]}:{scale:1}}
                 transition={{repeat:isActive?Infinity:0,duration:1}}
@@ -341,7 +322,6 @@ function JourneyPanel() {
                 ):s.n}
               </motion.div>
               
-              {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className={`text-sm font-bold truncate ${
                   isActive?'text-slate-800':
@@ -359,7 +339,6 @@ function JourneyPanel() {
                 </div>
               </div>
               
-              {/* Active indicator */}
               {isActive && (
                 <motion.div 
                   initial={{scale:0,opacity:0}}
@@ -382,7 +361,6 @@ function JourneyPanel() {
         })}
       </div>
       
-      {/* Progress summary */}
       <div className="mt-4 flex items-center justify-between px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200">
         <span className="text-[11px] text-slate-500 font-mono">Journey Progress</span>
         <div className="flex items-center gap-2">
@@ -402,16 +380,10 @@ function JourneyPanel() {
   );
 }
 
-
-/* ══════════════════════════════════════════════════════════════════
-   PROTOCOL DIAGRAMS — one per protocol, themed like AirgapPanel
-══════════════════════════════════════════════════════════════════ */
-
-/** 01 — Optical Airgap: CINEMATIC VERSION with enhanced photon beams, particle effects, 3D depth */
 function AirgapDiagram() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center gap-6 p-6 sm:p-8 select-none particle-container">
-      {/* Titlebar with cinematic styling */}
+      
       <div className="w-full flex items-center gap-2 mb-2">
         <div className="flex gap-1.5">
           <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500 shadow-lg shadow-red-200"/>
@@ -429,13 +401,13 @@ function AirgapDiagram() {
       </div>
 
       <div className="flex items-stretch gap-0 w-full max-w-lg depth-layer">
-        {/* Node A — Enhanced with cinematic depth */}
+        
         <motion.div 
           initial={{opacity:0,x:-30,rotateY:-15}} 
           animate={{opacity:1,x:0,rotateY:0}} 
           transition={{duration:0.7,ease:[0.16,1,0.3,1]}}
           className="flex-1 glass-cinematic rounded-2xl p-4 relative overflow-hidden group">
-          {/* Shimmer overlay */}
+          
           <div className="absolute inset-0 animate-shimmer opacity-30 pointer-events-none"/>
           
           <div className="relative z-10">
@@ -482,22 +454,18 @@ function AirgapDiagram() {
           </div>
         </motion.div>
 
-        {/* Channel — Cinematic optical beam */}
         <div className="flex flex-col items-center mx-2 sm:mx-3 shrink-0 justify-center" style={{width:90}}>
           <div className="text-[9px] font-mono text-slate-400 uppercase tracking-widest mb-3 text-center">Optical<br/>Bridge</div>
           
-          {/* Enhanced beam track with glow */}
           <div className="relative w-full h-20 flex flex-col items-center justify-center">
-            {/* Background track glow */}
+            
             <div className="absolute w-full h-1 rounded-full bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 opacity-50"/>
             
-            {/* Active beam line */}
             <motion.div 
               animate={{opacity:[0.3,0.8,0.3]}}
               transition={{repeat:Infinity,duration:2}}
               className="absolute w-full h-0.5 rounded-full bg-gradient-to-r from-transparent via-amber-400 to-transparent shadow-lg shadow-amber-200"/>
             
-            {/* Enhanced photon particles */}
             {[0,1,2,3].map(i=>(
               <motion.div 
                 key={i} 
@@ -511,7 +479,6 @@ function AirgapDiagram() {
                 transition={{duration:1.8,delay:i*0.45,repeat:Infinity,ease:'linear'}}/>
             ))}
             
-            {/* Trail effect particles */}
             {[0,1,2].map(i=>(
               <motion.div 
                 key={`trail-${i}`}
@@ -522,7 +489,6 @@ function AirgapDiagram() {
             ))}
           </div>
           
-          {/* QR token with enhanced styling */}
           <motion.div 
             animate={{opacity:[0.5,1,0.5],y:[0,-3,0]}} 
             transition={{repeat:Infinity,duration:2}}
@@ -531,7 +497,6 @@ function AirgapDiagram() {
             <div className="text-[7px] text-amber-400 text-center font-mono">RSA-4096</div>
           </motion.div>
           
-          {/* No-wire badges with icons */}
           <div className="mt-3 flex flex-col items-center gap-1">
             {['No Wire','No WiFi','No BT'].map((t,i)=>(
               <motion.span 
@@ -546,13 +511,12 @@ function AirgapDiagram() {
           </div>
         </div>
 
-        {/* Node B — Enhanced airgapped panel */}
         <motion.div 
           initial={{opacity:0,x:30,rotateY:15}} 
           animate={{opacity:1,x:0,rotateY:0}} 
           transition={{duration:0.7,delay:0.2,ease:[0.16,1,0.3,1]}}
           className="flex-1 glass-cinematic rounded-2xl p-4 relative overflow-hidden">
-          {/* Security border glow */}
+          
           <div className="absolute inset-0 rounded-2xl border-2 border-dashed border-slate-200 opacity-50"/>
           
           <div className="relative z-10">
@@ -594,7 +558,6 @@ function AirgapDiagram() {
         </motion.div>
       </div>
 
-      {/* A=B=C footer — Enhanced equality validation */}
       <motion.div 
         initial={{opacity:0,y:20}}
         animate={{opacity:1,y:0}}
@@ -626,16 +589,15 @@ function AirgapDiagram() {
   );
 }
 
-/** 02 — Hash Chain: CINEMATIC VERSION with 3D depth, glowing connections, explosion effects */
 function HashDiagram() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
-  const [tampered, setTampered] = React.useState(false);
-  const [phase, setPhase] = React.useState(0); // 0=building, 1=built, 2=tampered
-  const [hashCycle, setHashCycle] = React.useState(0);
-  const [showExplosion, setShowExplosion] = React.useState(false);
+  const [tampered, setTampered] = useState(false);
+  const [phase, setPhase] = useState(0);
+  const [hashCycle, setHashCycle] = useState(0);
+  const [showExplosion, setShowExplosion] = useState(false);
 
-  React.useEffect(()=>{
+  useEffect(()=>{
     if (!inView) return;
     setTampered(false); setPhase(0); setShowExplosion(false);
     const t1 = setTimeout(()=>setPhase(1), 1600);
@@ -653,13 +615,12 @@ function HashDiagram() {
 
   return (
     <div ref={wrapRef} className="w-full h-full flex flex-col items-center justify-center gap-5 p-6 sm:p-8 select-none relative overflow-hidden">
-      {/* Background grid effect */}
+      
       <div className="absolute inset-0 opacity-[0.03]" style={{
         backgroundImage:'radial-gradient(circle,#64748b 1px,transparent 1px)',
         backgroundSize:'20px 20px'
       }}/>
       
-      {/* Header with cinematic status indicator */}
       <div className="w-full flex items-center gap-2 mb-2 relative z-10">
         <div className="flex gap-1.5">
           <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500"/>
@@ -679,15 +640,14 @@ function HashDiagram() {
         )}
       </div>
 
-      {/* Chain blocks with 3D depth */}
       <div className="flex items-center gap-2 w-full max-w-xl flex-wrap justify-center relative z-10">
         {blocks.map((b,i)=>{
           const broken = tampered && i >= 2;
           const isTarget = i === 2;
           
           return (
-            <React.Fragment key={b.id}>
-              {/* Block with enhanced 3D styling */}
+            <Fragment key={b.id}>
+              
               <motion.div
                 initial={{opacity:0,scale:0.6,rotateY:90,y:20}}
                 animate={phase>0?{
@@ -701,10 +661,8 @@ function HashDiagram() {
                 }`}
                 style={{minWidth:85,transformStyle:'preserve-3d'}}>
                 
-                {/* Block header with gradient */}
                 <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-xl bg-gradient-to-r ${b.g} opacity-60`}/>
                 
-                {/* Content */}
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-[9px] font-bold text-slate-400">Block #{b.id}</span>
@@ -733,7 +691,6 @@ function HashDiagram() {
                   </div>
                 </div>
                 
-                {/* Explosion effect for tampered block */}
                 {showExplosion && isTarget && broken && (
                   <motion.div 
                     initial={{scale:0,opacity:1}}
@@ -745,7 +702,6 @@ function HashDiagram() {
                 )}
               </motion.div>
               
-              {/* Connection arrow with glow effect */}
               {i<blocks.length-1 && (
                 <motion.div 
                   initial={{scaleX:0,opacity:0}} 
@@ -753,7 +709,7 @@ function HashDiagram() {
                   transition={{delay:i*0.25+0.3,duration:0.4,ease:[0.16,1,0.3,1]}}
                   className="relative">
                   <ArrowRight className={`w-4 h-4 ${broken&&i>=1?'text-red-400':'text-slate-300'}`}/>
-                  {/* Glow line under arrow */}
+                  
                   <motion.div 
                     animate={{opacity:[0.3,0.8,0.3]}}
                     transition={{repeat:Infinity,duration:1.5,delay:i*0.2}}
@@ -761,22 +717,19 @@ function HashDiagram() {
                   />
                 </motion.div>
               )}
-            </React.Fragment>
+            </Fragment>
           );
         })}
       </div>
 
-      {/* Enhanced status bar with holographic effect */}
       <motion.div 
         animate={tampered?{borderColor:'rgba(239,68,68,0.4)'}:{borderColor:'rgba(16,185,129,0.3)'}}
         className={`flex items-center gap-4 w-full max-w-xl px-5 py-4 rounded-2xl border-2 transition-all duration-500 relative overflow-hidden ${
           tampered?'bg-red-50/80':'bg-emerald-50/80'
         }`}>
         
-        {/* Shimmer effect */}
         <div className="absolute inset-0 animate-shimmer opacity-20"/>
         
-        {/* Icon with pulse */}
         <motion.div 
           animate={tampered?{scale:[1,1.1,1]}:{scale:1}}
           transition={{repeat:Infinity,duration:1}}
@@ -794,7 +747,6 @@ function HashDiagram() {
           )}
         </motion.div>
         
-        {/* Status text */}
         <div className="relative z-10">
           <div className={`text-sm font-bold ${tampered?'text-red-700':'text-emerald-700'}`}>
             {tampered ? (
@@ -809,7 +761,6 @@ function HashDiagram() {
           </div>
         </div>
         
-        {/* Progress indicator */}
         <div className="ml-auto flex flex-col items-end gap-1">
           <div className="flex gap-0.5">
             {[0,1,2,3].map(idx=>{
@@ -834,7 +785,6 @@ function HashDiagram() {
         </div>
       </motion.div>
 
-      {/* Demo cycle indicator */}
       <div className="text-[10px] text-slate-400 font-mono text-center flex items-center gap-2">
         <span>Demo cycle:</span>
         <span className={phase===0?'text-amber-600 font-bold':'text-slate-400'}>Build</span>
@@ -849,16 +799,15 @@ function HashDiagram() {
   );
 }
 
-/** 03 — Hardware Watchdog: CINEMATIC VERSION with circuit board aesthetic, electrical pulses, lightning */
 function WatchdogDiagram() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
-  const [pingActive, setPingActive] = React.useState(true);
-  const [powerCut, setPowerCut] = React.useState(false);
-  const [cycle, setCycle] = React.useState(0);
-  const [showLightning, setShowLightning] = React.useState(false);
+  const [pingActive, setPingActive] = useState(true);
+  const [powerCut, setPowerCut] = useState(false);
+  const [cycle, setCycle] = useState(0);
+  const [showLightning, setShowLightning] = useState(false);
 
-  React.useEffect(()=>{
+  useEffect(()=>{
     if (!inView) return;
     setPingActive(true); setPowerCut(false); setShowLightning(false);
     const t1 = setTimeout(()=>setPingActive(false), 3500);
@@ -869,7 +818,7 @@ function WatchdogDiagram() {
 
   return (
     <div ref={wrapRef} className="w-full h-full flex flex-col items-center justify-center gap-5 p-6 sm:p-8 select-none relative overflow-hidden">
-      {/* Circuit board background pattern */}
+      
       <div className="absolute inset-0 opacity-[0.04]" style={{
         backgroundImage:`
           linear-gradient(90deg,#64748b 1px,transparent 1px),
@@ -878,7 +827,6 @@ function WatchdogDiagram() {
         backgroundSize:'40px 40px'
       }}/>
       
-      {/* Lightning flash overlay */}
       {showLightning && (
         <motion.div 
           initial={{opacity:0}} 
@@ -888,7 +836,6 @@ function WatchdogDiagram() {
         />
       )}
       
-      {/* Header with live indicator */}
       <div className="w-full flex items-center gap-2 mb-2 relative z-10">
         <div className="flex gap-1.5">
           <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500"/>
@@ -912,7 +859,7 @@ function WatchdogDiagram() {
       </div>
 
       <div className="flex items-center gap-6 w-full max-w-md justify-center relative z-10">
-        {/* Main CPU — Circuit board style */}
+        
         <div className="flex flex-col items-center gap-2">
           <motion.div
             animate={powerCut?{scale:[1,0.95,0.95],opacity:0.5}:{scale:1,opacity:1}}
@@ -920,7 +867,7 @@ function WatchdogDiagram() {
             className={`w-24 h-24 rounded-2xl flex flex-col items-center justify-center border-2 relative overflow-hidden ${
               powerCut?'bg-red-50 border-red-300':'bg-slate-50 border-slate-200'
             }`}>
-            {/* Circuit trace decoration */}
+            
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-2 left-2 w-8 h-px bg-slate-600"/>
               <div className="absolute top-2 left-2 w-px h-8 bg-slate-600"/>
@@ -931,7 +878,6 @@ function WatchdogDiagram() {
             <Cpu className={`w-10 h-10 mb-1 ${powerCut?'text-red-400':'text-slate-600'}`}/>
             <div className={`text-[10px] font-bold font-mono ${powerCut?'text-red-500':'text-slate-700'}`}>MAIN CPU</div>
             
-            {/* Status LED */}
             <motion.div 
               animate={powerCut?{opacity:0}:{opacity:[1,0.3,1]}}
               transition={{repeat:Infinity,duration:1}}
@@ -955,16 +901,13 @@ function WatchdogDiagram() {
           )}
         </div>
 
-        {/* Ping channel — Enhanced electrical pulses */}
         <div className="flex flex-col items-center gap-1" style={{width:100}}>
           <div className="text-[9px] font-mono text-slate-400 mb-1 uppercase tracking-wider">10ms Ping</div>
           
-          {/* Ping channel (CPU → MCU) */}
           <div className="relative w-full h-6 flex items-center">
-            {/* Channel background */}
+            
             <div className={`absolute w-full h-0.5 rounded-full transition-colors duration-500 ${pingActive?'bg-slate-200':'bg-red-100'}`}/>
             
-            {/* Active signal indicator */}
             {pingActive && (
               <motion.div 
                 animate={{opacity:[0.3,1,0.3]}}
@@ -973,7 +916,6 @@ function WatchdogDiagram() {
               />
             )}
             
-            {/* Electrical pulse packets */}
             {pingActive && [0,1,2].map(i=>(
               <motion.div 
                 key={i} 
@@ -989,7 +931,6 @@ function WatchdogDiagram() {
               />
             ))}
             
-            {/* Broken connection indicator */}
             {!pingActive && (
               <motion.div 
                 initial={{scale:0}} 
@@ -1003,7 +944,6 @@ function WatchdogDiagram() {
             )}
           </div>
           
-          {/* Bidirectional indicator */}
           <div className="flex items-center gap-1 my-1">
             <motion.div 
               animate={pingActive?{opacity:[0.3,1,0.3]}:{opacity:0.3}}
@@ -1020,7 +960,6 @@ function WatchdogDiagram() {
             />
           </div>
           
-          {/* Ack channel (MCU → CPU) */}
           <div className="relative w-full h-6 flex items-center">
             <div className={`absolute w-full h-0.5 rounded-full transition-colors duration-500 ${pingActive?'bg-slate-200':'bg-red-100'}`}/>
             
@@ -1043,7 +982,6 @@ function WatchdogDiagram() {
           <span className="text-[9px] text-slate-400 font-mono mt-1">ACK Response</span>
         </div>
 
-        {/* Watchdog MCU — Enhanced styling */}
         <div className="flex flex-col items-center gap-2">
           <motion.div
             animate={powerCut?{scale:1.05}:{scale:1}}
@@ -1051,7 +989,7 @@ function WatchdogDiagram() {
             className={`w-24 h-24 rounded-2xl flex flex-col items-center justify-center border-2 relative overflow-hidden ${
               powerCut?'bg-red-50 border-red-300':'bg-emerald-50 border-emerald-200'
             }`}>
-            {/* Circuit decoration */}
+            
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-2 right-2 w-8 h-px bg-slate-600"/>
               <div className="absolute top-2 right-2 w-px h-8 bg-slate-600"/>
@@ -1062,7 +1000,6 @@ function WatchdogDiagram() {
             <Activity className={`w-10 h-10 mb-1 ${powerCut?'text-red-500':'text-emerald-600'}`}/>
             <div className={`text-[10px] font-bold font-mono ${powerCut?'text-red-600':'text-emerald-700'}`}>WDT MCU</div>
             
-            {/* Status LED */}
             <motion.div 
               animate={powerCut?{opacity:[1,0.3,1]}:{opacity:1}}
               transition={{repeat:Infinity,duration:0.3}}
@@ -1083,7 +1020,6 @@ function WatchdogDiagram() {
         </div>
       </div>
 
-      {/* Enhanced timeline cards */}
       <div className="grid grid-cols-3 gap-2 w-full max-w-md relative z-10">
         {[
           {t:'Ping Stops',d:'CPU crash/freeze',icon:X,c:'text-red-600',bg:'bg-red-50',border:'border-red-200',active:!pingActive},
@@ -1095,7 +1031,7 @@ function WatchdogDiagram() {
             animate={s.active?{scale:1.03,y:-2}:{scale:1,y:0}}
             transition={{duration:0.3}}
             className={`text-center p-3 rounded-xl border ${s.bg} ${s.border} transition-all duration-300 relative overflow-hidden`}>
-            {/* Active indicator bar */}
+            
             <motion.div 
               animate={s.active?{opacity:1,scaleX:1}:{opacity:0,scaleX:0}}
               className={`absolute bottom-0 left-2 right-2 h-0.5 rounded-full ${s.active?(s.c.includes('red')?'bg-red-500':'bg-emerald-500'):'bg-transparent'}`}
@@ -1110,7 +1046,6 @@ function WatchdogDiagram() {
         ))}
       </div>
       
-      {/* Footer note */}
       <div className="text-[10px] text-slate-400 font-mono text-center relative z-10 flex items-center gap-2">
         <Shield className="w-3 h-3"/>
         Software cannot override hardware watchdog — independent circuit protection
@@ -1119,17 +1054,14 @@ function WatchdogDiagram() {
   );
 }
 
-/** 04 — VVPAT: CINEMATIC VERSION with realistic printer physics, paper slip animation, enhanced steps */
 function VVPATDiagram() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
-  const [step, setStep] = React.useState(0);
-  const [vvpatCycle, setVvpatCycle] = React.useState(0);
-  const [printProgress, setPrintProgress] = React.useState(0);
-  const [viewCountdown, setViewCountdown] = React.useState(5);
-
-  // steps: 0=idle, 1=vote tapped, 2=printing, 3=viewing, 4=deposited
-  React.useEffect(()=>{
+  const [step, setStep] = useState(0);
+  const [vvpatCycle, setVvpatCycle] = useState(0);
+  const [printProgress, setPrintProgress] = useState(0);
+  const [viewCountdown, setViewCountdown] = useState(5);
+  useEffect(()=>{
     if (!inView) return;
     setStep(0);
     setPrintProgress(0);
@@ -1137,8 +1069,6 @@ function VVPATDiagram() {
 
     const t1 = setTimeout(()=>setStep(1), 800);
     const t2 = setTimeout(()=>setStep(2), 1600);
-
-    // Print progress: 0→100% across the printing window (1.6s → 3.2s)
     const printInterval = setInterval(()=>{
       setPrintProgress(p=>{
         if(p>=100){clearInterval(printInterval);return 100;}
@@ -1148,9 +1078,6 @@ function VVPATDiagram() {
     const stopPrint = setTimeout(()=>clearInterval(printInterval), 3200);
 
     const t3 = setTimeout(()=>{setStep(3);setPrintProgress(100);}, 3200);
-
-    // Viewing countdown is synced to the viewing step (3.2s → 8.5s = 5.3s window).
-    // Defer countdown start until the view step actually begins so users see 5→4→3→2→1.
     let countdownInterval: ReturnType<typeof setInterval> | undefined;
     const startCountdown = setTimeout(()=>{
       setViewCountdown(5);
@@ -1184,12 +1111,11 @@ function VVPATDiagram() {
 
   return (
     <div ref={wrapRef} className="w-full h-full flex flex-col items-center justify-center gap-4 p-6 sm:p-8 select-none relative overflow-hidden">
-      {/* Background texture */}
+      
       <div className="absolute inset-0 opacity-[0.02]" style={{
         backgroundImage:'repeating-linear-gradient(0deg,transparent,transparent 2px,#64748b 2px,#64748b 4px)'
       }}/>
       
-      {/* Header */}
       <div className="w-full flex items-center gap-2 mb-1 relative z-10">
         <div className="flex gap-1.5">
           <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500"/>
@@ -1207,10 +1133,9 @@ function VVPATDiagram() {
         </motion.div>
       </div>
 
-      {/* Enhanced step flow */}
       <div className="flex items-center gap-1.5 w-full max-w-lg justify-center relative z-10">
         {steps.map((s,i)=>(
-          <React.Fragment key={s.label}>
+          <Fragment key={s.label}>
             <motion.div
               initial={{opacity:0,y:10}}
               animate={{
@@ -1224,7 +1149,7 @@ function VVPATDiagram() {
                 step===i?'bg-amber-50 border-amber-300 text-amber-700 shadow-lg shadow-amber-100':
                 'bg-slate-50 border-slate-200 text-slate-400'
               }`}>
-                {/* Active indicator */}
+                
                 {step===i && (
                   <motion.div 
                     layoutId="activeStep"
@@ -1236,7 +1161,6 @@ function VVPATDiagram() {
                 <div className="text-lg mb-0.5">{s.icon}</div>
                 <div className="text-[9px]">{s.label}</div>
                 
-                {/* Progress indicator for printing step */}
                 {step===i && i===1 && (
                   <div className="absolute bottom-0 left-0 h-1 bg-amber-400 rounded-b-xl" style={{width:`${printProgress}%`}}/>
                 )}
@@ -1248,20 +1172,19 @@ function VVPATDiagram() {
                 <ArrowRight className="w-4 h-4"/>
               </motion.div>
             )}
-          </React.Fragment>
+          </Fragment>
         ))}
       </div>
 
-      {/* EVM + VVPAT cinematic view */}
       <div className="flex items-start gap-4 w-full max-w-md justify-center relative z-10">
-        {/* EVM Unit */}
+        
         <motion.div 
           initial={{opacity:0,x:-20}}
           animate={{opacity:1,x:0}}
           transition={{duration:0.5}}
           className="flex flex-col items-center gap-2">
           <div className="bg-slate-50 rounded-2xl border-2 border-slate-200 p-4 w-40 shadow-lg shadow-slate-100">
-            {/* EVM header */}
+            
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-full bg-green-400 animate-glow-pulse-green"/>
@@ -1270,7 +1193,6 @@ function VVPATDiagram() {
               <span className="text-[8px] text-slate-400 font-mono">B2847-MH</span>
             </div>
             
-            {/* Candidate list */}
             <div className="space-y-1.5">
               {candidates.map((c,i)=>(
                 <motion.div key={i}
@@ -1312,7 +1234,6 @@ function VVPATDiagram() {
               ))}
             </div>
             
-            {/* Status footer */}
             {step>=1 && (
               <motion.div 
                 initial={{opacity:0,y:10}}
@@ -1325,17 +1246,16 @@ function VVPATDiagram() {
           </div>
         </motion.div>
 
-        {/* VVPAT Printer Unit */}
         <motion.div 
           initial={{opacity:0,x:20}}
           animate={{opacity:1,x:0}}
           transition={{duration:0.5,delay:0.2}}
           className="flex flex-col items-center gap-2">
-          {/* Printer head */}
+          
           <div className={`w-36 rounded-xl border-2 p-3 transition-all duration-500 relative overflow-hidden ${
             step>=2?'bg-amber-50 border-amber-200 shadow-lg shadow-amber-100':'bg-slate-50 border-slate-200'
           }`}>
-            {/* Status LED */}
+            
             <div className="absolute top-2 right-2 flex items-center gap-1">
               {step>=2 && step<4 && (
                 <motion.div 
@@ -1356,7 +1276,6 @@ function VVPATDiagram() {
               </div>
             </div>
             
-            {/* Print progress bar */}
             {step===2 && (
               <div className="mt-2">
                 <div className="flex justify-between text-[8px] text-amber-600 font-mono mb-1">
@@ -1373,12 +1292,10 @@ function VVPATDiagram() {
             )}
           </div>
 
-          {/* Paper slot */}
           <div className="w-32 h-3 bg-slate-800 rounded-full shadow-inner relative z-20">
             <div className="absolute inset-x-2 top-0.5 h-0.5 bg-slate-600 rounded-full"/>
           </div>
 
-          {/* Paper slip — Cinematic animation */}
           <motion.div
             initial={{height:0,opacity:0,y:-10}}
             animate={step>=2?{height:'auto',opacity:1,y:0}:{height:0,opacity:0,y:-10}}
@@ -1390,13 +1307,12 @@ function VVPATDiagram() {
                 step>=4?'border-emerald-200':'border-amber-200'
               }`}>
               <div className="p-3 space-y-1.5">
-                {/* Receipt header */}
+                
                 <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
                   <span className="text-[8px] font-black text-slate-700 tracking-wide">VOTE RECEIPT</span>
                   <span className="text-[7px] text-slate-400 font-mono">ECI-VVPAT</span>
                 </div>
                 
-                {/* Candidate selection */}
                 <div className="flex items-start gap-1.5">
                   <motion.div 
                     initial={{scale:0}} 
@@ -1411,14 +1327,12 @@ function VVPATDiagram() {
                   </div>
                 </div>
                 
-                {/* Booth info */}
                 <div className="text-[8px] text-slate-500 font-mono flex items-center gap-1">
                   <span className="px-1 py-0.5 rounded bg-slate-100 text-slate-600">BOOTH 2847-MH</span>
                   <span>•</span>
                   <span>{new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
                 </div>
                 
-                {/* Signature line */}
                 <div className="pt-1 border-t border-dashed border-slate-200">
                   <div className="text-[7px] text-slate-300 font-mono">ECI DIGITALLY SIGNED</div>
                 </div>
@@ -1426,7 +1340,6 @@ function VVPATDiagram() {
             </motion.div>
           </motion.div>
 
-          {/* View timer */}
           {step===3 && (
             <motion.div 
               initial={{opacity:0,scale:0.9}} 
@@ -1443,7 +1356,6 @@ function VVPATDiagram() {
             </motion.div>
           )}
 
-          {/* Deposited status */}
           {step>=4 && (
             <motion.div 
               initial={{opacity:0,y:10}} 
@@ -1462,7 +1374,6 @@ function VVPATDiagram() {
         </motion.div>
       </div>
 
-      {/* Footer message */}
       <motion.div 
         initial={{opacity:0}}
         animate={{opacity:1}}
@@ -1475,19 +1386,15 @@ function VVPATDiagram() {
   );
 }
 
-
-/* ══════════════════════════════════════════════════════════════════
-   RECONCILIATION DIAGRAM — CINEMATIC VERSION with flowing particles, holographic verification
-══════════════════════════════════════════════════════════════════ */
 function ReconcDiagram() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
-  const [match, setMatch] = React.useState(false);
-  const [mismatch, setMismatch] = React.useState(false);
-  const [cycle, setCycle] = React.useState(0);
-  const [particleBurst, setParticleBurst] = React.useState(false);
+  const [match, setMatch] = useState(false);
+  const [mismatch, setMismatch] = useState(false);
+  const [cycle, setCycle] = useState(0);
+  const [particleBurst, setParticleBurst] = useState(false);
 
-  React.useEffect(()=>{
+  useEffect(()=>{
     if (!inView) return;
     setMatch(false); setMismatch(false); setParticleBurst(false);
     const t1 = setTimeout(()=>{setMatch(true);setParticleBurst(true);}, 2000);
@@ -1504,7 +1411,7 @@ function ReconcDiagram() {
 
   return (
     <div ref={wrapRef} className="w-full glass-cinematic rounded-3xl p-6 sm:p-8 select-none overflow-hidden relative">
-      {/* Background flowing particles */}
+      
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(6)].map((_,i)=>(
           <motion.div
@@ -1529,7 +1436,6 @@ function ReconcDiagram() {
         ))}
       </div>
 
-      {/* Header with status */}
       <div className="flex items-center gap-2 mb-6 relative z-10">
         <div className="flex gap-1.5">
           <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500"/>
@@ -1538,7 +1444,6 @@ function ReconcDiagram() {
         </div>
         <span className="ml-3 text-[11px] font-mono text-slate-400 tracking-widest uppercase">Triple Reconciliation Engine</span>
         
-        {/* Live status badge */}
         <motion.div 
           animate={{opacity:[0.5,1,0.5]}} 
           transition={{repeat:Infinity,duration:1.5}}
@@ -1550,7 +1455,6 @@ function ReconcDiagram() {
         </motion.div>
       </div>
 
-      {/* Three streams with flowing data */}
       <div className="flex gap-3 mb-5 relative z-10">
         {streams.map((s,i)=>{
           const hasMismatch = mismatch && s.label === 'C';
@@ -1560,10 +1464,9 @@ function ReconcDiagram() {
               animate={{opacity:1,y:0,scale:1}} 
               transition={{delay:i*0.15,duration:0.5,ease:[0.16,1,0.3,1]}}
               className={`flex-1 rounded-2xl p-4 ${s.bg} ${s.border} border-2 relative overflow-hidden group`}>
-              {/* Shimmer effect */}
+              
               <div className="absolute inset-0 animate-shimmer opacity-20"/>
               
-              {/* Stream header */}
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-white shadow-sm">
                   <s.icon className="w-4 h-4" style={{color:s.color}}/>
@@ -1574,7 +1477,6 @@ function ReconcDiagram() {
               <div className="text-[12px] font-bold text-slate-700 mb-1">{s.name}</div>
               <div className="text-[10px] text-slate-400 mb-3 font-mono">{s.sub}</div>
               
-              {/* Count with animation */}
               <motion.div
                 animate={hasMismatch?{x:[0,-2,2,-2,0]}:{}}
                 transition={{repeat:hasMismatch?Infinity:0,duration:0.3}}
@@ -1583,7 +1485,6 @@ function ReconcDiagram() {
               </motion.div>
               <div className="text-[10px] text-slate-400">verified votes</div>
               
-              {/* Data flow particles */}
               <div className="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-1">
                 {[0,1,2].map(j=>{
                   const isMismatch = mismatch && i === 2;
@@ -1611,9 +1512,8 @@ function ReconcDiagram() {
         })}
       </div>
 
-      {/* Convergence zone with flowing particles */}
       <div className="relative h-16 mb-4">
-        {/* Particle streams converging */}
+        
         {[0,1,2].map(streamIdx=>{
           const isMismatch = mismatch && streamIdx === 2;
           return (
@@ -1621,7 +1521,7 @@ function ReconcDiagram() {
               key={streamIdx}
               className="absolute top-0"
               style={{left:`${15 + streamIdx * 35}%`,width:'2px',height:'100%'}}>
-              {/* Flowing dots */}
+              
               {[0,1,2,3].map(i=>{
                 const color = isMismatch ? '#ef4444' : streamIdx === 0 ? '#64748b' : streamIdx === 1 ? '#0f766e' : '#059669';
                 return (
@@ -1647,7 +1547,6 @@ function ReconcDiagram() {
           );
         })}
 
-        {/* Central convergence point */}
         <motion.div 
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
           animate={match?{scale:[1,1.2,1]}:mismatch?{scale:[1,0.9,1]}:{}}
@@ -1670,7 +1569,6 @@ function ReconcDiagram() {
         </motion.div>
       </div>
 
-      {/* Verification gate with holographic effect */}
       <motion.div
         animate={match?{
           borderColor:'rgba(16,185,129,0.5)',
@@ -1685,10 +1583,8 @@ function ReconcDiagram() {
         transition={{duration:0.4}}
         className="rounded-2xl border-2 p-5 text-center relative overflow-hidden bg-white/50">
         
-        {/* Holographic shimmer */}
         <div className="absolute inset-0 animate-shimmer opacity-10"/>
         
-        {/* Particle burst on match */}
         {particleBurst && match && (
           <div className="absolute inset-0 pointer-events-none">
             {[...Array(12)].map((_,i)=>{
@@ -1711,7 +1607,6 @@ function ReconcDiagram() {
           </div>
         )}
         
-        {/* Status content */}
         <div className="relative z-10">
           {!match && !mismatch && (
             <div>
@@ -1749,7 +1644,6 @@ function ReconcDiagram() {
         </div>
       </motion.div>
       
-      {/* Demo cycle indicator */}
       <div className="text-[10px] text-slate-400 font-mono text-center mt-4 flex items-center justify-center gap-2">
         <span>Demo cycle:</span>
         <span className={!match&&!mismatch?'text-amber-600 font-bold':'text-slate-400'}>Process</span>
@@ -1764,15 +1658,12 @@ function ReconcDiagram() {
   );
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   THREAT SHIELD DIAGRAM — CINEMATIC VERSION with shield pulses, impact effects, terminal aesthetic
-══════════════════════════════════════════════════════════════════ */
 function ThreatShieldDiagram() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
-  const [activeAttack, setActiveAttack] = React.useState(0);
-  const [showImpact, setShowImpact] = React.useState(false);
-  const [blockedCount, setBlockedCount] = React.useState(0);
+  const [activeAttack, setActiveAttack] = useState(0);
+  const [showImpact, setShowImpact] = useState(false);
+  const [blockedCount, setBlockedCount] = useState(0);
   
   const attacks = [
     { name:'Remote Hack',   icon:WifiOff, path:'Network → Node B', block:'No radio hardware', color:'#ef4444',   bg:'bg-red-50',   border:'border-red-200', tc:'text-red-600' },
@@ -1781,7 +1672,7 @@ function ThreatShieldDiagram() {
     { name:'Replay Attack', icon:ArrowRight, path:'Reuse QR token',   block:'Single-use nonce', color:'#2563eb',  bg:'bg-blue-50',  border:'border-blue-200', tc:'text-blue-600' },
   ];
   
-  React.useEffect(()=>{
+  useEffect(()=>{
     if (!inView) return;
     let impactTimer: ReturnType<typeof setTimeout> | undefined;
     const t = setInterval(()=>{
@@ -1798,13 +1689,12 @@ function ThreatShieldDiagram() {
   
   return (
     <div ref={wrapRef} className="glass-cinematic rounded-3xl p-5 sm:p-6 select-none relative overflow-hidden">
-      {/* Terminal grid background */}
+      
       <div className="absolute inset-0 opacity-[0.02]" style={{
         backgroundImage:'linear-gradient(90deg,#000 1px,transparent 1px),linear-gradient(180deg,#000 1px,transparent 1px)',
         backgroundSize:'20px 20px'
       }}/>
       
-      {/* Impact flash effect */}
       {showImpact && (
         <motion.div 
           initial={{opacity:0.3}}
@@ -1814,7 +1704,6 @@ function ThreatShieldDiagram() {
         />
       )}
       
-      {/* Header with attack counter */}
       <div className="flex items-center justify-between mb-5 relative z-10">
         <div className="flex items-center gap-2">
           <div className="flex gap-1.5">
@@ -1825,7 +1714,6 @@ function ThreatShieldDiagram() {
           <span className="ml-3 text-[11px] font-mono text-slate-400 tracking-widest uppercase">Attack Vector Simulation</span>
         </div>
         
-        {/* Blocked counter */}
         <motion.div 
           key={blockedCount}
           initial={{scale:1.2}}
@@ -1838,7 +1726,6 @@ function ThreatShieldDiagram() {
         </motion.div>
       </div>
       
-      {/* Attack selector tabs */}
       <div className="grid grid-cols-4 gap-2 mb-5 relative z-10">
         {attacks.map((att,i)=>(
           <motion.button 
@@ -1868,7 +1755,6 @@ function ThreatShieldDiagram() {
         ))}
       </div>
       
-      {/* Attack flow visualization */}
       <AnimatePresence mode="wait">
         <motion.div 
           key={activeAttack} 
@@ -1879,7 +1765,7 @@ function ThreatShieldDiagram() {
           className="relative z-10">
           
           <div className="flex items-center gap-3 mb-4">
-            {/* Attacker node */}
+            
             <motion.div 
               animate={showImpact?{x:[0,5,0]}:{}}
               transition={{duration:0.2}}
@@ -1897,23 +1783,20 @@ function ThreatShieldDiagram() {
               </div>
             </motion.div>
             
-            {/* Attack arrow with collision */}
             <div className="flex flex-col items-center gap-1 relative">
-              {/* Animated arrow */}
+              
               <motion.div 
                 animate={{x:[0,12,0],opacity:showImpact?[1,0.3,1]:[0.5,1,0.5]}}
                 transition={{repeat:Infinity,duration:0.6}}>
                 <ArrowRight className="w-6 h-6" style={{color:a.color}}/>
               </motion.div>
               
-              {/* Impact X mark */}
               <motion.div 
                 animate={showImpact?{scale:[1,1.4,1],rotate:[0,90,0]}:{scale:[1,1.2,1]}}
                 transition={{repeat:showImpact?0:Infinity,duration:showImpact?0.3:0.6}}
                 className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center shadow-lg shadow-red-200 relative">
                 <X className="w-5 h-5 text-white"/>
                 
-                {/* Ripple effect on impact */}
                 {showImpact && (
                   <>
                     <motion.div 
@@ -1935,12 +1818,11 @@ function ThreatShieldDiagram() {
               <span className="text-[9px] font-bold text-red-500 font-mono">BLOCKED</span>
             </div>
             
-            {/* Shield defense node */}
             <motion.div 
               animate={showImpact?{scale:[1,0.95,1.02,1]}:{scale:1}}
               transition={{duration:0.3}}
               className="flex-1 text-center p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-200 relative overflow-hidden">
-              {/* Shield glow effect */}
+              
               <motion.div 
                 animate={showImpact?{opacity:[0.3,0.6,0.3]}:{opacity:0.2}}
                 transition={{duration:0.5}}
@@ -1967,7 +1849,6 @@ function ThreatShieldDiagram() {
             </motion.div>
           </div>
           
-          {/* Security layer info */}
           <motion.div 
             initial={{opacity:0,y:10}}
             animate={{opacity:1,y:0}}
@@ -1984,13 +1865,10 @@ function ThreatShieldDiagram() {
   );
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   DEPLOYMENT MAP DIAGRAM — CINEMATIC VERSION with animated heatmap, scan effects
-══════════════════════════════════════════════════════════════════ */
 function DeploymentDiagram() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
-  const [scanPosition, setScanPosition] = React.useState(0);
+  const [scanPosition, setScanPosition] = useState(0);
   const phases = [
     { label:'Phase 1', sub:'Pilot · 500 Booths', pct:100, color:'#E87722', years:'Yr 1–2', states:['MH','DL','KA'] },
     { label:'Phase 2', sub:'Scale · 10 States',  pct:60,  color:'#1E3A8A', years:'Yr 2–3', states:['MH','DL','KA','UP','TN','AP','WB','GJ','RJ','MP'] },
@@ -2004,9 +1882,7 @@ function DeploymentDiagram() {
   ];
   const phase1 = ['MH','DL','KA'];
   const phase2 = ['MH','DL','KA','UP','TN','AP','WB','GJ','RJ','MP'];
-  
-  // Scanner animation — paused when out of view
-  React.useEffect(()=>{
+  useEffect(()=>{
     if (!inView) return;
     const t = setInterval(()=>{
       setScanPosition(p=>(p+1)%4);
@@ -2016,14 +1892,13 @@ function DeploymentDiagram() {
   
   return (
     <div ref={wrapRef} className="glass-cinematic rounded-3xl p-5 sm:p-6 select-none relative overflow-hidden">
-      {/* Scan line effect */}
+      
       <motion.div 
         className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent z-10 pointer-events-none"
         animate={{top:['10%','90%','10%']}}
         transition={{duration:4,repeat:Infinity,ease:'linear'}}
       />
       
-      {/* Header with tricolor accent */}
       <div className="flex items-center justify-between mb-5 relative z-10">
         <div className="flex items-center gap-2">
           <div className="flex gap-1.5">
@@ -2039,7 +1914,6 @@ function DeploymentDiagram() {
         </div>
       </div>
       
-      {/* India state grid — Cinematic heatmap */}
       <div className="mb-5 p-4 rounded-2xl bg-slate-50 border-2 border-slate-100 relative">
         <div className="flex items-center justify-between mb-3">
           <div className="text-[10px] text-slate-400 font-mono">State Coverage Heatmap</div>
@@ -2097,7 +1971,6 @@ function DeploymentDiagram() {
         </div>
       </div>
       
-      {/* Phase bars — Enhanced */}
       <div className="space-y-3 mb-4">
         {phases.map((p,i)=>(
           <div key={i} className="group">
@@ -2121,7 +1994,7 @@ function DeploymentDiagram() {
                 transition={{delay:i*0.2+0.3,duration:1.2,ease:[0.16,1,0.3,1]}}
                 className="h-full rounded-full relative"
                 style={{backgroundColor:p.color}}>
-                {/* Animated shine */}
+                
                 <motion.div 
                   animate={{x:['-100%','200%']}}
                   transition={{duration:2,repeat:Infinity,delay:i*0.3}}
@@ -2139,7 +2012,6 @@ function DeploymentDiagram() {
         ))}
       </div>
       
-      {/* Target milestone */}
       <motion.div 
         animate={{scale:[1,1.02,1]}}
         transition={{repeat:Infinity,duration:3}}
@@ -2155,9 +2027,6 @@ function DeploymentDiagram() {
   );
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   COST COMPARISON DIAGRAM — CINEMATIC VERSION with animated counters, holographic ring
-══════════════════════════════════════════════════════════════════ */
 function CostComparisonDiagram() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const inView = useInView(wrapRef, { margin: '0px 0px -20% 0px' });
@@ -2170,10 +2039,8 @@ function CostComparisonDiagram() {
   ];
   const total = 17951;
   const electionCost = 120000;
-  const [animatedTotal, setAnimatedTotal] = React.useState(0);
-  
-  // Animated counter — only ticks while visible
-  React.useEffect(()=>{
+  const [animatedTotal, setAnimatedTotal] = useState(0);
+  useEffect(()=>{
     if (!inView) return;
     let start = 0;
     const duration = 1500;
@@ -2192,11 +2059,10 @@ function CostComparisonDiagram() {
   
   return (
     <div ref={wrapRef} className="glass-cinematic rounded-3xl p-5 sm:p-6 select-none relative overflow-hidden">
-      {/* Background rings */}
+      
       <div className="absolute -right-20 -top-20 w-40 h-40 rounded-full border border-slate-100 opacity-50"/>
       <div className="absolute -right-16 -top-16 w-32 h-32 rounded-full border border-slate-100 opacity-30"/>
       
-      {/* Header */}
       <div className="flex items-center gap-2 mb-5">
         <div className="flex gap-1.5">
           <motion.div animate={{scale:[1,1.2,1]}} transition={{repeat:Infinity,duration:2}} className="w-3 h-3 rounded-full bg-gradient-to-br from-red-400 to-red-500"/>
@@ -2206,13 +2072,12 @@ function CostComparisonDiagram() {
         <span className="ml-3 text-[11px] font-mono text-slate-400 tracking-widest uppercase">Investment Analysis</span>
       </div>
 
-      {/* Donut chart with animated segments */}
       <div className="flex items-center gap-5 mb-5 relative z-10">
         <div className="relative shrink-0" style={{width:110,height:110}}>
           <svg width="110" height="110" viewBox="0 0 110 110" className="-rotate-90">
-            {/* Background ring */}
+            
             <circle cx="55" cy="55" r="42" fill="none" stroke="#f1f5f9" strokeWidth="14"/>
-            {/* Segments with animation — pre-compute offsets so each segment starts where the previous ended */}
+            
             {(()=>{
               const circ = 2*Math.PI*42;
               let runningOffset = 0;
@@ -2236,13 +2101,11 @@ function CostComparisonDiagram() {
             })()}
           </svg>
           
-          {/* Center counter */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-sm font-black text-slate-800 font-mono">₹{Math.round(animatedTotal/1000)}K</span>
             <span className="text-[9px] text-slate-400 font-mono">crore</span>
           </div>
           
-          {/* Rotating holographic ring */}
           <motion.div 
             animate={{rotate:360}}
             transition={{duration:20,repeat:Infinity,ease:'linear'}}
@@ -2251,7 +2114,6 @@ function CostComparisonDiagram() {
           />
         </div>
         
-        {/* Legend */}
         <div className="flex-1 space-y-2">
           {items.map((item,i)=>(
             <motion.div 
@@ -2269,7 +2131,6 @@ function CostComparisonDiagram() {
         </div>
       </div>
 
-      {/* Comparison bars — Enhanced */}
       <div className="rounded-2xl bg-slate-50 border-2 border-slate-200 p-4 relative overflow-hidden">
         <div className="text-[11px] text-slate-500 mb-3 font-mono flex items-center gap-1">
           <BarChart3 className="w-3 h-3"/>
@@ -2277,7 +2138,7 @@ function CostComparisonDiagram() {
         </div>
         
         <div className="space-y-3">
-          {/* Zero-Gap bar */}
+          
           <div>
             <div className="flex justify-between text-[11px] mb-1.5">
               <span className="text-slate-600 font-medium">Zero-Gap (one-time)</span>
@@ -2300,7 +2161,6 @@ function CostComparisonDiagram() {
             </div>
           </div>
           
-          {/* Election cost bar */}
           <div>
             <div className="flex justify-between text-[11px] mb-1.5">
               <span className="text-slate-600 font-medium">2024 Election footprint</span>
@@ -2312,7 +2172,6 @@ function CostComparisonDiagram() {
           </div>
         </div>
         
-        {/* ROI highlight */}
         <div className="mt-4 flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-emerald-50 border border-emerald-200">
           <CheckCircle2 className="w-4 h-4 text-emerald-600"/>
           <span className="text-[12px] font-bold text-emerald-700">
@@ -2331,9 +2190,6 @@ export default function App() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const progressRef = useRef<HTMLDivElement>(null);
-
-  // rAF-throttled scroll handler — DOM mutation for progress bar (no App re-render),
-  // boolean threshold flip for nav glassiness (max 2 re-renders per page-scroll).
   useEffect(()=>{
     let ticking = false;
     let lastScrolled = false;
@@ -2356,8 +2212,6 @@ export default function App() {
     update();
     return ()=>window.removeEventListener('scroll', onScroll);
   },[]);
-
-  // Body scroll lock when mobile menu open
   useEffect(()=>{
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
     return ()=>{ document.body.style.overflow = ''; };
@@ -2404,16 +2258,12 @@ export default function App() {
     <MotionConfig reducedMotion="user">
     <div className="min-h-screen bg-page relative overflow-x-hidden">
 
-      {/* Progress bar (mutated imperatively via ref — zero re-renders) */}
       <div ref={progressRef} className="progress-bar" style={{width:'0%'}} />
 
-      {/* Mobile notice popup */}
       <MobileNotice />
 
-      {/* Subtle dot grid — only one global background layer */}
       <div className="fixed inset-0 pointer-events-none z-0 dot-grid opacity-30" />
 
-      {/* ── NAV ─────────────────────────────────────────────────────── */}
       <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled?'glass-nav':'bg-transparent'}`}>
         <nav className="max-w-7xl mx-auto px-6 sm:px-8 h-16 flex items-center justify-between">
           <button onClick={()=>go('hero')} className="flex items-center gap-2.5 shrink-0">
@@ -2479,33 +2329,27 @@ export default function App() {
 
       <main className="relative z-10">
 
-        {/* ══════════════════════════════════════════════════════════
-            HERO
-        ══════════════════════════════════════════════════════════ */}
         <section id="hero" className="section-shell is-spacious overflow-hidden">
           <div className="hero-decor" />
 
           <div className="container-shell">
-            {/* Eyebrow */}
+            
             <motion.div initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{duration:0.5,ease}}
               className="flex justify-center mb-8">
               <span className="eyebrow-pill">Proposed to ECI · UIDAI · MeitY</span>
             </motion.div>
 
-            {/* H1 */}
             <motion.h1 initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{duration:0.7,ease,delay:0.05}}
               className="headline-hero text-center mx-auto max-w-5xl">
               Secure India's <span className="gradient-text">elections</span> for ever.
             </motion.h1>
 
-            {/* Subtext */}
             <motion.p initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{duration:0.6,delay:0.18,ease}}
               className="lede is-center text-center mt-2 mb-10 max-w-2xl">
               Zero-Gap makes electronic vote manipulation not merely difficult —
               <span className="text-slate-800 font-medium"> physically and mathematically impossible.</span>
             </motion.p>
 
-            {/* CTAs */}
             <motion.div initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{duration:0.5,delay:0.28,ease}}
               className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-14 sm:mb-20">
               <motion.button whileHover={{scale:1.03}} whileTap={{scale:0.97}} onClick={()=>go('solution')} className="btn-primary w-full sm:w-auto justify-center">
@@ -2516,13 +2360,11 @@ export default function App() {
               </motion.a>
             </motion.div>
 
-            {/* Hero full-width panel */}
             <motion.div initial={{opacity:0,y:32}} animate={{opacity:1,y:0}} transition={{duration:0.9,ease,delay:0.35}}
               className="relative max-w-5xl mx-auto">
               <AirgapPanel />
             </motion.div>
 
-            {/* Stats strip — unified tile design (no orphan dividers) */}
             <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{duration:0.6,delay:0.65,ease}}
               className="mt-12 sm:mt-16 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-5xl mx-auto">
               {[
@@ -2540,9 +2382,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════
-            PROBLEM
-        ══════════════════════════════════════════════════════════ */}
         <section id="problem" className="section-shell bg-soft">
           <div className="container-shell">
             <header className="section-head is-center">
@@ -2649,9 +2488,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════
-            SOLUTION — copy L + panel R
-        ══════════════════════════════════════════════════════════ */}
         <section id="solution" className="section-shell">
           <div className="container-shell">
             <div className="grid-2up">
@@ -2678,9 +2514,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════
-            HASH CHAIN — panel L + copy R
-        ══════════════════════════════════════════════════════════ */}
         <section className="section-shell bg-soft">
           <div className="container-shell">
             <div className="grid-2up">
@@ -2704,9 +2537,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════
-            PROTOCOLS — tabs
-        ══════════════════════════════════════════════════════════ */}
         <section id="protocols" className="section-shell">
           <div className="container-shell">
             <header className="section-head is-center">
@@ -2715,7 +2545,7 @@ export default function App() {
               <p className="lede is-center">Every security layer operates at the hardware or physics level. Software exploits simply cannot reach them.</p>
             </header>
             <div className="grid lg:grid-cols-[380px_1fr] gap-4 lg:gap-6">
-              {/* tab list */}
+              
               <div className="space-y-3">
                 {protocols.map((p,i)=>(
                   <motion.button key={i} onClick={()=>setActiveProto(i)} whileTap={{scale:0.99}}
@@ -2743,7 +2573,6 @@ export default function App() {
                 ))}
               </div>
 
-              {/* visual panel — live diagram per protocol */}
               <div className="relative min-h-[420px] sm:min-h-[520px] card-shell is-strong is-flush diagram-panel">
                 <AnimatePresence mode="wait">
                   <motion.div key={activeProto}
@@ -2756,16 +2585,13 @@ export default function App() {
                     {activeProto===3 && <VVPATDiagram />}
                   </motion.div>
                 </AnimatePresence>
-                {/* ambient glow */}
+                
                 <div className={`absolute -bottom-16 -right-16 w-48 h-48 rounded-full bg-gradient-to-br ${protocols[activeProto].g} opacity-10 blur-2xl pointer-events-none transition-all duration-700`} />
               </div>
             </div>
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════
-            JOURNEY — sticky L + panel R
-        ══════════════════════════════════════════════════════════ */}
         <section id="journey" className="section-shell bg-soft">
           <div className="container-shell">
             <div className="grid-2up is-start">
@@ -2791,9 +2617,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════
-            RECONCILIATION — panel L + copy R
-        ══════════════════════════════════════════════════════════ */}
         <section className="section-shell">
           <div className="container-shell">
             <div className="grid-2up">
@@ -2815,9 +2638,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════
-            THREAT TABLE
-        ══════════════════════════════════════════════════════════ */}
         <section className="section-shell bg-soft">
           <div className="container-shell">
             <header className="section-head">
@@ -2867,9 +2687,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════
-            ROADMAP
-        ══════════════════════════════════════════════════════════ */}
         <section id="roadmap" className="section-shell">
           <div className="container-shell">
             <header className="section-head is-center">
@@ -2888,9 +2705,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════
-            COST
-        ══════════════════════════════════════════════════════════ */}
         <section className="section-shell bg-soft">
           <div className="container-shell">
             <div className="grid-2up is-start">
@@ -2931,9 +2745,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════
-            FAQ
-        ══════════════════════════════════════════════════════════ */}
         <section id="faq" className="section-shell">
           <div className="container-shell">
             <div className="grid lg:grid-cols-[1fr_2fr] gap-10 lg:gap-20 items-start">
@@ -2953,9 +2764,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════
-            CTA
-        ══════════════════════════════════════════════════════════ */}
         <section className="section-shell">
           <div className="container-shell">
             <FadeIn>
@@ -2980,7 +2788,6 @@ export default function App() {
 
       </main>
 
-      {/* FOOTER — clean 2-row layout */}
       <footer className="footer-shell">
         <div className="container-shell">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
