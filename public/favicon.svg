@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <defs>
-    <!-- Primary violet→indigo gradient matching site theme -->
+    <!-- Primary amber/orange gradient to match the new visual identity -->
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%"   stop-color="#8b5cf6"/>
-      <stop offset="100%" stop-color="#6366f1"/>
+      <stop offset="0%"   stop-color="#d97706"/> <!-- amber-600 -->
+      <stop offset="100%" stop-color="#b45309"/> <!-- amber-700 -->
     </linearGradient>
     <!-- Subtle inner highlight for depth -->
     <linearGradient id="shine" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -12,32 +12,25 @@
     </linearGradient>
     <!-- Shadow filter for the shield icon -->
     <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="#4c1d95" flood-opacity="0.4"/>
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="#78350f" flood-opacity="0.4"/>
     </filter>
   </defs>
 
   <!-- Rounded square background -->
-  <rect width="32" height="32" rx="8" fill="url(#bg)"/>
+  <rect width="32" height="32" rx="10" fill="url(#bg)"/>
 
   <!-- Inner shine overlay -->
-  <rect width="32" height="15" rx="8" fill="url(#shine)"/>
+  <rect width="32" height="15" rx="10" fill="url(#shine)"/>
 
-  <!-- Shield icon — white, centered, filter shadow -->
-  <g filter="url(#soft-shadow)" transform="translate(6, 5)">
+  <!-- Shield icon — white outline, centered, filter shadow -->
+  <g filter="url(#soft-shadow)" transform="translate(6, 6)">
     <path
-      d="M10 1.5 C8 2.5 5.5 3.5 3 3.5 L3 10 C3 14.5 6 17.5 10 19 C14 17.5 17 14.5 17 10 L17 3.5 C14.5 3.5 12 2.5 10 1.5 Z"
-      fill="white"
-      opacity="0.95"
+      d="M10 2 L3 5 L3 11 C3 16 8 19.5 10 20.5 C12 19.5 17 16 17 11 L17 5 L10 2 Z"
+      fill="none"
+      stroke="white"
+      stroke-width="2"
+      stroke-linejoin="round"
+      stroke-linecap="round"
     />
-    <!-- "ZG" zero-gap mark — violet on white shield -->
-    <text
-      x="10" y="13.5"
-      text-anchor="middle"
-      font-family="system-ui, -apple-system, sans-serif"
-      font-size="7.5"
-      font-weight="900"
-      letter-spacing="-0.5"
-      fill="#7c3aed"
-    >ZG</text>
   </g>
 </svg>
