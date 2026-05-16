@@ -4,7 +4,7 @@
   <a href="https://www.framer.com/motion/"><img src="https://img.shields.io/badge/Framer_Motion-12.3-EF4444?logo=framer&logoColor=white" alt="Framer Motion"></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white" alt="TypeScript"></a>
 # PROJECT ZERO GAP VOTE
-<strong>A Formal Technical Proposal for Modernizing India's Electronic Voting System</strong>
+<strong>Blueprint For Modernizing India's Electronic Voting System</strong>
 
 ---
 
