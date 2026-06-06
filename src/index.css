@@ -1,12 +1,6 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-/* ═══════════════════════════════════════════════════════════════════
-   ZERO-GAP VOTING — LIGHT / GLASS THEME
-   White background · Glassmorphism · Soft pastel gradients
-   Accent: indigo/violet/saffron/pink
-═══════════════════════════════════════════════════════════════════ */
-
 @theme {
   --color-brand-400:   #fb923c;
   --color-brand-500:   #f97316;
@@ -38,21 +32,18 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   DESIGN TOKENS — single source of truth for spacing, radii, type
-═══════════════════════════════════════════════════════════════════ */
 :root {
-  /* Spacing scale (4px base) */
+  
   --s-1: 0.25rem;  --s-2: 0.5rem;   --s-3: 0.75rem;  --s-4: 1rem;
   --s-5: 1.25rem;  --s-6: 1.5rem;   --s-8: 2rem;     --s-10: 2.5rem;
   --s-12: 3rem;    --s-16: 4rem;    --s-20: 5rem;    --s-24: 6rem;
   --s-32: 8rem;
 
-  /* Radii scale */
+  
   --r-sm: 0.5rem;   --r-md: 0.75rem;  --r-lg: 1rem;
   --r-xl: 1.25rem;  --r-2xl: 1.5rem;  --r-3xl: 2rem;  --r-pill: 100px;
 
-  /* Type scale (fluid) */
+  
   --t-xs:   clamp(0.7rem,   0.65rem + 0.2vw,  0.75rem);
   --t-sm:   clamp(0.8rem,   0.75rem + 0.25vw, 0.875rem);
   --t-base: clamp(0.95rem,  0.9rem  + 0.3vw,  1rem);
@@ -64,50 +55,47 @@
   --t-5xl:  clamp(3rem,     2.2rem  + 5vw,    5.5rem);
   --t-hero: clamp(2.75rem,  2rem    + 7vw,    7.5rem);
 
-  /* Shadow scale */
+  
   --sh-sm:  0 1px 2px rgba(15,10,46,0.04);
   --sh-md:  0 4px 16px rgba(99,102,241,0.07), 0 1px 3px rgba(15,10,46,0.03);
   --sh-lg:  0 12px 36px rgba(99,102,241,0.10), 0 2px 6px rgba(15,10,46,0.04);
   --sh-xl:  0 24px 64px rgba(99,102,241,0.14), 0 4px 12px rgba(15,10,46,0.05);
   --sh-violet: 0 8px 32px rgba(139,92,246,0.18);
 
-  /* Colors (semantic) — Indian tricolor, professional palette */
-  --c-ink:        #0b1e4b;    /* Ashoka deep navy */
+  
+  --c-ink:        #0b1e4b;    
   --c-ink-soft:   #1e3a8a;
   --c-body:       #475569;
   --c-muted:      #94a3b8;
   --c-faint:      #cbd5e1;
-  --c-line:       rgba(232,119,34,0.22);      /* saffron tinted */
+  --c-line:       rgba(232,119,34,0.22);      
   --c-line-soft:  rgba(232,119,34,0.12);
-  --c-bg:         #fdfbf5;                    /* warm ivory */
-  --c-bg-2:       #f9f3e8;                    /* pale saffron haze */
+  --c-bg:         #fdfbf5;                    
+  --c-bg-2:       #f9f3e8;                    
   --c-surface:    rgba(255,253,248,0.82);
   --c-surface-2:  rgba(255,253,248,0.94);
-  /* Brand triad */
-  --c-saffron:    #E87722;                    /* primary accent — kesari */
+  
+  --c-saffron:    #E87722;                    
   --c-saffron-d:  #C5601A;
   --c-saffron-l:  #F4A261;
-  --c-ashoka:     #1E3A8A;                    /* Ashoka navy — secondary */
+  --c-ashoka:     #1E3A8A;                    
   --c-ashoka-d:   #0B1E4B;
   --c-ashoka-l:   #3B5BDB;
-  --c-green:      #0F7A3A;                    /* India green — tertiary/success */
+  --c-green:      #0F7A3A;                    
   --c-green-d:    #0A5C2C;
   --c-green-l:    #2CA15A;
-  /* Legacy aliases for existing class compatibility */
+  
   --c-violet:     var(--c-saffron);
   --c-indigo:     var(--c-ashoka);
   --c-violet-d:   var(--c-saffron-d);
   --c-indigo-d:   var(--c-ashoka-d);
 
-  /* Layout */
+  
   --max-w: 1200px;
   --gutter: clamp(1rem, 4vw, 2rem);
   --section-y: clamp(4.5rem, 9vw, 9rem);
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   LAYOUT PRIMITIVES — use these on every section
-═══════════════════════════════════════════════════════════════════ */
 .section-shell {
   position: relative;
   padding-top: var(--section-y);
@@ -125,16 +113,12 @@
   position: relative;
 }
 
-/* Section background variants */
 .bg-soft {
   background:
     radial-gradient(ellipse 80% 50% at 50% 0%, rgba(232,119,34,0.06), transparent 60%),
     linear-gradient(180deg, var(--c-bg-2) 0%, var(--c-bg) 100%);
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   TYPOGRAPHY UTILITIES
-═══════════════════════════════════════════════════════════════════ */
 .eyebrow-pill {
   display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.4rem 0.85rem;
@@ -198,9 +182,6 @@
 .section-head.is-center { text-align: center; }
 .section-head.is-center .lede { margin-inline: auto; }
 
-/* ═══════════════════════════════════════════════════════════════════
-   CARD SHELL — replaces ad-hoc glass classes for content cards
-═══════════════════════════════════════════════════════════════════ */
 .card-shell {
   background: var(--c-surface);
   backdrop-filter: blur(18px) saturate(1.6);
@@ -223,7 +204,6 @@
 }
 .card-shell.is-flush { padding: 0; overflow: hidden; }
 
-/* Inset surface within a card */
 .card-inset {
   background: rgba(245,243,255,0.55);
   border: 1px solid var(--c-line-soft);
@@ -231,9 +211,6 @@
   padding: clamp(0.875rem, 2vw, 1.25rem);
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   GRID PRIMITIVES
-═══════════════════════════════════════════════════════════════════ */
 .grid-2up {
   display: grid;
   gap: clamp(2rem, 5vw, 5rem);
@@ -253,9 +230,6 @@
 @media (min-width: 640px) { .grid-cards { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1024px){ .grid-cards { grid-template-columns: repeat(3, 1fr); } }
 
-/* ═══════════════════════════════════════════════════════════════════
-   STAT TILE — used in hero stats strip
-═══════════════════════════════════════════════════════════════════ */
 .stat-tile {
   padding: clamp(1rem, 2.5vw, 1.5rem);
   border-radius: var(--r-2xl);
@@ -281,16 +255,12 @@
   margin-top: 0.4rem;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   DIVIDERS
-═══════════════════════════════════════════════════════════════════ */
 .divider-soft {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--c-line), transparent);
   margin-block: clamp(2rem, 4vw, 3rem);
 }
 
-/* ─── Base ───────────────────────────────────────────────────────── */
 @layer base {
   *, *::before, *::after {
     -webkit-font-smoothing: antialiased;
@@ -341,9 +311,6 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   KEYFRAMES
-═══════════════════════════════════════════════════════════════════ */
 @keyframes float-a {
   0%,100% { transform: translateY(0px) rotate(0deg); }
   33%      { transform: translateY(-18px) rotate(3deg); }
@@ -393,9 +360,6 @@
   to   { opacity: 1; transform: scale(1); }
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   ANIMATION UTILITIES
-═══════════════════════════════════════════════════════════════════ */
 .animate-float-a   { animation: float-a 6s ease-in-out infinite; will-change: transform; transform: translateZ(0); }
 .animate-float-b   { animation: float-b 5s ease-in-out infinite; will-change: transform; transform: translateZ(0); }
 .animate-float-c   { animation: float-c 7s ease-in-out infinite; will-change: transform; transform: translateZ(0); }
@@ -406,31 +370,18 @@
 .animate-slide-up  { animation: slide-up 0.6s cubic-bezier(0.16,1,0.3,1) both; }
 .animate-scale-in  { animation: scale-in 0.5s cubic-bezier(0.16,1,0.3,1) both; }
 
-/* ═══════════════════════════════════════════════════════════════════
-   PAGE BACKGROUNDS
-═══════════════════════════════════════════════════════════════════ */
-
-/* Main gradient bg — warm ivory with saffron/green whispers */
 .bg-page {
   background: linear-gradient(145deg, #fdfbf5 0%, #fcf5e8 35%, #fefcf7 65%, #f3f9f1 100%);
 }
 
-/* Alt section — slightly more saturated saffron haze */
 .bg-page-alt {
   background: linear-gradient(145deg, #fbf3e2 0%, #fefcf7 50%, #edf7e8 100%);
 }
 
-/* Hero radial wash — saffron dominant */
 .hero-wash {
   background: radial-gradient(ellipse 90% 70% at 50% 0%, rgba(232,119,34,0.14) 0%, rgba(30,58,138,0.06) 40%, transparent 70%);
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   GLASSMORPHISM CARDS
-   The centrepiece of the new design
-═══════════════════════════════════════════════════════════════════ */
-
-/* Primary glass card */
 .glass {
   background: rgba(255,255,255,0.65);
   backdrop-filter: blur(20px) saturate(1.8);
@@ -450,7 +401,6 @@
   transform: translateY(-3px);
 }
 
-/* Deeper / more opaque glass — for key info panels */
 .glass-solid {
   background: rgba(255,255,255,0.82);
   backdrop-filter: blur(24px) saturate(1.8);
@@ -463,7 +413,6 @@
   transform: translateZ(0);
 }
 
-/* Coloured glass — violet tint */
 .glass-violet {
   background: rgba(237,233,254,0.7);
   backdrop-filter: blur(16px) saturate(1.6);
@@ -474,7 +423,6 @@
   transform: translateZ(0);
 }
 
-/* Coloured glass — indigo tint */
 .glass-indigo {
   background: rgba(224,231,255,0.7);
   backdrop-filter: blur(16px) saturate(1.6);
@@ -485,7 +433,6 @@
   transform: translateZ(0);
 }
 
-/* Coloured glass — saffron tint */
 .glass-saffron {
   background: rgba(255,247,237,0.75);
   backdrop-filter: blur(16px) saturate(1.6);
@@ -496,7 +443,6 @@
   transform: translateZ(0);
 }
 
-/* Coloured glass — green tint */
 .glass-green {
   background: rgba(240,253,244,0.75);
   backdrop-filter: blur(16px) saturate(1.6);
@@ -507,7 +453,6 @@
   transform: translateZ(0);
 }
 
-/* Coloured glass — red/danger tint */
 .glass-red {
   background: rgba(254,242,242,0.75);
   backdrop-filter: blur(16px) saturate(1.6);
@@ -518,7 +463,6 @@
   transform: translateZ(0);
 }
 
-/* Nav glass */
 .glass-nav {
   background: rgba(255,255,255,0.85);
   backdrop-filter: blur(20px) saturate(1.8);
@@ -528,10 +472,6 @@
   transform: translateZ(0);
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   FLOATING BLOBS / ORBS
-   Used as background decoration
-═══════════════════════════════════════════════════════════════════ */
 .blob-violet {
   border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   background: linear-gradient(135deg, rgba(167,139,250,0.3), rgba(99,102,241,0.18));
@@ -561,17 +501,11 @@
   transform: translateZ(0);
 }
 
-/* Small floating shape */
 .orb {
   border-radius: 50%;
   animation: float-a 6s ease-in-out infinite;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   TYPOGRAPHY
-═══════════════════════════════════════════════════════════════════ */
-
-/* Hero gradient — Indian tricolor sweep: saffron → navy → green */
 .gradient-text {
   background: linear-gradient(120deg, #E87722 0%, #C5601A 25%, #1E3A8A 55%, #0F7A3A 90%);
   background-size: 220% 220%;
@@ -581,7 +515,6 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* Saffron-dominant gradient (replaces old violet gradient usage) */
 .gradient-text-violet {
   background: linear-gradient(120deg, #E87722, #C5601A, #F4A261);
   -webkit-background-clip: text;
@@ -589,7 +522,6 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* Navy-green gradient for tertiary accent */
 .gradient-text-ashoka {
   background: linear-gradient(120deg, #1E3A8A, #3B5BDB, #0F7A3A);
   -webkit-background-clip: text;
@@ -597,7 +529,6 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* Eyebrow label */
 .eyebrow {
   display: inline-block;
   font-size: 0.78rem;
@@ -611,16 +542,10 @@
   margin-bottom: 0.75rem;
 }
 
-/* Legacy aliases */
 .overline       { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #E87722; }
 .overline-accent{ font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #0F7A3A; }
 .code-text      { font-family: var(--font-mono); }
 
-/* ═══════════════════════════════════════════════════════════════════
-   BUTTON SYSTEM
-═══════════════════════════════════════════════════════════════════ */
-
-/* Primary — vivid violet pill */
 .btn-primary {
   display: inline-flex; align-items: center; gap: 0.5rem;
   background: linear-gradient(135deg, #8b5cf6, #6366f1);
@@ -641,7 +566,6 @@
 }
 .btn-primary:active { transform: translateY(0); }
 
-/* Ghost — glass pill */
 .btn-ghost {
   display: inline-flex; align-items: center; gap: 0.5rem;
   background: rgba(255,255,255,0.7);
@@ -662,7 +586,6 @@
   transform: translateY(-2px);
 }
 
-/* Orange CTA */
 .btn-brand {
   display: inline-flex; align-items: center; gap: 0.5rem;
   background: linear-gradient(135deg, #f97316, #ec4899);
@@ -680,7 +603,6 @@
   transform: translateY(-2px);
 }
 
-/* Legacy alias */
 .btn-outline {
   display: inline-flex; align-items: center; gap: 0.5rem;
   background: rgba(255,255,255,0.7);
@@ -700,10 +622,6 @@
   box-shadow: 0 6px 20px rgba(139,92,246,0.18);
   transform: translateY(-2px);
 }
-
-/* ═══════════════════════════════════════════════════════════════════
-   STATUS INDICATORS
-═══════════════════════════════════════════════════════════════════ */
 
 .live-dot {
   display: inline-flex; align-items: center; gap: 0.5rem;
@@ -725,7 +643,6 @@
   box-shadow: 0 0 0 0 rgba(34,197,94,0.4);
 }
 
-/* Severity chips */
 .badge-crit {
   display: inline-block;
   font-size: 0.6rem; font-weight: 800;
@@ -760,30 +677,20 @@
   color: #6366f1;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   SECTION LAYOUT
-═══════════════════════════════════════════════════════════════════ */
 .section-pad { padding-top: 7rem; padding-bottom: 7rem; }
 @media (min-width:1024px){ .section-pad { padding-top:10rem; padding-bottom:10rem; } }
 
-/* ═══════════════════════════════════════════════════════════════════
-   ILLUSTRATION SHAPES — CSS 3D-like floating objects
-═══════════════════════════════════════════════════════════════════ */
-
-/* Cube face */
 .shape-cube {
   width: 52px; height: 52px;
   border-radius: 16px;
   box-shadow: 4px 6px 16px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.5);
 }
 
-/* Sphere */
 .shape-sphere {
   border-radius: 50%;
   box-shadow: 4px 8px 20px rgba(0,0,0,0.12), inset -4px -4px 8px rgba(0,0,0,0.1), inset 4px 4px 8px rgba(255,255,255,0.5);
 }
 
-/* Ring / donut — uses pseudo element */
 .shape-ring {
   border-radius: 50%;
   border-width: 8px; border-style: solid;
@@ -791,9 +698,6 @@
   box-shadow: 0 6px 20px rgba(0,0,0,0.1);
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   SHIMMER — loading highlight
-═══════════════════════════════════════════════════════════════════ */
 .shimmer { position: relative; overflow: hidden; }
 .shimmer::after {
   content: '';
@@ -802,9 +706,6 @@
   animation: shimmer-light 2s ease-in-out infinite;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   PROGRESS BAR
-═══════════════════════════════════════════════════════════════════ */
 .progress-bar {
   position: fixed; top: 0; left: 0; z-index: 9999;
   height: 3px;
@@ -816,9 +717,6 @@
   border-radius: 0 2px 2px 0;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   TABLE
-═══════════════════════════════════════════════════════════════════ */
 .glass-table {
   background: rgba(255,255,255,0.6);
   backdrop-filter: blur(20px);
@@ -831,9 +729,6 @@
   border-bottom: 1px solid rgba(196,181,253,0.25);
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   LEGACY STUBS
-═══════════════════════════════════════════════════════════════════ */
 .card, .card-accent, .glass-card, .feature-panel {
   background: rgba(255,255,255,0.65);
   backdrop-filter: blur(20px) saturate(1.8);
@@ -859,31 +754,17 @@
 }
 .section-standard { padding-top: 8rem; padding-bottom: 8rem; }
 
-/* ═══════════════════════════════════════════════════════════════════
-   RESPONSIVE TYPOGRAPHY SCALE
-   Fluid sizes from mobile (320px) → desktop (1280px+)
-═══════════════════════════════════════════════════════════════════ */
-
-/* Heading fluid scale */
 h1 { font-size: clamp(2.2rem, 8vw, 6.75rem); line-height: 0.95; }
 h2 { font-size: clamp(1.75rem, 5vw, 3.75rem); line-height: 1.0; }
 h3 { font-size: clamp(1.1rem, 3vw, 1.5rem);   line-height: 1.15; }
 
-/* Body text minimum readable size */
 p  { font-size: clamp(0.95rem, 2vw, 1.125rem); line-height: 1.7; }
 
-/* ═══════════════════════════════════════════════════════════════════
-   SECTION VERTICAL RHYTHM  — replaces py-40 / py-32 ad-hoc values
-   Use .section-block on every <section>
-═══════════════════════════════════════════════════════════════════ */
 .section-block {
   padding-top:    clamp(4rem, 8vw, 10rem);
   padding-bottom: clamp(4rem, 8vw, 10rem);
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   CONTAINER  — consistent max-width + side padding
-═══════════════════════════════════════════════════════════════════ */
 .container-page {
   max-width: 1280px;
   margin-left:  auto;
@@ -893,9 +774,6 @@ p  { font-size: clamp(0.95rem, 2vw, 1.125rem); line-height: 1.7; }
   width: 100%;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   TWO-COLUMN GRID  — stacks on mobile, side-by-side on lg+
-═══════════════════════════════════════════════════════════════════ */
 .grid-2col {
   display: grid;
   gap: clamp(2rem, 5vw, 6rem);
@@ -906,33 +784,21 @@ p  { font-size: clamp(0.95rem, 2vw, 1.125rem); line-height: 1.7; }
   .grid-2col { grid-template-columns: 1fr 1fr; }
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   CARD CONSISTENCY
-   All glass cards get the same internal padding scale
-═══════════════════════════════════════════════════════════════════ */
 .card-pad  { padding: clamp(1.25rem, 3vw, 2rem); }
 .card-pad-sm { padding: clamp(0.75rem, 2vw, 1.25rem); }
 
-/* ═══════════════════════════════════════════════════════════════════
-   DIAGRAM PANELS — prevent content overflow on small screens
-═══════════════════════════════════════════════════════════════════ */
 .diagram-panel {
   width: 100%;
   overflow: hidden;
   min-height: 0;
 }
 
-/* Diagram inner text never overflows its box */
 .diagram-panel * { max-width: 100%; }
 
-/* Diagram font floors — readable even on 320px */
 .diagram-panel .text-\[9px\]  { font-size: max(9px,  0.55rem); }
 .diagram-panel .text-\[10px\] { font-size: max(10px, 0.6rem);  }
 .diagram-panel .text-\[11px\] { font-size: max(11px, 0.65rem); }
 
-/* ═══════════════════════════════════════════════════════════════════
-   BUTTON GROUP  — wraps on mobile, row on md+
-═══════════════════════════════════════════════════════════════════ */
 .btn-group {
   display: flex;
   flex-wrap: wrap;
@@ -941,27 +807,18 @@ p  { font-size: clamp(0.95rem, 2vw, 1.125rem); line-height: 1.7; }
   gap: 0.75rem;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   TABLE — always horizontally scrollable
-═══════════════════════════════════════════════════════════════════ */
 .glass-table-wrap {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border-radius: 20px;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   NAV HEIGHT TOKEN — keeps scroll-padding in sync
-═══════════════════════════════════════════════════════════════════ */
 :root { --nav-h: 4rem; }
 html  { scroll-padding-top: var(--nav-h); }
 
-/* ═══════════════════════════════════════════════════════════════════
-   MOBILE-SPECIFIC OVERRIDES (max 640px)
-═══════════════════════════════════════════════════════════════════ */
 @media (max-width: 640px) {
 
-  /* ── MOBILE PERFORMANCE: reduce blur cost significantly ─────── */
+  
   .glass {
     backdrop-filter: blur(10px) saturate(1.4) !important;
     -webkit-backdrop-filter: blur(10px) saturate(1.4) !important;
@@ -979,7 +836,7 @@ html  { scroll-padding-top: var(--nav-h); }
     -webkit-backdrop-filter: blur(14px) saturate(1.6) !important;
   }
 
-  /* ── Kill heavy decorative animations on mobile ─────────────── */
+  
   .animate-blob, .blob-violet, .blob-pink, .blob-orange, .blob-sky {
     animation: none !important;
   }
@@ -988,10 +845,10 @@ html  { scroll-padding-top: var(--nav-h); }
     transform: none !important;
   }
 
-  /* Hero h1 — tighter tracking on small screens */
+  
   #hero h1 { letter-spacing: -0.03em; }
 
-  /* CTA row wraps cleanly */
+  
   #hero .flex.items-center.justify-center.gap-4 {
     flex-direction: column;
     width: 100%;
@@ -1001,111 +858,108 @@ html  { scroll-padding-top: var(--nav-h); }
     justify-content: center;
   }
 
-  /* Stats strip — 2×2 grid */
+  
   .stats-strip-grid {
     grid-template-columns: 1fr 1fr !important;
     gap: 1.5rem !important;
   }
 
-  /* Problem card grid — single column */
+  
   #problem .grid {
     grid-template-columns: 1fr !important;
   }
 
-  /* Protocols tab list stacks above panel */
+  
   #protocols .grid {
     grid-template-columns: 1fr !important;
   }
 
-  /* Diagram panels scale text down */
+  
   .diagram-inner { transform-origin: top left; }
 
-  /* Roadmap timeline — full width */
+  
   #roadmap .grid { grid-template-columns: 1fr !important; }
 
-  /* Cost section — stacks */
+  
   .cost-grid { grid-template-columns: 1fr !important; }
 
-  /* FAQ cluster hidden on mobile to reduce clutter */
+  
   #faq .float-cluster-wrapper { display: none; }
 
-  /* FloatCluster decorations hidden on mobile */
+  
   .float-decor { display: none !important; }
 
-  /* Section heading overflow prevention */
+  
   section h2 { word-break: break-word; hyphens: auto; }
 
-  /* Consistent section padding on mobile */
+  
   section { padding-top: 4rem !important; padding-bottom: 4rem !important; }
 
-  /* Prevent text from escaping flex/grid containers */
+  
   .flex > *, .grid > * { min-width: 0; }
 
-  /* Truncate long mono labels on mobile */
+  
   .font-mono { word-break: break-all; overflow-wrap: anywhere; }
 
-  /* ── Hard overflow guards ─────────────────────────────────── */
-  /* Every flex/grid child MUST allow shrinking below content size */
+  
+  
   .flex > *, .grid > * { min-width: 0; }
 
-  /* Every card's direct children cannot exceed card width */
+  
   .card-shell > *, .glass > *, .glass-solid > *, .glass-indigo > *,
   .glass-saffron > *, .glass-violet > *, .glass-green > *, .glass-red > * {
     max-width: 100%;
     min-width: 0;
   }
 
-  /* Force word breaking on long tokens inside cards */
+  
   .card-shell, .glass, .glass-solid,
   .glass-indigo, .glass-saffron, .glass-violet, .glass-green, .glass-red {
     overflow-wrap: anywhere;
     word-break: break-word;
   }
 
-  /* Tighter card padding on small screens to buy more width */
+  
   .card-shell { padding: clamp(1rem, 3.5vw, 1.25rem); }
 
-  /* Reduce hero headline tracking so no char spills */
+  
   .headline-hero { letter-spacing: -0.035em; }
 
-  /* Container horizontal padding can be smaller on narrow screens */
+  
   .container-shell { padding-inline: 1rem; }
 
-  /* Protocol panel heights scale on mobile */
+  
   .diagram-panel { min-height: 360px !important; }
 
-  /* Shrink diagram internal padding */
+  
   .diagram-panel > *, .diagram-panel [class*="p-8"], .diagram-panel [class*="p-7"] {
     padding: 0.875rem !important;
   }
 
-  /* Roadmap timeline tighter indent on mobile */
+  
   .timeline-spine { padding-left: 1.75rem; }
   .timeline-spine::before { left: 0.625rem; }
   .timeline-node::before { left: -1.375rem; width: 12px; height: 12px; }
 
-  /* Stat tile a bit tighter */
+  
   .stat-tile { padding: 0.875rem 0.75rem; }
   .stat-tile .stat-num { font-size: 1.4rem; }
 
-  /* CTA shell */
+  
   .cta-shell { padding: 2.25rem 1.25rem; border-radius: 1.25rem; }
 
-  /* Tables on mobile wrap inside cells */
+  
   table td, table th { word-break: break-word; overflow-wrap: anywhere; }
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   TABLET (641–1023px)
-═══════════════════════════════════════════════════════════════════ */
 @media (min-width: 641px) and (max-width: 1023px) {
 
   section { padding-top: 6rem; padding-bottom: 6rem; }
 
-  /* 2-col problem cards on tablet */
+  
   #problem .grid { grid-template-columns: repeat(2, 1fr) !important; }
 
-  /* Protocols on tablet — tabs stacked above panel */
+  
   #protocols .grid { grid-template-columns: 1fr !important; }
   #protocols .grid > div:first-child {
     display: grid !important;
@@ -1114,22 +968,15 @@ html  { scroll-padding-top: var(--nav-h); }
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   ALIGNMENT UTILITIES
-═══════════════════════════════════════════════════════════════════ */
-
-/* Vertically center grid children when heights differ */
 .grid-align-start { align-items: start; }
 .grid-align-center { align-items: center; }
 
-/* Text in diagram nodes — always centered */
 .node-label {
   text-align: center;
   word-break: break-word;
   overflow-wrap: break-word;
 }
 
-/* Consistent icon+text row */
 .icon-row {
   display: flex;
   align-items: center;
@@ -1137,49 +984,29 @@ html  { scroll-padding-top: var(--nav-h); }
   flex-wrap: wrap;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   PANEL MIN-HEIGHT — prevents empty-looking panels on mobile
-═══════════════════════════════════════════════════════════════════ */
 .panel-min { min-height: clamp(280px, 40vw, 520px); }
 
-/* ═══════════════════════════════════════════════════════════════════
-   CONTENT-VISIBILITY OPTIMISATION
-   Browser skips layout/paint/animation for off-screen sections.
-   Massive perf win on long pages — esp. mobile.
-═══════════════════════════════════════════════════════════════════ */
 main > section:not(#hero) {
   content-visibility: auto;
   contain-intrinsic-size: 1px 800px;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   IMAGE / SVG RENDERING HINTS
-═══════════════════════════════════════════════════════════════════ */
 img, svg { max-width: 100%; height: auto; }
 
-/* ═══════════════════════════════════════════════════════════════════
-   FORCE HARDWARE ACCEL ON STICKY/FIXED LAYERS
-═══════════════════════════════════════════════════════════════════ */
 .progress-bar,
 header[class*="fixed"] {
   transform: translateZ(0);
   backface-visibility: hidden;
 }
 
-/* Tap highlight removal on iOS — feels snappier */
 button, a {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Prevent overscroll bounce stealing taps on iOS — body only */
 body { overscroll-behavior-y: none; }
 
-/* Horizontal overflow guard — only on body, never html or #root (creates nested scroll containers that capture wheel events) */
 body { overflow-x: clip; }
 
-/* ═══════════════════════════════════════════════════════════════════
-   ROADMAP / TIMELINE SPINE — single continuous connector
-═══════════════════════════════════════════════════════════════════ */
 .timeline-spine {
   position: relative;
   padding-left: 2.5rem;
@@ -1218,9 +1045,6 @@ body { overflow-x: clip; }
 .timeline-node[data-color="blue"]::before   { border-color: #1E3A8A; }
 .timeline-node[data-color="green"]::before  { border-color: #0F7A3A; }
 
-/* ═══════════════════════════════════════════════════════════════════
-   FOOTER REFINEMENT
-═══════════════════════════════════════════════════════════════════ */
 .footer-shell {
   border-top: 1px solid var(--c-line);
   background: rgba(255,255,255,0.55);
@@ -1230,9 +1054,6 @@ body { overflow-x: clip; }
   margin-top: 0;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   HERO DECOR — clean radial wash, no fixed blobs
-═══════════════════════════════════════════════════════════════════ */
 .hero-decor {
   position: absolute;
   inset: 0;
@@ -1260,9 +1081,6 @@ body { overflow-x: clip; }
   filter: blur(60px);
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   PROBLEM CARD — uniform layout
-═══════════════════════════════════════════════════════════════════ */
 .problem-card {
   display: flex;
   flex-direction: column;
@@ -1297,9 +1115,6 @@ body { overflow-x: clip; }
   margin-top: auto;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   PROTOCOL CARDS — standardised tab buttons
-═══════════════════════════════════════════════════════════════════ */
 .proto-tab {
   width: 100%;
   text-align: left;
@@ -1319,9 +1134,6 @@ body { overflow-x: clip; }
   box-shadow: 0 12px 36px rgba(232,119,34,0.14), 0 2px 6px rgba(11,30,75,0.05);
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   CTA SECTION
-═══════════════════════════════════════════════════════════════════ */
 .cta-shell {
   position: relative;
   padding: clamp(3rem, 7vw, 6rem) clamp(1.5rem, 4vw, 4rem);
@@ -1353,9 +1165,6 @@ body { overflow-x: clip; }
   pointer-events: none;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   BUTTON REFINEMENT — clearer states, better focus
-═══════════════════════════════════════════════════════════════════ */
 .btn-primary, .btn-outline, .btn-ghost, .btn-brand {
   font-family: var(--font-sans);
   font-feature-settings: "ss01" 1, "cv11" 1;
@@ -1387,9 +1196,6 @@ body { overflow-x: clip; }
   color: var(--c-ashoka);
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   ENHANCED EYEBROW (replaces gradient .eyebrow when used alone)
-═══════════════════════════════════════════════════════════════════ */
 .eyebrow {
   display: inline-flex; align-items: center; gap: 0.5rem;
   font-family: var(--font-mono);
@@ -1406,19 +1212,12 @@ body { overflow-x: clip; }
   background: var(--c-saffron);
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   FORCE BASE TYPE SCALE TO TOKENS
-═══════════════════════════════════════════════════════════════════ */
 body { font-size: var(--t-base); color: var(--c-body); }
 
-/* Override hover lift on glass to match new shadow scale */
 .glass:hover, .card:hover, .glass-card:hover {
   box-shadow: var(--sh-lg) !important;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   MOBILE NOTICE POPUP
-═══════════════════════════════════════════════════════════════════ */
 .mobile-notice-backdrop {
   position: fixed; inset: 0;
   background: rgba(11,30,75,0.55);
@@ -1490,12 +1289,6 @@ body { font-size: var(--t-base); color: var(--c-body); }
 }
 .mobile-notice-secondary:hover { color: var(--c-body); }
 
-/* ═══════════════════════════════════════════════════════════════════
-   CINEMATIC GOD-TIER ANIMATION EFFECTS
-   Enhanced motion design for real-time working diagrams
-═══════════════════════════════════════════════════════════════════ */
-
-/* Glow pulse for active elements */
 @keyframes glow-pulse {
   0%, 100% { box-shadow: 0 0 20px rgba(232,119,34,0.3), 0 0 40px rgba(232,119,34,0.1); }
   50% { box-shadow: 0 0 30px rgba(232,119,34,0.5), 0 0 60px rgba(232,119,34,0.2); }
@@ -1511,13 +1304,11 @@ body { font-size: var(--t-base); color: var(--c-body); }
   50% { box-shadow: 0 0 30px rgba(30,58,138,0.5), 0 0 60px rgba(30,58,138,0.2); }
 }
 
-/* Shimmer sweep for glass panels */
 @keyframes shimmer-sweep {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
 
-/* Particle float animation */
 @keyframes particle-float {
   0%, 100% { transform: translateY(0) translateX(0); opacity: 0.6; }
   25% { transform: translateY(-8px) translateX(4px); opacity: 1; }
@@ -1525,7 +1316,6 @@ body { font-size: var(--t-base); color: var(--c-body); }
   75% { transform: translateY(-12px) translateX(2px); opacity: 1; }
 }
 
-/* Data stream flow */
 @keyframes data-stream {
   0% { transform: translateX(-100%); opacity: 0; }
   10% { opacity: 1; }
@@ -1533,13 +1323,11 @@ body { font-size: var(--t-base); color: var(--c-body); }
   100% { transform: translateX(100%); opacity: 0; }
 }
 
-/* Circuit pulse for watchdog */
 @keyframes circuit-pulse {
   0%, 100% { opacity: 0.3; }
   50% { opacity: 1; }
 }
 
-/* Lightning flash for power cut */
 @keyframes lightning {
   0%, 100% { opacity: 0; }
   5%, 15%, 25% { opacity: 1; }
@@ -1547,45 +1335,38 @@ body { font-size: var(--t-base); color: var(--c-body); }
   30% { opacity: 0; }
 }
 
-/* Scanner sweep effect */
 @keyframes scanner-sweep {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(200%); }
 }
 
-/* Block shake for tamper detection */
 @keyframes block-shake {
   0%, 100% { transform: translateX(0); }
   10%, 30%, 50%, 70%, 90% { transform: translateX(-3px) rotate(-1deg); }
   20%, 40%, 60%, 80% { transform: translateX(3px) rotate(1deg); }
 }
 
-/* Holographic flicker */
 @keyframes hologram-flicker {
   0%, 100% { opacity: 1; filter: hue-rotate(0deg); }
   50% { opacity: 0.95; filter: hue-rotate(3deg); }
   75% { opacity: 0.98; filter: hue-rotate(-2deg); }
 }
 
-/* Connection line glow */
 @keyframes connection-glow {
   0%, 100% { stroke-dashoffset: 0; opacity: 0.6; }
   50% { stroke-dashoffset: 20; opacity: 1; }
 }
 
-/* Photon beam pulse */
 @keyframes photon-beam {
   0%, 100% { opacity: 0.6; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.2); }
 }
 
-/* Orbital rotation */
 @keyframes orbital {
   0% { transform: rotate(0deg) translateX(20px) rotate(0deg); }
   100% { transform: rotate(360deg) translateX(20px) rotate(-360deg); }
 }
 
-/* Enhanced utility classes for diagrams */
 .animate-glow-pulse { animation: glow-pulse 2s ease-in-out infinite; }
 .animate-glow-pulse-green { animation: glow-pulse-green 2s ease-in-out infinite; }
 .animate-glow-pulse-blue { animation: glow-pulse-blue 2s ease-in-out infinite; }
@@ -1598,7 +1379,6 @@ body { font-size: var(--t-base); color: var(--c-body); }
 .animate-hologram { animation: hologram-flicker 4s ease-in-out infinite; }
 .animate-block-shake { animation: block-shake 0.5s ease-in-out; }
 
-/* Glass panel with enhanced depth */
 .glass-cinematic {
   background: linear-gradient(135deg, rgba(255,253,248,0.9) 0%, rgba(255,253,248,0.75) 50%, rgba(255,253,248,0.85) 100%);
   backdrop-filter: blur(24px) saturate(2);
@@ -1611,7 +1391,6 @@ body { font-size: var(--t-base); color: var(--c-body); }
     0 8px 32px rgba(30,58,138,0.08);
 }
 
-/* 3D depth layer effect */
 .depth-layer {
   transform-style: preserve-3d;
   perspective: 1000px;
@@ -1626,7 +1405,6 @@ body { font-size: var(--t-base); color: var(--c-body); }
   transform: translateZ(10px);
 }
 
-/* Particle container */
 .particle-container {
   position: relative;
   overflow: hidden;
@@ -1655,7 +1433,6 @@ body { font-size: var(--t-base); color: var(--c-body); }
   animation-delay: 2s;
 }
 
-/* Status indicator with enhanced glow */
 .status-glow {
   position: relative;
 }
@@ -1671,13 +1448,11 @@ body { font-size: var(--t-base); color: var(--c-body); }
   z-index: -1;
 }
 
-/* Connection line styles */
 .connection-line {
   stroke-dasharray: 5, 5;
   animation: connection-glow 1s linear infinite;
 }
 
-/* Beveled edge effect */
 .beveled {
   position: relative;
 }
@@ -1696,7 +1471,6 @@ body { font-size: var(--t-base); color: var(--c-body); }
   pointer-events: none;
 }
 
-/* Data packet animation */
 .data-packet {
   position: absolute;
   width: 8px;
@@ -1707,7 +1481,6 @@ body { font-size: var(--t-base); color: var(--c-body); }
   animation: data-stream 2s linear infinite;
 }
 
-/* Scan line effect */
 .scan-line {
   position: relative;
   overflow: hidden;
@@ -1724,7 +1497,6 @@ body { font-size: var(--t-base); color: var(--c-body); }
   animation: scanner-sweep 3s ease-in-out infinite;
 }
 
-/* Active step indicator trail */
 .step-trail {
   position: relative;
 }
